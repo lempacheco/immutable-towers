@@ -71,6 +71,9 @@ danoInimigo :: Torre -> Inimigo -> Inimigo
 danoInimigo t i = i {vidaInimigo =  (vidaInimigo i - danoTorre t)}
 
 
+getTiposProjsInimigo :: Inimigo -> [TipoProjetil]
+getTiposProjsInimigo i = map tipoProjetil (projeteisInimigo i)
+
 atingeInimigo :: Torre -> Inimigo -> Inimigo
 atingeInimigo torre inimigo
     | eFogoGelo torre inimigo = fogoGelo inimigo
@@ -89,9 +92,6 @@ atingeInimigo torre inimigo
             removeProj tp1 (p:ps)
                 | tp1 == tipoProjetil p = removeProj tp1 ps
                 | otherwise = p : removeProj tp1 ps
-
-            getTiposProjsInimigo :: Inimigo -> [TipoProjetil]
-            getTiposProjsInimigo i = map tipoProjetil (projeteisInimigo i)
 
             eFogoResina :: Torre -> Inimigo -> Bool
             eFogoResina t i = (tipoProjetil (projetilTorre t) == Fogo && Resina `elem` getTiposProjsInimigo i) || (tipoProjetil (projetilTorre t) == Resina && Fogo `elem` getTiposProjsInimigo i)

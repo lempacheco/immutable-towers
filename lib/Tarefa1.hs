@@ -11,6 +11,7 @@ Copyright   : Letícia Maria de Lima Cavalcanti Pacheco <a112062@alunos.uminho.p
 Módulo para a realização da Tarefa 1 de LI1 em 2024/25.
 -}
 
+--TODO: atualizar existePeloMenosUmCaminho com as funcoes eTerra,eAgua e eRelva
 module Tarefa1 where
 import LI12425
 

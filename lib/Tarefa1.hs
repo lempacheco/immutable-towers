@@ -173,9 +173,9 @@ normalizaInimigos is = all normalizainimigo is
     fogoEresina :: [TipoProjetil] -> Bool
     fogoEresina [] = True 
     fogoEresina (p:ps) = case p of 
-      Fogo -> if Resina `elem` ps || Gelo `elem` ps then False else fogoEresina ps
-      Resina -> if Fogo `elem` ps then False else fogoEresina ps 
-      Gelo -> if Fogo `elem` ps then False else fogoEresina ps 
+      Fogo -> not (Resina `elem` ps || Gelo `elem` ps) && fogoEresina ps
+      Resina -> not (Fogo `elem` ps) && fogoEresina ps 
+      Gelo -> not (Fogo `elem` ps) && fogoEresina ps 
 
     normalizainimigo :: Inimigo -> Bool
     normalizainimigo i = fogoEresina tProjetil&& projetilIgual projetil 

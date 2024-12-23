@@ -76,10 +76,10 @@ getTiposProjsInimigo i = map tipoProjetil (projeteisInimigo i)
 
 atingeInimigo :: Torre -> Inimigo -> Inimigo
 atingeInimigo torre inimigo
-    | eFogoGelo torre inimigo = fogoGelo inimigo
-    | eFogoResina torre inimigo = fogoResina inimigo
-    | eProjetilIgual torre inimigo = projetilIgual torre inimigo
-    | otherwise = outrasCombs torre inimigo
+    | eFogoGelo torre inimigo = danoInimigo torre (fogoGelo inimigo)
+    | eFogoResina torre inimigo = danoInimigo torre (fogoResina inimigo)
+    | eProjetilIgual torre inimigo = danoInimigo torre (projetilIgual torre inimigo)
+    | otherwise = danoInimigo torre (outrasCombs torre inimigo)
         where
             eFogoGelo :: Torre -> Inimigo -> Bool
             eFogoGelo t i = (tipoProjetil (projetilTorre t) == Fogo && Gelo `elem` getTiposProjsInimigo i) || (tipoProjetil (projetilTorre t) == Gelo && Fogo `elem` getTiposProjsInimigo i)

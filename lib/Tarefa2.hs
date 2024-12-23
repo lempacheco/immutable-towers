@@ -135,16 +135,25 @@ ativaInimigo portal inimigosAtivos = case ondasPortal portal of
                   novoInimigo = i: inimigosAtivos
               in (novoPortal, novoInimigo)
 
+{-| A função 'terminouJogo' é responsável por indicar o fim do jogo, sendo possível duas eventualidaes: ganhar ou perder. -}
 terminouJogo :: Jogo -> Bool
 terminouJogo j = ganhouJogo j || perdeuJogo j 
 
+{-| A função 'ganhouJogo' indica se um jogador ganhou o jogo, o jogador ganha o jogo nas seguintes condições: 
+     1. ausência de inimigos ativos ou inativos;  
+     2. nível de vida da base positivo.
+-}
 ganhouJogo :: Jogo -> Bool
 ganhouJogo j = null (inimigosJogo j) 
                && (vidaBase $ baseJogo j) > 0 
                && all verificaPortal (portaisJogo j) 
 
+
 verificaPortal :: Portal -> Bool
 verificaPortal p = null (ondasPortal p) || all (null . inimigosOnda) (ondasPortal p)
 
+{-| A função 'perdeuJogo' indica se um jogador perdeu o jogo, o jogador perde o jogo na seguinte condição: 
+     1. nível de vida igual ou inferior a zero
+-}
 perdeuJogo :: Jogo -> Bool
 perdeuJogo j = vidaBase (baseJogo j) <= 0 

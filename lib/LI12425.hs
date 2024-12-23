@@ -102,7 +102,7 @@ data Projetil = Projetil
     -- | Duração do efeito do projétil no inimigo.
     duracaoProjetil :: Duracao
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 -- | Direção de movimento de uma entidade no jogo.
 data Direcao
@@ -129,7 +129,7 @@ data Inimigo = Inimigo
     -- | Efeitos secundários ativos no inimigo.
     projeteisInimigo :: [Projetil]
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 -- | Onda de inimigos que saem de um portal.
 data Onda = Onda

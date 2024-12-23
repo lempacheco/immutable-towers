@@ -11,7 +11,6 @@ Copyright   : Letícia Maria de Lima Cavalcanti Pacheco <a112062@alunos.uminho.p
 Módulo para a realização da Tarefa 1 de LI1 em 2024/25.
 -}
 
---TODO: atualizar existePeloMenosUmCaminho com as funcoes eTerra,eAgua e eRelva
 module Tarefa1 where
 import LI12425
 
@@ -169,9 +168,6 @@ existePeloMenosUmCaminho mapa p b =
       eFronteiras :: Posicao -> Bool
       eFronteiras (x,y) = x < 0 || y < 0 || x>=6 || y >= 6
 
-      eTerra :: Mapa -> Posicao -> Bool
-      eTerra m (x,y) = (m !! floor x) !! floor y == Terra
-
       jaPassou :: Posicao -> [Posicao] -> Bool
       jaPassou _ [] = False
       jaPassou (x,y) ((x1,y1):t) = (x==x1 && y == y1) || jaPassou (x,y) t
@@ -181,10 +177,10 @@ existePeloMenosUmCaminho mapa p b =
 
       verificaDirecaoTerra :: Mapa -> Posicao -> [Posicao] -> Direcao -> Bool
       verificaDirecaoTerra m (x,y) lpos d = case d of
-        Norte -> not (jaPassou (x,y-1) lpos) && not (eFronteiras (x,y-1)) && eTerra m (x,y-1)
-        Sul -> not (jaPassou (x,y+1) lpos) && not (eFronteiras (x,y+1)) && eTerra m (x,y+1)
-        Este -> not (jaPassou (x+1,y) lpos) && not (eFronteiras (x+1,y)) && eTerra m (x+1,y)
-        Oeste -> not (jaPassou (x-1,y) lpos) && not (eFronteiras (x-1,y)) && eTerra m (x-1,y)
+        Norte -> not (jaPassou (x,y-1) lpos) && not (eFronteiras (x,y-1)) && eTerra (x,y-1) m
+        Sul -> not (jaPassou (x,y+1) lpos) && not (eFronteiras (x,y+1)) && eTerra (x,y+1) m
+        Este -> not (jaPassou (x+1,y) lpos) && not (eFronteiras (x+1,y)) && eTerra (x+1,y) m
+        Oeste -> not (jaPassou (x-1,y) lpos) && not (eFronteiras (x-1,y)) && eTerra (x-1,y) m
 
       atualizaPos :: Mapa -> Posicao -> Posicao -> [Posicao] -> (Bool, [Posicao])
       atualizaPos m pos@(x,y) posB lpos
@@ -218,14 +214,23 @@ rajadaTorresPositivo :: [Torre] -> Bool
 rajadaTorresPositivo [] = True
 rajadaTorresPositivo (t:ts) = rajadaTorre t > 0 && rajadaTorresPositivo ts
 
+
+{-| A função 'cicloTorresNaoNegativo' verifica se, numa lista de torres, o ciclo é um valor não negativo.
+-}
 cicloTorresNaoNegativo :: [Torre] -> Bool
 cicloTorresNaoNegativo [] = True
 cicloTorresNaoNegativo (t:ts) = cicloTorre t >= 0 && cicloTorresNaoNegativo ts
 
+
+{-| A função 'sobrepostoTorres' verifica se, numa lista de torres, nenhuma está sobreposta a outra.
+-}
 sobrepostoTorres :: [Torre] -> Bool
 sobrepostoTorres [] = False
 sobrepostoTorres (t:ts) = (foldr (||)False $ map (\x -> posicaoTorre t == posicaoTorre x) ts) || sobrepostoTorres ts
 
+
+{-| A função 'validaPosicaoBase' verifica se uma base tem uma posição válida.
+-}
 validaPosicaoBase :: Base -> Mapa -> Bool
 validaPosicaoBase b m = terrenoBase b m == Just Terra
   where 
@@ -233,83 +238,16 @@ validaPosicaoBase b m = terrenoBase b m == Just Terra
       let cse = (floor (fst (posicaoBase base)), floor (snd (posicaoBase base)))
       in Just $ (mapa !! fst cse) !! snd cse
 
+{-| A função 'creditoNaoNegativoBase' verifica se uma base tem não tem crédito negativo.
+-}
 creditoNaoNegativoBase :: Base -> Bool
 creditoNaoNegativoBase b = creditosBase b >= 0
 
+{-| A função 'sobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal.
+-}
 sobrepostoBaseTorrePortal :: Base -> [Torre] -> [Portal] -> Bool
 sobrepostoBaseTorrePortal b ts ps = sobrepostoBasePortal b ps || sobrepostoBaseTorres b ts
-
-sobrepostoBaseTorres :: Base -> [Torre] -> Bool
-sobrepostoBaseTorres b ts = elem (posicaoBase b) pts
-  where pts = map posicaoTorre ts
-
---para propositos de debugging
-mapa1 :: Mapa
-mapa1 =
- [ [t, t, r, a, a, a],
-   [r, t, r, a, r, r],
-   [r, t, r, a, r, t],
-   [r, t, r, a, r, t],
-   [r, t, t, t, t, t],
-   [a, a, a, a, r, r]
- ]
- where
-       t = Terra
-       r = Relva
-       a = Agua
-
-portal1 :: Portal
-portal1 = Portal {posicaoPortal = (0.5,0.5)}
-
-base1 :: Base
-base1 = Base {posicaoBase = (2.5,5.5)}
-
-mapa2 :: Mapa
-mapa2 =
- [ [t, t, r, a, a, a],
-   [r, t, r, a, r, r],
-   [r, a, r, a, r, t],
-   [r, t, r, a, r, t],
-   [r, t, t, t, t, t],
-   [a, a, a, a, r, r]
- ]
- where
-       t = Terra
-       r = Relva
-       a = Agua
-
-mapa3 :: Mapa
-mapa3 =
- [ [t, a],
-   [t, t]
- ]
- where
-       t = Terra
-       --r = Relva
-       a = Agua
-
-base3 :: Base
-base3 = Base {posicaoBase = (1.5,1.5)}
-
-mapa4 :: Mapa
-mapa4 =
- [ [t, t, r, a, a, a],
-   [t, t, t, t, r, r],
-   [t, t, r, a, r, t],
-   [t, t, r, a, r, t],
-   [t, t, t, t, t, t],
-   [t, a, a, a, r, r]
- ]
- where
-       t = Terra
-       r = Relva
-       a = Agua
-
-torre1 :: Torre
-torre1 = Torre {posicaoTorre = (1.5,5.5)}
-
-torre2 :: Torre
-torre2 = Torre {posicaoTorre = (2.5,5.5)}
-
-torre3 :: Torre
-torre3 = Torre {posicaoTorre = (0.5,2.5)}
+  where
+    sobrepostoBaseTorres :: Base -> [Torre] -> Bool
+    sobrepostoBaseTorres b ts = elem (posicaoBase b) pts
+      where pts = map posicaoTorre ts

@@ -27,16 +27,16 @@ atualizaInimigoResina i =
     let f = fatorVelocidadeInimigoResina
     in i {velocidadeInimigo = velocidadeInimigo i * f}
 
+fatorVelocidadeInimigoResina :: Float
+fatorVelocidadeInimigoResina = 1
+
 atualizaInimigoFogo :: Inimigo -> Inimigo
 atualizaInimigoFogo i =
     let t = taxaVelocidadeInimigoFogo
     in i {vidaInimigo = vidaInimigo i - t}
 
-fatorVelocidadeInimigoResina :: Float
-fatorVelocidadeInimigoResina = undefined
-
 taxaVelocidadeInimigoFogo :: Float
-taxaVelocidadeInimigoFogo = undefined
+taxaVelocidadeInimigoFogo = 1
 
 removeInimigosSemVida :: Portal -> Portal
 removeInimigosSemVida p =
@@ -70,3 +70,19 @@ atualizaVelocidadeInimigo i =
         else if Resina `elem` tpsProjsInimigo
             then velocidadeInimigo (atualizaInimigoResina i)
             else velocidadeInimigo i
+
+inimigoAtingeBase :: Inimigo -> Base -> Portal -> (Portal, Base)
+inimigoAtingeBase i b
+    | posicaoInimigo i == (atualizaPortal, atualizaBase)
+    | otherwise = b
+        where
+            atualizaPortal :: Portal -> Inimigo -> Portal
+            atualizaPortal portal inimigo =
+                let inimigosAtivos = inimigosOnda $ head $ ondasPortal p
+                in p {ondasPortal = (atualizaInimigosAtivos i (head ondasPortal)) : tail ondasPortal}
+        
+            atualizaInimigosAtivos :: Inimigo -> [Inimigo] -> [Inimigo]
+            atualizaInimigosAtivos i iAtivos = delete i iAtivos
+
+            atualizaBase :: Base -> Inimigo -> Base
+            atualizaBase b i = b {vidaBase = vidaBase b - danoInimigo i}

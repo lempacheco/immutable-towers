@@ -50,10 +50,13 @@ eAgua (x,y) mapa = case procuraTerreno (x,y) mapa of
 -}
 
 procuraTerreno :: Posicao -> Mapa -> Maybe Terreno  
-procuraTerreno (x,y) mapa = Just $ (mapa !! (fst cse)) !! (snd cse) 
-  where cse = (x1,y1)
-        x1 = floor x 
-        y1 = floor y 
+procuraTerreno (x, y) mapa =
+  if x1 >= 0 && x1 < length mapa && y1 >= 0 && y1 < length (head mapa)
+    then Just ((mapa !! x1) !! y1)
+    else Nothing
+  where
+    x1 = floor y -- Índice da linha (Y)
+    y1 = floor x -- Índice da coluna (X)
 
 validaTorre :: Torre -> Bool 
 validaTorre t = 
@@ -73,14 +76,15 @@ peloMenosUmPortal ps = not (null ps)
 
 validaPosicaoPortal :: [Portal] -> Mapa -> Bool
 validaPosicaoPortal [] _ = True
-validaPosicaoPortal (p:ps) mapa = let t = terrenoPortal p mapa
-                                  in if t == Just Terra then True && validaPosicaoPortal ps mapa else False
+validaPosicaoPortal (p:ps) mapa =
+  eTerra (posicaoPortal p) mapa && validaPosicaoPortal ps mapa
+
 
 {-| A função 'terrenoPortal' informa qual o terreno que se encontra um portal. 
  Esta é utilizada como função auxiliar na função 'validaPosicaoPortal'  
 
 -}
-
+-- TODO
 terrenoPortal :: Portal -> Mapa -> Maybe Terreno 
 terrenoPortal p mapa = let cse = (floor (fst (posicaoPortal p)), floor (snd (posicaoPortal p)))  
                       in Just $ (mapa !! (fst cse)) !! (snd cse) 
@@ -103,10 +107,10 @@ sobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps
 -}
 
 sobrepostoTorrePortal :: [Torre] -> [Portal] -> Bool
-sobrepostoTorrePortal [] _ = False 
-sobrepostoTorrePortal (t:ts) ps = not $ elem (posicaoTorre t) pps || sobrepostoTorrePortal ts ps
+sobrepostoTorrePortal [] _ = True 
+sobrepostoTorrePortal (t:ts) ps = not $ elem (posicaoTorre t) pps && sobrepostoTorrePortal ts ps
   where pps = map posicaoPortal ps 
-  
+
 
 {-| A função 'inimigosInicio' verifica o estado dos inimigos inicialmente. Isto é todos os inimigos inicialmente devem ter:
  1. Posição do respetivo portal. 
@@ -136,13 +140,15 @@ inimigosTerra [] _ = True
 inimigosTerra (i:is) mapa = eTerra (posicaoInimigo i) mapa && inimigosTerra is mapa 
 
 {-| A função 'inimigosTorre' verifica se os inimigos estão sobrepostos a alguma torre. 
- Como os inimigos não podem estar sobrepostos a torres, a função devolve *True* se as posições forem diferentes, 
+ Como os inimigos não podem estar sobrepostos a torres, a função devolve *True* se as posições forem diferentes.
 
 -}
 
 inimigosTorre :: [Inimigo] -> [Torre] -> Bool 
 inimigosTorre [] _ = True
-inimigosTorre (i:is) (t:ts) = not (posicaoInimigo i == posicaoTorre t && inimigosTorre is ts)
+inimigosTorre _ [] = True
+inimigosTorre (i:is) torres =
+  not (any (\t -> posicaoInimigo i == posicaoTorre t) torres) && inimigosTorre is torres
 
 {-| A função 'velocidadeInimigos' verifica se a velocidade dos inimigos é sempre positiva. 
 
@@ -157,7 +163,29 @@ velocidadeInimigos is = all (>0) (map velocidadeInimigo is)
 -- ii. Não pode conter, simultaneamente, projéteis do tipo Fogo e Resina
 -- nem Fogo e Gelo (ver secção 3.2 para mais detalhes).
 
-{-| A função 'existePeloMenosUmCaminho' verifica se existe pelo menos um caminho um caminho (de terra) ligando um portal à base. De outra forma, não seria possı́vel a base sofrer dano.
+normalizaInimigos :: [Inimigo] -> Bool
+normalizaInimigos is = all normalizainimigo is
+  where 
+    projetilIgual :: [Projetil] -> Bool
+    projetilIgual [] = True 
+    projetilIgual (p:ps) = length ps == length (foldr (\x ac -> if x `elem` ac then ac else x:ac) [] (p:ps))
+    
+    fogoEresina :: [TipoProjetil] -> Bool
+    fogoEresina [] = True 
+    fogoEresina (p:ps) = case p of 
+      Fogo -> if Resina `elem` ps || Gelo `elem` ps then False else fogoEresina ps
+      Resina -> if Fogo `elem` ps then False else fogoEresina ps 
+      Gelo -> if Fogo `elem` ps then False else fogoEresina ps 
+
+    normalizainimigo :: Inimigo -> Bool
+    normalizainimigo i = fogoEresina tProjetil&& projetilIgual projetil 
+      where projetil = projeteisInimigo i 
+            tProjetil = map tipoProjetil (projeteisInimigo i)  
+
+
+
+{-| A função 'existePeloMenosUmCaminho' verifica se existe pelo menos um caminho um caminho (de terra) ligando um portal à base. 
+ De outra forma, não seria possı́vel a base sofrer dano.
 -}
 existePeloMenosUmCaminho :: Mapa -> Portal -> Base -> Bool
 existePeloMenosUmCaminho mapa p b =

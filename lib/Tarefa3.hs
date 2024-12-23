@@ -10,14 +10,51 @@ Módulo para a realização da Tarefa 3 de LI1 em 2024/25.
 module Tarefa3 where
 
 import LI12425
-import Tarefa2(getTiposProjsInimigo)
+import Tarefa2
 
+import Data.List
 --TODO: 3.3.2.3
 --TODO: fatorVelocidadeInimigoResina e taxaVelocidadeInimigoFogo
 --TODO: atualizaJogo
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo = undefined
+
+detetarInimigo :: Torre -> [Inimigo] -> [Inimigo]
+detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
+
+{-| ([Inimigo], [Projetil]) -> A lista de inimigos atualizada, refletindo os danos causados pelos projéteis disparados.
+A lista de projéteis disparados.-}
+
+disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], [Projetil])
+disparaProjeteis torre inimigos = 
+
+
+inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
+inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo torre inimigos)
+
+inimigosAtualizados :: Torre -> [Inimigo] -> [Inimigo]
+inimigosAtualizados torre inimigos = map (atingeInimigo torre) (inimigosOrdenados torre inimigos)
+
+inimigosSobreviventes :: Torre -> [Inimigo] -> [Inimigo]
+inimigosSobreviventes torre inimigos = 
+    filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos) 
+
+inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
+inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo torre inimigos)
+
+distinimigo t i = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
+        where (x1, y1) = posicaoInimigo i
+              (x2, y2) = posicaoTorre t
+
+{-| Determina o número de tiros que podem ser disparados neste ciclo -}
+
+tirosPossiveis :: Torre -> [Inimigos] -> Int 
+tirosPossiveis torre is = if rajadaTorre torre > numeroInimigos then rajadaTorre torre else numeroInimigos
+  where numeroInimigos = length (inimigosOrdenados is)
+
+tempoDisparo :: Torre -> Bool 
+tempoDisparo 
 
 atualizaInimigoGelo :: Inimigo -> Inimigo
 atualizaInimigoGelo i = i {velocidadeInimigo = 0}

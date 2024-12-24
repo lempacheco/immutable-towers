@@ -7,54 +7,10 @@ Copyright   : Letícia Maria de Lima Cavalcanti Pacheco <a112062@alunos.uminho.p
 
 Módulo para a realização da Tarefa 2 de LI1 em 2024/25.
 -}
+
 module Tarefa2 where
 
 import LI12425
-
--- Exemplos para teste 
-
-base2 :: Base
-base2 = Base { vidaBase = 100, 
-               posicaoBase = (0, 0), 
-               creditosBase = 500 }
-
-inimigo2 :: Inimigo 
-inimigo2 = Inimigo {posicaoInimigo = (1.5,1.5),
-    direcaoInimigo = Norte,
-    vidaInimigo = 5,
-    velocidadeInimigo = 4.5,
-    projeteisInimigo = []}
-
-
--- Ondas
-onda1 :: Onda
-onda1 = Onda {inimigosOnda = [inimigo2], 
-              cicloOnda = 2,
-              tempoOnda = 2,
-              entradaOnda = 0}
-
-onda2 :: Onda
-onda2 = Onda {inimigosOnda = [], 
-              cicloOnda = 2,
-              tempoOnda = 2,
-              entradaOnda = 0}
-
-portal1 :: Portal 
-portal1 = Portal {posicaoPortal = (0.5,0.5), 
-                  ondasPortal = [onda1]}
-portal2 :: Portal 
-portal2 = Portal {posicaoPortal = (1.5,1.5),
-                  ondasPortal = [onda2]}
-
--- Jogo
-jogo1 :: Jogo
-jogo1 = Jogo { baseJogo = base2,
-               portaisJogo = [portal1, portal2],
-               torresJogo = [],
-               mapaJogo = [],
-               inimigosJogo = [inimigo2],
-               lojaJogo = []
-              }
 
 {-| A função 'inimigosNoAlcance' filtra os inimigos que estão no alcance de uma determinada torre. 
 
@@ -66,6 +22,10 @@ inimigosNoAlcance t is =
         where (x1, y1) = posicaoInimigo i
               (x2, y2) = posicaoTorre t
   in filter (\i -> distinimigo i <= alcanceTorre t) is
+
+{-| A função 'danoInimigo' atualiza o estado da vida do inimigo, assumindo que este acaba de ter sofrido dano.
+
+-}
 
 danoInimigo :: Torre -> Inimigo -> Inimigo 
 danoInimigo t i = i {vidaInimigo =  (vidaInimigo i - danoTorre t)}
@@ -121,7 +81,6 @@ atingeInimigo torre inimigo
             outrasCombs t i = i {projeteisInimigo = projetilTorre t : projeteisInimigo i}
                 
 {-| A função 'ativaInimigo' é responsável por mover o próximo inimigo a ser lanaçado pelo portal para lista de inimigos ativos. 
-
 -}
 
 ativaInimigo :: Portal -> [Inimigo] -> (Portal, [Inimigo])
@@ -135,7 +94,9 @@ ativaInimigo portal inimigosAtivos = case ondasPortal portal of
                   novoInimigo = i: inimigosAtivos
               in (novoPortal, novoInimigo)
 
-{-| A função 'terminouJogo' é responsável por indicar o fim do jogo, sendo possível duas eventualidaes: ganhar ou perder. -}
+{-| A função 'terminouJogo' é responsável por indicar o fim do jogo, sendo possível duas eventualidaes: ganhar ou perder.
+-}
+
 terminouJogo :: Jogo -> Bool
 terminouJogo j = ganhouJogo j || perdeuJogo j 
 
@@ -143,17 +104,22 @@ terminouJogo j = ganhouJogo j || perdeuJogo j
      1. ausência de inimigos ativos ou inativos;  
      2. nível de vida da base positivo.
 -}
+
 ganhouJogo :: Jogo -> Bool
 ganhouJogo j = null (inimigosJogo j) 
                && (vidaBase $ baseJogo j) > 0 
                && all verificaPortal (portaisJogo j) 
 
+{-| A função 'verificaPortal', verifica se um portal está "inativo". Um portal é considerado inativo se:
+    1. Não possui nenhuma onda (ondasPortal é uma lista vazia);
+    2. Todas as ondas no portal estão vazias, ou seja, não possuem inimigos (inimigosOnda é uma lista vazia para todas as ondas).
 
+-}
 verificaPortal :: Portal -> Bool
 verificaPortal p = null (ondasPortal p) || all (null . inimigosOnda) (ondasPortal p)
 
 {-| A função 'perdeuJogo' indica se um jogador perdeu o jogo, o jogador perde o jogo na seguinte condição: 
-     1. nível de vida igual ou inferior a zero
+     1. nível de vida da base igual ou inferior a zero.
 -}
 perdeuJogo :: Jogo -> Bool
 perdeuJogo j = vidaBase (baseJogo j) <= 0 

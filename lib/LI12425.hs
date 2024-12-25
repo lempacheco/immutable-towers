@@ -86,7 +86,7 @@ data Torre = Torre
     -- | Efeito secundário associado ao tipo de projétil da torre.
     projetilTorre :: Projetil
   }
-  deriving (Show)
+  deriving (Show,Eq)
 
 -- | Loja de torres disponíveis para construir por uma quantidade de créditos.
 type Loja = [(Creditos, Torre)]

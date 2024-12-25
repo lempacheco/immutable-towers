@@ -13,6 +13,7 @@ import LI12425
 import Tarefa2
 
 import Data.List
+
 --TODO: 3.3.2.3
 --TODO: fatorVelocidadeInimigoResina e taxaVelocidadeInimigoFogo
 --TODO: atualizaJogo
@@ -23,39 +24,70 @@ atualizaJogo = undefined
 detetarInimigo :: Torre -> [Inimigo] -> [Inimigo]
 detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
 
-{-| ([Inimigo], [Projetil]) -> A lista de inimigos atualizada, refletindo os danos causados pelos projéteis disparados.
-A lista de projéteis disparados.-}
+{-| -}
+-- mesmo se não tiver inimigos o ciclo está funcionando?
+disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
+disparaProjeteis torre [] = ([], torre)
+disparaProjeteis torre is = 
+    if length (inimigosSobreviventes torre is) == 0 then ([],torre) 
+     else if tempoTorre torre > 0 && length (inimigosSobreviventes torre is) > 0 then (is, torre {tempoTorre = tempoTorre torre - 1})
+      else (inimigosSobreviventes torre is, novaTorre)
+       where novaTorre = torre {tempoTorre = cicloTorre torre} -- (quando chegar a zero dispara)
 
-disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], [Projetil])
-disparaProjeteis torre inimigos = 
+{-| A função 'inimigosOrdenados' ordena uma lista de inimigos com base na distância
+  de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
+  primeiro na lista resultante.
+  
+  == __ Exemplos de utilização: __
 
-
+  >>> let torre = Torre {posicaoTorre = (2.0, 3.0)}
+  >>> let inimigos = [Inimigo {posicaoInimigo = (1.0, 1.0)}, Inimigo {posicaoInimigo = (3.0, 3.0)}]
+  >>> inimigosOrdenados torre inimigos
+  [Inimigo {posicaoInimigo = (3.0, 3.0)}, Inimigo {posicaoInimigo = (1.0, 1.0)}]
+  
+-}
 inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
 inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo torre inimigos)
 
-inimigosAtualizados :: Torre -> [Inimigo] -> [Inimigo]
-inimigosAtualizados torre inimigos = map (atingeInimigo torre) (inimigosOrdenados torre inimigos)
+
+-- atualizar apenas o numero de tiros possiveis 
+
+{-| A função 'inimigosSobreviventes' -}
 
 inimigosSobreviventes :: Torre -> [Inimigo] -> [Inimigo]
-inimigosSobreviventes torre inimigos = 
-    filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos) 
+inimigosSobreviventes torre inimigos =
+        let inimigosAtualizados torre inimigos = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
+            nI = tirosPossiveis torre inimigos
+            inimigosEmOrdem = inimigosOrdenados torre inimigos
+            inimigosSemDano = drop nI inimigosEmOrdem
+        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) ++ inimigosSemDano  
 
-inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
-inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo torre inimigos)
+{-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
+
+-}
 
 distinimigo t i = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
         where (x1, y1) = posicaoInimigo i
               (x2, y2) = posicaoTorre t
 
-{-| Determina o número de tiros que podem ser disparados neste ciclo -}
+{-| A função 'tiroPossiveis' determina o número máximo de tiros que uma torre pode disparar em um ciclo, 
+    levando em consideração o número de rajadas da torre, e o número de inimigos no alcance.
 
-tirosPossiveis :: Torre -> [Inimigos] -> Int 
-tirosPossiveis torre is = if rajadaTorre torre > numeroInimigos then rajadaTorre torre else numeroInimigos
-  where numeroInimigos = length (inimigosOrdenados is)
+== __ Exemplos de utilização: __
 
-tempoDisparo :: Torre -> Bool 
-tempoDisparo 
+  >>> tirosPossiveis (Torre {rajadaTorre = 3}) [inimigo1, inimigo2]
+  2
 
+  >>> tirosPossiveis (Torre {rajadaTorre = 5}) [inimigo1, inimigo2, inimigo3, inimigo4]
+  4
+-}
+
+tirosPossiveis :: Torre -> [Inimigo] -> Int 
+tirosPossiveis torre is = if rajadaTorre torre < numeroInimigos then rajadaTorre torre else numeroInimigos
+  where numeroInimigos = length (inimigosOrdenados torre is)
+
+
+{-
 atualizaInimigoGelo :: Inimigo -> Inimigo
 atualizaInimigoGelo i = i {velocidadeInimigo = 0}
 
@@ -123,3 +155,6 @@ inimigoAtingeBase i b
 
             atualizaBase :: Base -> Inimigo -> Base
             atualizaBase b i = b {vidaBase = vidaBase b - danoInimigo i}
+
+-}
+

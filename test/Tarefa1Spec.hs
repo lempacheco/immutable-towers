@@ -74,21 +74,21 @@ testesInimigos =
                                                                                                       Projetil {tipoProjetil = Gelo}]},
                                                                          Inimigo {projeteisInimigo = []}],
        "Na lista de projeteis ativos existe mais do que um projetil do mesmo tipo" ~: False ~=? normalizaInimigos 
-            [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}, 
-                                          Projetil {tipoProjetil = Fogo}, 
+            [Inimigo {projeteisInimigo = [projetilA, 
+                                          projetilA 
                                          ]}, 
              Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Resina}, 
                                           Projetil {tipoProjetil = Gelo}]}],
        "Na lista de projéteis ativos coexistem fogo e resina" ~: False ~=? normalizaInimigos 
             [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Gelo}, 
-                                          Projetil {tipoProjetil = Resina}, 
+                                          Projetil {tipoProjetil = Resina} 
                                          ]},
              Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}, 
-                                          Projetil {tipoProjetil = Resina}, 
+                                          Projetil {tipoProjetil = Resina} 
                                          ]}],
        "Na lista de projéteis ativos coexistem fogo e gelo" ~: False ~=? normalizaInimigos 
             [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}, 
-                                          Projetil {tipoProjetil = Gelo}, 
+                                          Projetil {tipoProjetil = Gelo} 
                                          ]}, 
              Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Resina}, 
                                           Projetil {tipoProjetil = Gelo}]}]
@@ -346,7 +346,7 @@ projetilA = Projetil
 projetilB :: Projetil
 projetilB = Projetil
   { tipoProjetil = Gelo,
-    duracaoProjetil = Infinita 
+    duracaoProjetil = Finita 2.0
   }
 
 projetilC :: Projetil 

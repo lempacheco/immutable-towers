@@ -58,6 +58,7 @@ procuraTerreno (x, y) mapa =
     x1 = floor y -- Índice da linha (Y)
     y1 = floor x -- Índice da coluna (X)
 
+-- TODO - o que esta função esta fazendo aqui?
 validaTorre :: Torre -> Bool 
 validaTorre t = 
     alcanceTorre t > 0 
@@ -79,17 +80,6 @@ validaPosicaoPortal [] _ = True
 validaPosicaoPortal (p:ps) mapa =
   eTerra (posicaoPortal p) mapa && validaPosicaoPortal ps mapa
 
-
-{-| A função 'terrenoPortal' informa qual o terreno que se encontra um portal. 
- Esta é utilizada como função auxiliar na função 'validaPosicaoPortal'  
-
--}
--- TODO
-terrenoPortal :: Portal -> Mapa -> Maybe Terreno 
-terrenoPortal p mapa = let cse = (floor (fst (posicaoPortal p)), floor (snd (posicaoPortal p)))  
-                      in Just $ (mapa !! (fst cse)) !! (snd cse) 
-
-
 {-| A função 'sobrepostoBasePortal' verifica se a base está sobreposta à algum portal. 
  Como para um bom funcionamento do jogo, a base não pode está sobreposta à nenhum portal, a função devolve *True* quando 
  não houver nenhum portal na mesma posição da base.
@@ -97,6 +87,7 @@ terrenoPortal p mapa = let cse = (floor (fst (posicaoPortal p)), floor (snd (pos
 -}
 
 sobrepostoBasePortal :: Base -> [Portal] -> Bool 
+sobrepostoBasePortal _ [] = True 
 sobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps 
   where pps = map posicaoPortal ps 
 
@@ -108,7 +99,7 @@ sobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps
 
 sobrepostoTorrePortal :: [Torre] -> [Portal] -> Bool
 sobrepostoTorrePortal [] _ = True 
-sobrepostoTorrePortal (t:ts) ps = not $ elem (posicaoTorre t) pps && sobrepostoTorrePortal ts ps
+sobrepostoTorrePortal (t:ts) ps = not ((posicaoTorre t) `elem` pps) && sobrepostoTorrePortal ts ps
   where pps = map posicaoPortal ps 
 
 
@@ -158,10 +149,11 @@ velocidadeInimigos :: [Inimigo] -> Bool
 velocidadeInimigos [] = True
 velocidadeInimigos is = all (>0) (map velocidadeInimigo is)  
 
---(e) A lista de projéteis ativos deve encontrar-se “normalizada”, ou seja:
--- i. Não pode conter mais do que um projétil do mesmo tipo.
--- ii. Não pode conter, simultaneamente, projéteis do tipo Fogo e Resina
--- nem Fogo e Gelo (ver secção 3.2 para mais detalhes).
+{- | A função 'normalizaInimigos' verifica se a lista de projéteis ativos encontram-se “normalizada”, ou seja:
+       1. Não pode conter mais do que um projétil do mesmo tipo;
+       2. Não pode conter, simultaneamente, projéteis do tipo Fogo e Resina, nem Fogo e Gelo.
+
+-}
 
 normalizaInimigos :: [Inimigo] -> Bool
 normalizaInimigos is = all normalizainimigo is
@@ -170,17 +162,18 @@ normalizaInimigos is = all normalizainimigo is
     projetilIgual [] = True 
     projetilIgual (p:ps) = length ps == length (foldr (\x ac -> if x `elem` ac then ac else x:ac) [] (p:ps))
     
-    fogoEresina :: [TipoProjetil] -> Bool
-    fogoEresina [] = True 
-    fogoEresina (p:ps) = case p of 
-      Fogo -> not (Resina `elem` ps || Gelo `elem` ps) && fogoEresina ps
-      Resina -> not (Fogo `elem` ps) && fogoEresina ps 
-      Gelo -> not (Fogo `elem` ps) && fogoEresina ps 
+    projeteisValidos :: [TipoProjetil] -> Bool
+    projeteisValidos tps =
+      let contemFogo = Fogo `elem` tps
+          contemResina = Resina `elem` tps
+          contemGelo = Gelo `elem` tps
+      in not (contemFogo && contemResina) && not (contemFogo && contemGelo)
 
+   
     normalizainimigo :: Inimigo -> Bool
-    normalizainimigo i = fogoEresina tProjetil&& projetilIgual projetil 
+    normalizainimigo i = projeteisValidos tProjetil && projetilIgual projetil 
       where projetil = projeteisInimigo i 
-            tProjetil = map tipoProjetil (projeteisInimigo i)  
+            tProjetil = map tipoProjetil (projetil)  
 
 
 

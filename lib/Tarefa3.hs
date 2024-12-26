@@ -14,8 +14,6 @@ import Tarefa2
 
 import Data.List
 
---TODO: 3.3.2.3
---TODO: fatorVelocidadeInimigoResina e taxaVelocidadeInimigoFogo
 --TODO: atualizaJogo
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
@@ -142,7 +140,7 @@ atualizaVelocidadeInimigo i =
 
 inimigoAtingeBase :: Inimigo -> Base -> Portal -> (Portal, Base)
 inimigoAtingeBase i b
-    | posicaoInimigo i == (atualizaPortal, atualizaBase)
+    | posicaoInimigo i == posicaoBase b = (atualizaPortal, atualizaBase)
     | otherwise = b
         where
             atualizaPortal :: Portal -> Inimigo -> Portal

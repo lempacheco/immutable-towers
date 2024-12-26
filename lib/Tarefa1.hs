@@ -216,12 +216,14 @@ existePeloMenosUmCaminho mapa p b =
 {-| A função 'validaPosicoesTorres' verifica se, numa lista de torres, todas estão posicionadas sobre terra.
 -}
 validaPosicoesTorres :: [Torre] -> Mapa -> Bool
-validaPosicoesTorres [] _ = True
-validaPosicoesTorres (t:ts) mapa = if terrenoTorre t mapa == Just Relva then validaPosicoesTorres ts mapa else False
-  where
-    terrenoTorre torre m = let cse = (floor (fst (posicaoTorre torre)), floor (snd (posicaoTorre torre)))
-                      in Just $ (m !! fst cse) !! snd cse
-
+validaPosicoesTorres ts m =
+  let pts = map posicaoTorre ts
+  in aux pts m
+    where
+      aux [] _ = True
+      aux (pt:pts) m
+        | not $ eTerra pt m = False
+        | otherwise = aux pts m
 
 {-| A função 'alcanceTorresPositivo' verifica se, numa lista de torres, o alcance de todas é um valor positivo.
 -}
@@ -243,32 +245,31 @@ cicloTorresNaoNegativo [] = True
 cicloTorresNaoNegativo (t:ts) = cicloTorre t >= 0 && cicloTorresNaoNegativo ts
 
 
-{-| A função 'sobrepostoTorres' verifica se, numa lista de torres, nenhuma está sobreposta a outra.
+{-| A função 'naoSobrepostoTorres' verifica se, numa lista de torres, nenhuma está sobreposta a outra. Devolve False caso haja sobreposição.
 -}
-sobrepostoTorres :: [Torre] -> Bool
-sobrepostoTorres [] = False
-sobrepostoTorres (t:ts) = (foldr (||)False $ map (\x -> posicaoTorre t == posicaoTorre x) ts) || sobrepostoTorres ts
-
+naoSobrepostoTorres :: [Torre] -> Bool
+naoSobrepostoTorres [] = True
+naoSobrepostoTorres (t:ts) =
+  let pts = map posicaoTorre ts
+  in if elem (posicaoTorre t) pts 
+      then False 
+      else naoSobrepostoTorres ts
 
 {-| A função 'validaPosicaoBase' verifica se uma base tem uma posição válida.
 -}
 validaPosicaoBase :: Base -> Mapa -> Bool
-validaPosicaoBase b m = terrenoBase b m == Just Terra
-  where 
-    terrenoBase base mapa =
-      let cse = (floor (fst (posicaoBase base)), floor (snd (posicaoBase base)))
-      in Just $ (mapa !! fst cse) !! snd cse
+validaPosicaoBase b m = eTerra (posicaoBase b) m
 
-{-| A função 'creditoNaoNegativoBase' verifica se uma base tem não tem crédito negativo.
+{-| A função 'creditoNaoNegativoBase' verifica se uma base não tem crédito negativo.
 -}
 creditoNaoNegativoBase :: Base -> Bool
 creditoNaoNegativoBase b = creditosBase b >= 0
 
-{-| A função 'sobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal.
+{-| A função 'sobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve False se houver sobreposição.
 -}
 sobrepostoBaseTorrePortal :: Base -> [Torre] -> [Portal] -> Bool
-sobrepostoBaseTorrePortal b ts ps = sobrepostoBasePortal b ps || sobrepostoBaseTorres b ts
+sobrepostoBaseTorrePortal b ts ps = sobrepostoBasePortal b ps && sobrepostoBaseTorres b ts
   where
     sobrepostoBaseTorres :: Base -> [Torre] -> Bool
-    sobrepostoBaseTorres b ts = elem (posicaoBase b) pts
+    sobrepostoBaseTorres b ts = not $ elem (posicaoBase b) pts
       where pts = map posicaoTorre ts

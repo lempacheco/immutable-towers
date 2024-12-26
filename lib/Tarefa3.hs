@@ -158,3 +158,26 @@ inimigoAtingeBase i b
 
 -}
 
+{-}
+-- devolve True, a onda esta ativa, logo pode lançar inimigos
+ondaAtiva :: Onda -> Bool 
+ondaAtiva o = entradaOnda o <= 0 
+
+
+--
+lancaInimigos :: Portal -> [Inimigo] -> (Portal, [Inimigo]) 
+lancaInimigos p is = if ondaAtiva o && tempoOnda o <= 0 then ativaInimigo p is
+                     else if ondaAtiva && tempoOnda o > 0 then (p {ondasPortal = (o {tempoOnda  } :os)} , is) 
+    where (o:os) = ondasPortal p 
+
+
+
+tempoDaOnda :: Portal -> Portal  
+tempoDaOnda p = case ondasPortal p of 
+    [] -> p 
+    (o:os) -> case tempoOnda o of 
+        (> 0) ->
+
+            -} 
+
+            

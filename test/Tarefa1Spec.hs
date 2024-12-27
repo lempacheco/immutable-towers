@@ -22,8 +22,10 @@ testesFaux =
        "eRelva 2" ~: False ~=? eRelva (0.5,0.5) mapa1,
 
        "eAgua 1" ~: True ~=? eAgua (3.5,0.5) mapa1,
-       "eAgua 2" ~: False ~=? eAgua (0.5,0.5) mapa1 
+       "eAgua 2" ~: False ~=? eAgua (0.5,0.5) mapa1, 
 
+       "validaTorre - torre válida" ~: True ~=? validaTorre jogo1,
+       "validaTorre - torre não válida" ~: False ~=? validaTorre jogo2
      ]
 
 testesPortais :: Test 
@@ -37,14 +39,14 @@ testesPortais =
        "Nem todos estão posicionados sobre a terra" ~: False ~=? validaPosicaoPortal [portalA, portalB, portalC] mapa1,
        "A lista de portais é vazia (sempre True)" ~: True ~=? validaPosicaoPortal [] mapa1,
 
-       "A base não esta sobreposta sobre nenhum portal" ~: True ~=? sobrepostoBasePortal baseA [portalA, portalB, portalC], 
-       "A base está sobreposta com algum portal" ~: False ~=? sobrepostoBasePortal baseB [portalA, portalB, portalC],
-       "Não existe portais, lista vazia (sempre True)" ~: True ~=? sobrepostoBasePortal baseB [],
+       "A base não esta sobreposta sobre nenhum portal" ~: True ~=? naoSobrepostoBasePortal baseA [portalA, portalB, portalC], 
+       "A base está sobreposta com algum portal" ~: False ~=? naoSobrepostoBasePortal baseB [portalA, portalB, portalC],
+       "Não existe portais, lista vazia (sempre True)" ~: True ~=? naoSobrepostoBasePortal baseB [],
 
-       "Não estão sobrepostos portais com torres" ~: True ~=? sobrepostoTorrePortal [torre1, torre2] [portalA,portalC],
-       "Estão sobrepostos portais com torres" ~: False ~=? sobrepostoTorrePortal [torre1, torre2, torreA] [portalA, portalC],
-       "Não existe torres, lista vazia (sempre True)" ~: True ~=? sobrepostoTorrePortal [] [portalA, portalC], 
-       "Não existe portais, lista vazia (sempre True)" ~: True ~=? sobrepostoTorrePortal [torre1, torre2, torreA] []
+       "Não estão sobrepostos portais com torres" ~: True ~=? naoSobrepostoTorrePortal [torre1, torre2] [portalA,portalC],
+       "Estão sobrepostos portais com torres" ~: False ~=? naoSobrepostoTorrePortal [torre1, torre2, torreA] [portalA, portalC],
+       "Não existe torres, lista vazia (sempre True)" ~: True ~=? naoSobrepostoTorrePortal [] [portalA, portalC], 
+       "Não existe portais, lista vazia (sempre True)" ~: True ~=? naoSobrepostoTorrePortal [torre1, torre2, torreA] []
      ]
 
 testesInimigos :: Test 
@@ -126,9 +128,9 @@ testesBase =
         "creditoNaoNegativoBase - teste com uma base válida" ~: True ~=? creditoNaoNegativoBase base1,
         "creditoNaoNegativoBase - teste com uma base não válida" ~: False ~=? creditoNaoNegativoBase base3,
 
-        "sobrepostoBaseTorrePortal - teste com uma base válida" ~: True ~=? sobrepostoBaseTorrePortal base1 [torre1] [portal1],
-        "sobrepostoBaseTorrePortal - teste com uma base não válida (sobreposta a uma torre)" ~: False ~=? sobrepostoBaseTorrePortal base4 [torre1] [portal1],
-        "sobrepostoBaseTorrePortal - teste com uma base não válida (sobreposta a um portal)" ~: False ~=? sobrepostoBaseTorrePortal base5 [torre1] [portal1]
+        "naoSobrepostoBaseTorrePortal - teste com uma base válida" ~: True ~=? naoSobrepostoBaseTorrePortal base1 [torre1] [portal1],
+        "naoSobrepostoBaseTorrePortal - teste com uma base não válida (sobreposta a uma torre)" ~: False ~=? naoSobrepostoBaseTorrePortal base4 [torre1] [portal1],
+        "naoSobrepostoBaseTorrePortal - teste com uma base não válida (sobreposta a um portal)" ~: False ~=? naoSobrepostoBaseTorrePortal base5 [torre1] [portal1]
       ]
 
 portal1 = Portal {
@@ -504,4 +506,28 @@ base5 = Base
     vidaBase = 3,
     posicaoBase = (0.5,0.5),
     creditosBase = 100
+  }
+
+--jogo válido
+jogo1 :: Jogo
+jogo1 = Jogo
+  {
+    baseJogo = base1,
+    portaisJogo = [portal1],
+    torresJogo = [torre1],
+    mapaJogo = mapa1,
+    inimigosJogo = [inimigoA],
+    lojaJogo = [(100,torre1)]
+  }
+
+--jogo não válido - torre não válida
+jogo2 :: Jogo
+jogo2 = Jogo
+  {
+    baseJogo = base1,
+    portaisJogo = [portal1],
+    torresJogo = [torre3],
+    mapaJogo = mapa1,
+    inimigosJogo = [inimigoA],
+    lojaJogo = [(100,torre1)]
   }

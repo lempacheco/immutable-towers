@@ -16,7 +16,7 @@ import LI12425
 
 -- | A função 'validaJogo' verifica se um jogo é válido
 validaJogo :: Jogo -> Bool
-validaJogo j = validaTorre j && validaBase j
+validaJogo j = validaTorre j && validaBase j && validaPortal j && validaInimigo j 
 
 validaTorre :: Jogo -> Bool 
 validaTorre j =
@@ -38,10 +38,6 @@ validaBase j =
       && creditoNaoNegativoBase b
       && naoSobrepostoBaseTorrePortal b ts ps
 
-{-| A função 'eTerra' verifica se uma determinada posição é terra. 
-
--}
-
 validaPortal :: Jogo -> Bool 
 validaPortal jogo = (peloMenosUmPortal portais) && (validaPosicaoPortal portais mapa) &&
                     (existeCaminho mapa portais base) && (sobrepostoBasePortal base portais) && 
@@ -60,7 +56,9 @@ validaInimigo jogo = (inimigosInicio inimigos portais) && (inimigosTerra inimigo
         torres@(t:ts) = torresJogo jogo
         mapa = mapaJogo jogo
 
+{-| A função 'eTerra' verifica se uma determinada posição é terra. 
 
+-}
 
 eTerra :: Posicao -> Mapa -> Bool
 eTerra (x,y) mapa = case procuraTerreno (x,y) mapa of 

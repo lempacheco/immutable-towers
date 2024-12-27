@@ -14,10 +14,8 @@ import Tarefa2
 
 import Data.List
 
---TODO: atualizaJogo
-
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = undefined
+atualizaJogo t j = atualizaInimigos t $ atualizaTorresEInimigos $ atualizaPortaisEInimigos $ atualizaBase j
 
 atualizaTorresEInimigos :: Jogo -> Jogo 
 atualizaTorresEInimigos j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}

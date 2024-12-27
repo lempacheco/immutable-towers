@@ -15,32 +15,34 @@ import Tarefa2
 import Data.List
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaInimigos t $ atualizaTorresEInimigos $ atualizaPortaisEInimigos $ atualizaBase j
+atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
-atualizaTorresEInimigos :: Jogo -> Jogo 
-atualizaTorresEInimigos j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
+atualizaTorres :: Jogo -> Jogo 
+atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
     where inimigos@(i:is) = inimigosJogo j 
           torres@(t:ts) = torresJogo j 
-          (inimigosAtualizados, torresAtualizadas) = disparaTodasTorres torres inimigos 
+          (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos 
 
 atualizaPortaisEInimigos :: Jogo -> Jogo 
 atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJogo = portaisAtualizado}
     where inimigos@(i:is) = inimigosJogo j 
           torres@(t:ts) = torresJogo j 
           portais@(p:ps) = portaisJogo j 
-          (inimigosAtualizados, torresAtualizadas) = disparaTodasTorres torres inimigos
+          (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos
           (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
 
 lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
+lancaTodosPortais [] is = ([], is)
 lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is 
-                                  (portaisAtualizados,inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos 
+                                  (restoPortaisAtualizados, inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos 
                               in (portalAtualizado:portaisAtualizados, inimigosNovosAtualizados)
 
-disparaTodasTorres :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
-disparaTodasTorres [] is = (is, [])
-disparaTodasTorres (t:ts) is = let (inimigosPosDano,torreAtualizada) = disparaProjeteis t is  
-                                   (inimigosAtualizados, restoTorresAtualizadas) = disparaTodasTorres ts inimigosPosDano 
-                               in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas ) 
+-- Processa todas as torres, disparando projéteis contra os inimigos
+disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
+disparaTodosProjeteis [] is = (is, [])
+disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = disparaProjeteis t is  
+                                      (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo 
+                                  in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas ) 
 
 {-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
 -}
@@ -87,7 +89,7 @@ disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
 disparaProjeteis torre [] = ([], torre) 
 disparaProjeteis torre is 
     | tempoTorre torre > 0 = (is, torre {tempoTorre = tempoTorre torre - 1}) 
-    | null (inimigosNoAlcance torre is) = ([],torre)
+    | null (inimigosNoAlcance torre is) = (is,torre)  -- se não tiver inimigos no alcance vai devolver na mesma inimigos, mas a torre não é alterada. 
     | otherwise = (inimigosSobreviventesAlcance torre is, novaTorre)
        where novaTorre = torre {tempoTorre = cicloTorre torre} 
 

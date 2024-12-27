@@ -53,7 +53,7 @@ data Base = Base
     -- | Balanço de créditos do jogador.
     creditosBase :: Creditos
   }
-  deriving (Show)
+  deriving (Eq,Show)
 
 -- | Distância entre duas posições.
 type Distancia = Float

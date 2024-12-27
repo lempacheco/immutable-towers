@@ -8,7 +8,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, teste2, teste3, teste4, teste5, teste6 ]
+      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, teste10]
 
 -- detetarInimigos 
 teste1 :: Test
@@ -105,6 +105,38 @@ teste6 =
                                             lancaInimigo portalA3 {ondasPortal = [ondaB3 {inimigosOnda = [],tempoOnda = -1}, ondaA3]} [inimigoA3]
        -- Não tem inimigos, a onda é retirada. 
        
+teste7 :: Test
+teste7 =
+  TestLabel "Testes para a função atualizaInimigoGelo" $
+    test
+      [
+        "Teste com um inimigo com velocidade nula" ~: inimigo1 ~=? atualizaInimigoGelo inimigo1,
+        "Teste com um inimigo com velocidade não nula" ~: inimigo2 {velocidadeInimigo = 0} ~=? atualizaInimigoGelo inimigo2
+      ]
+
+teste8 :: Test
+teste8 =
+  TestLabel "Testes para a função atualizaInimigoResina" $
+    test
+      [
+        "Teste com um inimigo com velocidade nula" ~: inimigo1 ~=? atualizaInimigoResina inimigo1,
+        "Teste com um inimigo com velocidade não nula" ~: inimigo2 {velocidadeInimigo = 9.0} ~=? atualizaInimigoResina inimigo2
+      ]
+
+teste9 :: Test
+teste9 =
+  TestLabel "Teste para a função atualizaInimigoFogo" $
+    test
+      [
+        inimigo1 {vidaInimigo = 5.0} ~=? atualizaInimigoFogo inimigo1
+      ]
+
+teste10 :: Test
+teste10 = 
+  TestLabel "Teste para a função inimigosSemVida" $
+    test
+      [
+        "Teste só com inimigos com vida" ~: (portal1, base1 {creditosBase = 25}) ~=? inimigosSemVida portal1 base1
       ]
 
 {-
@@ -190,9 +222,125 @@ inimigoB3 = Inimigo
   posicaoInimigo = (1.5, 0.5),
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
+--projetil de tipo Fogo
+projetil1 :: Projetil
+projetil1 = Projetil
+  { tipoProjetil = Fogo,
+    duracaoProjetil = Finita 5.0 
+  }
+
+--projetil de tipo Gelo
+projetil2 :: Projetil
+projetil2 = Projetil
+  { tipoProjetil = Gelo,
+    duracaoProjetil = Finita 2.0
+  }
+
+--projetil de tipo Resina
+projetil3 :: Projetil 
+projetil3 = Projetil 
+ {tipoProjetil = Resina, 
+  duracaoProjetil = Infinita
+ }
+
+--inimigo com velocidade nula
+inimigo1 :: Inimigo 
+inimigo1 = Inimigo 
+ {
+  posicaoInimigo = (0.5,0.5),
+  direcaoInimigo = Norte,
+  vidaInimigo = 10.0,
+  velocidadeInimigo = 0.0,
+  ataqueInimigo = 5.0, 
+  butimInimigo = 5, 
+  projeteisInimigo = [] 
+ }
+
+--inimigo com velocidade não nula
+inimigo2 :: Inimigo 
+inimigo2 = Inimigo 
+ {
+  posicaoInimigo = (0.5,0.5),
+  direcaoInimigo = Norte,
+  vidaInimigo = 10.0,
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [] 
  }
 
+--inimigo com vida nula e butim 5
+inimigo3 :: Inimigo 
+inimigo3 = Inimigo 
+ {
+  posicaoInimigo = (0.5,0.5),
+  direcaoInimigo = Norte,
+  vidaInimigo = 0.0,
+  velocidadeInimigo = 10.0,
+  ataqueInimigo = 5.0, 
+  butimInimigo = 5, 
+  projeteisInimigo = [] 
+ }
+
+--inimigo com vida nula e butim 10
+inimigo4 :: Inimigo 
+inimigo4 = Inimigo 
+ {
+  posicaoInimigo = (0.5,0.5),
+  direcaoInimigo = Norte,
+  vidaInimigo = 0.0,
+  velocidadeInimigo = 10.0,
+  ataqueInimigo = 5.0, 
+  butimInimigo = 10, 
+  projeteisInimigo = [] 
+ }
+
+--portal apenas com inimigos com vida
+portal1 :: Portal 
+portal1 = Portal 
+  { 
+    posicaoPortal = (0.5, 0.5),
+    ondasPortal = [onda1] 
+  }
+
+onda1 :: Onda
+onda1 = Onda
+  {
+    inimigosOnda = [inimigo1, inimigo2],
+    cicloOnda = 10,
+    tempoOnda = 5,
+    entradaOnda = 9
+  }
+
+--portal apenas com inimigos sem vida
+portal2 :: Portal 
+portal2 = Portal 
+  { 
+    posicaoPortal = (0.5, 0.5),
+    ondasPortal = [onda2] 
+  }
+
+onda2 :: Onda
+onda2 = Onda
+  {
+    inimigosOnda = [inimigo3, inimigo4],
+    cicloOnda = 10,
+    tempoOnda = 5,
+    entradaOnda = 9
+  }
+
+--portal com inimigos com e sem vida
+portal3 :: Portal 
+portal3 = Portal 
+  { 
+    posicaoPortal = (0.5, 0.5),
+    ondasPortal = [onda1, onda2] 
+  }
+
+base1 :: Base 
+base1 = Base 
+  { 
+    vidaBase = 5,
+    posicaoBase = (5.5, 4.5),
+    creditosBase = 10
+  }

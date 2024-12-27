@@ -40,12 +40,21 @@ detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
     -} 
 
 disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
+<<<<<<< HEAD
 disparaProjeteis torre [] = ([], torre) 
 disparaProjeteis torre is 
     | tempoTorre torre > 0 = (is, torre {tempoTorre = tempoTorre torre - 1}) 
     | null (inimigosNoAlcance torre is) = ([],torre)
     | otherwise = (inimigosSobreviventesAlcance torre is, novaTorre)
        where novaTorre = torre {tempoTorre = cicloTorre torre} 
+=======
+disparaProjeteis torre [] = ([], torre)
+disparaProjeteis torre is =
+    if length (inimigosSobreviventes torre is) == 0 then ([],torre)
+     else if tempoTorre torre > 0 && length (inimigosSobreviventes torre is) > 0 then (is, torre {tempoTorre = tempoTorre torre - 1})
+      else (inimigosSobreviventes torre is, novaTorre)
+       where novaTorre = torre {tempoTorre = cicloTorre torre} -- (quando chegar a zero dispara)
+>>>>>>> dev
 
 {-| A função 'inimigosOrdenados' ordena uma lista de inimigos com base na distância
   de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
@@ -74,7 +83,12 @@ inimigosSobreviventesAlcance torre inimigos =
         let inimigosAtualizados torre inimigos = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
             nI = tirosPossiveis torre inimigos
             inimigosEmOrdem = inimigosOrdenados torre inimigos
+<<<<<<< HEAD
         in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) 
+=======
+            inimigosSemDano = drop nI inimigosEmOrdem
+        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) ++ inimigosSemDano
+>>>>>>> dev
 
 {-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
 
@@ -96,22 +110,23 @@ distinimigo t i = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
   4
 -}
 
-tirosPossiveis :: Torre -> [Inimigo] -> Int 
+tirosPossiveis :: Torre -> [Inimigo] -> Int
 tirosPossiveis torre is = if rajadaTorre torre < numeroInimigos then rajadaTorre torre else numeroInimigos
   where numeroInimigos = length (inimigosOrdenados torre is)
 
 {-
 
+
 atualizaInimigoGelo :: Inimigo -> Inimigo
 atualizaInimigoGelo i = i {velocidadeInimigo = 0}
 
 atualizaInimigoResina :: Inimigo -> Inimigo
-atualizaInimigoResina i = 
+atualizaInimigoResina i =
     let f = fatorVelocidadeInimigoResina
     in i {velocidadeInimigo = velocidadeInimigo i * f}
 
 fatorVelocidadeInimigoResina :: Float
-fatorVelocidadeInimigoResina = 1
+fatorVelocidadeInimigoResina = 0.9 --atualizaInimigoResina reduz a velocidade por 10 porcento
 
 atualizaInimigoFogo :: Inimigo -> Inimigo
 atualizaInimigoFogo i =
@@ -119,18 +134,30 @@ atualizaInimigoFogo i =
     in i {vidaInimigo = vidaInimigo i - t}
 
 taxaVelocidadeInimigoFogo :: Float
-taxaVelocidadeInimigoFogo = 1
+taxaVelocidadeInimigoFogo = 5
 
-removeInimigosSemVida :: Portal -> Portal
-removeInimigosSemVida p =
+inimigosSemVida :: Portal -> Base -> (Portal, Base)
+inimigosSemVida p b =
     let inimigosAtivos = inimigosOnda $ head $ ondasPortal p
-    in p {ondasPortal = (head (ondasPortal p)){inimigosOnda = atualizaInimigosOndaPortal inimigosAtivos} : tail (ondasPortal p)}
+    in (p {ondasPortal = (head (ondasPortal p)){inimigosOnda = comVida inimigosAtivos} : tail (ondasPortal p)}, atualizaBase (semVida inimigosAtivos) b)
         where
-            atualizaInimigosOndaPortal :: [Inimigo] -> [Inimigo]
-            atualizaInimigosOndaPortal [] = []
-            atualizaInimigosOndaPortal (i:is) = if vidaInimigo i == 0
-                                                  then atualizaInimigosOndaPortal is
-                                                  else i : atualizaInimigosOndaPortal is
+            semVida :: [Inimigo] -> [Inimigo]
+            semVida [] = []
+            semVida (i:is) = if vidaInimigo i == 0
+                                            then i : semVida is
+                                            else semVida is
+            comVida :: [Inimigo] -> [Inimigo]
+            comVida [] = []
+            comVida (i:is) = if vidaInimigo i == 0
+                                            then comVida is
+                                            else i : comVida is
+            atualizaBase :: [Inimigo] -> Base -> Base
+            atualizaBase is base = b {creditosBase = creditosBase base + getButins is}
+            
+            getButins :: [Inimigo] -> Int
+            getButins is = 
+                let butins = map butimInimigo is
+                in sum butins
 
 atualizaDistanciaPercorridaInimigo :: Tempo -> Inimigo -> Inimigo
 atualizaDistanciaPercorridaInimigo t i =
@@ -142,35 +169,41 @@ atualizaDistanciaPercorridaInimigo t i =
         Sul -> i {posicaoInimigo = (x, y + (v*t))}
         Oeste -> i {posicaoInimigo = (x - (v*t), y)}
         Este -> i {posicaoInimigo = (x + (v*t), y)}
-
-atualizaVelocidadeInimigo :: Inimigo -> Float
-atualizaVelocidadeInimigo i =
-    let tpsProjsInimigo = getTiposProjsInimigo i
-    in if Gelo `elem` tpsProjsInimigo
-        then if Resina `elem` tpsProjsInimigo
-              then velocidadeInimigo (atualizaInimigoGelo (atualizaInimigoResina i))
-              else velocidadeInimigo (atualizaInimigoGelo i)
-        else if Resina `elem` tpsProjsInimigo
-            then velocidadeInimigo (atualizaInimigoResina i)
-            else velocidadeInimigo i
+    where
+        atualizaVelocidadeInimigo :: Inimigo -> Float
+        atualizaVelocidadeInimigo i =
+            let tpsProjsInimigo = getTiposProjsInimigo i
+            in if Gelo `elem` tpsProjsInimigo
+                then if Resina `elem` tpsProjsInimigo
+                    then velocidadeInimigo (atualizaInimigoGelo (atualizaInimigoResina i))
+                    else velocidadeInimigo (atualizaInimigoGelo i)
+                else if Resina `elem` tpsProjsInimigo
+                    then velocidadeInimigo (atualizaInimigoResina i)
+                    else velocidadeInimigo i
 
 inimigoAtingeBase :: Inimigo -> Base -> Portal -> (Portal, Base)
-inimigoAtingeBase i b
-    | posicaoInimigo i == posicaoBase b = (atualizaPortal, atualizaBase)
-    | otherwise = b
+inimigoAtingeBase i b p
+    | posicaoInimigo i == posicaoBase b = (atualizaPortal p i, atualizaBase b i)
+    | otherwise = (p,b)
         where
             atualizaPortal :: Portal -> Inimigo -> Portal
             atualizaPortal portal inimigo =
-                let inimigosAtivos = inimigosOnda $ head $ ondasPortal p
-                in p {ondasPortal = (atualizaInimigosAtivos i (head ondasPortal)) : tail ondasPortal}
-        
+                let inimigosAtivos = inimigosOnda $ head $ ondasPortal portal
+                    inimigosAtivosAtualizados = atualizaInimigosAtivos inimigo inimigosAtivos
+                    ondas = ondasPortal portal
+                    ondasAtualizadas = atualizaOnda (head ondas) inimigosAtivosAtualizados : tail ondas
+                in portal {ondasPortal = ondasAtualizadas}
+
             atualizaInimigosAtivos :: Inimigo -> [Inimigo] -> [Inimigo]
-            atualizaInimigosAtivos i iAtivos = delete i iAtivos
+            atualizaInimigosAtivos inimigo iAtivos = delete inimigo iAtivos
+
+            atualizaOnda :: Onda -> [Inimigo] -> Onda
+            atualizaOnda onda iAtivos = onda {inimigosOnda = iAtivos}
 
             atualizaBase :: Base -> Inimigo -> Base
-            atualizaBase b i = b {vidaBase = vidaBase b - danoInimigo i}
+            atualizaBase base inimigo = b {vidaBase = vidaBase base - ataqueInimigo inimigo}
 
--}
+
 
 
 {-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
@@ -198,4 +231,14 @@ lancaInimigo p is = case ondasPortal p of
             let o' = o {tempoOnda = cicloOnda o}
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
+
+
+
+tempoDaOnda :: Portal -> Portal  
+tempoDaOnda p = case ondasPortal p of 
+    [] -> p 
+    (o:os) -> case tempoOnda o of 
+        (> 0) ->
+
+            -}
 

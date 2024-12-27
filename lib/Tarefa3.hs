@@ -40,21 +40,18 @@ detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
     -} 
 
 disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
-<<<<<<< HEAD
 disparaProjeteis torre [] = ([], torre) 
 disparaProjeteis torre is 
     | tempoTorre torre > 0 = (is, torre {tempoTorre = tempoTorre torre - 1}) 
     | null (inimigosNoAlcance torre is) = ([],torre)
     | otherwise = (inimigosSobreviventesAlcance torre is, novaTorre)
        where novaTorre = torre {tempoTorre = cicloTorre torre} 
-=======
-disparaProjeteis torre [] = ([], torre)
-disparaProjeteis torre is =
-    if length (inimigosSobreviventes torre is) == 0 then ([],torre)
-     else if tempoTorre torre > 0 && length (inimigosSobreviventes torre is) > 0 then (is, torre {tempoTorre = tempoTorre torre - 1})
-      else (inimigosSobreviventes torre is, novaTorre)
-       where novaTorre = torre {tempoTorre = cicloTorre torre} -- (quando chegar a zero dispara)
->>>>>>> dev
+-- disparaProjeteis torre [] = ([], torre)
+-- disparaProjeteis torre is =
+--     if length (inimigosSobreviventes torre is) == 0 then ([],torre)
+--      else if tempoTorre torre > 0 && length (inimigosSobreviventes torre is) > 0 then (is, torre {tempoTorre = tempoTorre torre - 1})
+--       else (inimigosSobreviventes torre is, novaTorre)
+--        where novaTorre = torre {tempoTorre = cicloTorre torre} -- (quando chegar a zero dispara)
 
 {-| A função 'inimigosOrdenados' ordena uma lista de inimigos com base na distância
   de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
@@ -83,12 +80,7 @@ inimigosSobreviventesAlcance torre inimigos =
         let inimigosAtualizados torre inimigos = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
             nI = tirosPossiveis torre inimigos
             inimigosEmOrdem = inimigosOrdenados torre inimigos
-<<<<<<< HEAD
         in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) 
-=======
-            inimigosSemDano = drop nI inimigosEmOrdem
-        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) ++ inimigosSemDano
->>>>>>> dev
 
 {-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
 
@@ -114,7 +106,7 @@ tirosPossiveis :: Torre -> [Inimigo] -> Int
 tirosPossiveis torre is = if rajadaTorre torre < numeroInimigos then rajadaTorre torre else numeroInimigos
   where numeroInimigos = length (inimigosOrdenados torre is)
 
-{-
+
 
 
 atualizaInimigoGelo :: Inimigo -> Inimigo
@@ -231,14 +223,3 @@ lancaInimigo p is = case ondasPortal p of
             let o' = o {tempoOnda = cicloOnda o}
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
-
-
-
-tempoDaOnda :: Portal -> Portal  
-tempoDaOnda p = case ondasPortal p of 
-    [] -> p 
-    (o:os) -> case tempoOnda o of 
-        (> 0) ->
-
-            -}
-

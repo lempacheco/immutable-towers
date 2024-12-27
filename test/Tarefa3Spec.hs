@@ -104,6 +104,7 @@ teste6 =
         "Primeira onda não tem inimigos" ~: (portalA3 {ondasPortal = [ondaA3]}, [inimigoA3]) ~=? 
                                             lancaInimigo portalA3 {ondasPortal = [ondaB3 {inimigosOnda = [],tempoOnda = -1}, ondaA3]} [inimigoA3]
        -- Não tem inimigos, a onda é retirada. 
+      ]
        
 teste7 :: Test
 teste7 =
@@ -222,6 +223,11 @@ inimigoB3 = Inimigo
   posicaoInimigo = (1.5, 0.5),
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
+  ataqueInimigo = 5.0, 
+  velocidadeInimigo = 0.0,
+  butimInimigo = 5, 
+  projeteisInimigo = []
+ }
 --projetil de tipo Fogo
 projetil1 :: Projetil
 projetil1 = Projetil

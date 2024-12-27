@@ -8,7 +8,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8]
+      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, teste10]
 
 -- detetarInimigos 
 teste1 :: Test
@@ -90,8 +90,8 @@ teste5 =
                                                                           inimigoA3 {posicaoInimigo = (4.5,3.5), vidaInimigo = 10.0}, inimigoA3]
       ]
 
-teste6 :: Test
-teste6 =
+teste7 :: Test
+teste7 =
   TestLabel "Testes para a função atualizaInimigoGelo" $
     test
       [
@@ -99,8 +99,8 @@ teste6 =
         "Teste com um inimigo com velocidade não nula" ~: inimigo2 {velocidadeInimigo = 0} ~=? atualizaInimigoGelo inimigo2
       ]
 
-teste7 :: Test
-teste7 =
+teste8 :: Test
+teste8 =
   TestLabel "Testes para a função atualizaInimigoResina" $
     test
       [
@@ -108,16 +108,16 @@ teste7 =
         "Teste com um inimigo com velocidade não nula" ~: inimigo2 {velocidadeInimigo = 9.0} ~=? atualizaInimigoResina inimigo2
       ]
 
-teste8 :: Test
-teste8 =
+teste9 :: Test
+teste9 =
   TestLabel "Teste para a função atualizaInimigoFogo" $
     test
       [
         inimigo1 {vidaInimigo = 5.0} ~=? atualizaInimigoFogo inimigo1
       ]
 
-teste9 :: Test
-teste9 = 
+teste10 :: Test
+teste10 = 
   TestLabel "Teste para a função inimigosSemVida" $
     test
       [

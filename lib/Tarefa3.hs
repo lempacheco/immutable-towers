@@ -17,7 +17,7 @@ import Data.List
 --TODO: atualizaJogo
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo = undefined
+atualizaJogo t j = undefined
 
 atualizaTorresEInimigos :: Jogo -> Jogo 
 atualizaTorresEInimigos j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -44,9 +44,24 @@ disparaTodasTorres (t:ts) is = let (inimigosPosDano,torreAtualizada) = disparaPr
                                    (inimigosAtualizados, restoTorresAtualizadas) = disparaTodasTorres ts inimigosPosDano 
                                in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas ) 
 
-{-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada tore. 
+{-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
 -}
--- TODO : irrelevante?
+
+atualizaInimigos :: Tempo -> Jogo -> Jogo
+atualizaInimigos t j =
+    let is = inimigosJogo j
+        b = baseJogo j
+    in j {inimigosJogo = inimigoAtingeBaseIs b is
+                            $ atualizaDistanciaPercorridaInimigos t 
+                            $ inimigosSemVidaIs
+                            $ atualizaInimigoFogo is}
+
+atualizaBase :: Jogo -> Jogo
+atualizaBase j =
+    let b = baseJogo j
+        is = inimigosJogo j
+    in j {baseJogo = inimigosSemVidaB is $ inimigoAtingeBaseB is b}
+
 detetarInimigo :: Torre -> [Inimigo] -> [Inimigo]
 detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
 
@@ -63,6 +78,12 @@ detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
        2.2. Há inimigos no alcance: a função realiza disparos, a lista de inimigos é atualizada, i.e. aplica-se 
             os danos e os efeitos dos projéteis nos inimigos. E, após disparar o tempo de recarga da torre é reiniciado para o valor do ciclo ('cicloTorre').
     -} 
+
+-- disparaProjeteisTds :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
+-- disparaProjeteisTds (t:ts) is = 
+--     let (nIs, t) = disparaProjeteis t is
+--     in disparaProjeteisTds nIs 
+--(fst $ disparaProjeteis t is, snd $ disparaProjeteis t is : snd $ disparaProjeteisTds ts is)
 
 disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
 disparaProjeteis torre [] = ([], torre) 
@@ -149,47 +170,58 @@ atualizaInimigoResina i =
 fatorVelocidadeInimigoResina :: Float
 fatorVelocidadeInimigoResina = 0.9 --atualizaInimigoResina reduz a velocidade por 10 porcento
 
-atualizaInimigoFogo :: Inimigo -> Inimigo
-atualizaInimigoFogo i =
-    let t = taxaVelocidadeInimigoFogo
-    in i {vidaInimigo = vidaInimigo i - t}
+atualizaInimigoFogo :: [Inimigo] -> [Inimigo]
+atualizaInimigoFogo [] = []
+atualizaInimigoFogo (i:is)
+    | Fogo `elem` getTiposProjsInimigo i = i {vidaInimigo = vidaInimigo i - taxaVelocidadeInimigoFogo} : atualizaInimigoFogo is
+    | otherwise = i : atualizaInimigoFogo is
 
 taxaVelocidadeInimigoFogo :: Float
 taxaVelocidadeInimigoFogo = 5
 
-inimigosSemVida :: Portal -> Base -> (Portal, Base)
-inimigosSemVida p b =
-    let inimigosAtivos = inimigosOnda $ head $ ondasPortal p
-    in (p {ondasPortal = (head (ondasPortal p)){inimigosOnda = comVida inimigosAtivos} : tail (ondasPortal p)}, atualizaBase (semVida inimigosAtivos) b)
-        where
-            semVida :: [Inimigo] -> [Inimigo]
-            semVida [] = []
-            semVida (i:is) = if vidaInimigo i == 0
-                                            then i : semVida is
-                                            else semVida is
-            comVida :: [Inimigo] -> [Inimigo]
-            comVida [] = []
-            comVida (i:is) = if vidaInimigo i == 0
-                                            then comVida is
-                                            else i : comVida is
-            atualizaBase :: [Inimigo] -> Base -> Base
-            atualizaBase is base = b {creditosBase = creditosBase base + getButins is}
+inimigosSemVidaIs :: [Inimigo] -> [Inimigo]
+inimigosSemVidaIs [] = []
+inimigosSemVidaIs (i:is)
+    | vidaInimigo i <= 0 = inimigosSemVidaIs is
+    | otherwise = i : inimigosSemVidaIs is
+    
+    --(p {ondasPortal = (head (ondasPortal p)){inimigosOnda = comVida inimigosAtivos} : tail (ondasPortal p)}, atualizaBase (semVida inimigosAtivos) b)
+--         where
+--             semVida :: [Inimigo] -> [Inimigo]
+--             semVida [] = []
+--             semVida (i:is) = if vidaInimigo i == 0
+--                                             then i : semVida is
+--                                             else semVida is
+--             comVida :: [Inimigo] -> [Inimigo]
+--             comVida [] = []
+--             comVida (i:is) = if vidaInimigo i == 0
+--                                             then comVida is
+--                                             else i : comVida is
+--             atualizaBase :: [Inimigo] -> Base -> Base
+--             atualizaBase is base = b {creditosBase = creditosBase base + getButins is}
             
-            getButins :: [Inimigo] -> Int
-            getButins is = 
-                let butins = map butimInimigo is
-                in sum butins
+--             getButins :: [Inimigo] -> Int
+--             getButins is = 
+--                 let butins = map butimInimigo is
+--                 in sum butins
 
-atualizaDistanciaPercorridaInimigo :: Tempo -> Inimigo -> Inimigo
-atualizaDistanciaPercorridaInimigo t i =
+inimigosSemVidaB :: [Inimigo] -> Base -> Base
+inimigosSemVidaB [] b = b
+inimigosSemVidaB (i:is) b
+    | vidaInimigo i <= 0 = inimigosSemVidaB is b{creditosBase =  creditosBase b + butimInimigo i}
+    | otherwise = inimigosSemVidaB is b
+
+atualizaDistanciaPercorridaInimigos :: Tempo -> [Inimigo] -> [Inimigo]
+atualizaDistanciaPercorridaInimigos _ [] = []
+atualizaDistanciaPercorridaInimigos t (i:is)  =
     let v = atualizaVelocidadeInimigo i
         (x,y) = posicaoInimigo i
         d = direcaoInimigo i
     in case d of
-        Norte -> i {posicaoInimigo = (x, y - (v*t))}
-        Sul -> i {posicaoInimigo = (x, y + (v*t))}
-        Oeste -> i {posicaoInimigo = (x - (v*t), y)}
-        Este -> i {posicaoInimigo = (x + (v*t), y)}
+        Norte -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Sul -> i {posicaoInimigo = (x, y + (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Oeste -> i {posicaoInimigo = (x - (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
+        Este -> i {posicaoInimigo = (x + (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
     where
         atualizaVelocidadeInimigo :: Inimigo -> Float
         atualizaVelocidadeInimigo inimigo =
@@ -202,27 +234,23 @@ atualizaDistanciaPercorridaInimigo t i =
                     then velocidadeInimigo (atualizaInimigoResina inimigo)
                     else velocidadeInimigo inimigo
 
-inimigoAtingeBase :: Inimigo -> Base -> Portal -> (Portal, Base)
-inimigoAtingeBase i b p
-    | posicaoInimigo i == posicaoBase b = (atualizaPortal p i, atualizaBase b i)
-    | otherwise = (p,b)
-        where
-            atualizaPortal :: Portal -> Inimigo -> Portal
-            atualizaPortal portal inimigo =
-                let inimigosAtivos = inimigosOnda $ head $ ondasPortal portal
-                    inimigosAtivosAtualizados = atualizaInimigosAtivos inimigo inimigosAtivos
-                    ondas = ondasPortal portal
-                    ondasAtualizadas = atualizaOnda (head ondas) inimigosAtivosAtualizados : tail ondas
-                in portal {ondasPortal = ondasAtualizadas}
+-- inimigoAtingeBase :: Inimigo -> Base -> Portal -> (Portal, Base)
+-- inimigoAtingeBase i b p
+--     | posicaoInimigo i == posicaoBase b = (atualizaPortal p i, atualizaBase b i)
+--     | otherwise = (p,b)
 
-            atualizaInimigosAtivos :: Inimigo -> [Inimigo] -> [Inimigo]
-            atualizaInimigosAtivos inimigo iAtivos = delete inimigo iAtivos
+inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo] -> [Inimigo]
+inimigoAtingeBaseIs _ [] inimigosAtivos = inimigosAtivos
+inimigoAtingeBaseIs base (i:is) inimigosAtivos = if posicaoInimigo i == posicaoBase base
+                                                    then inimigoAtingeBaseIs base is (delete i inimigosAtivos)
+                                                    else inimigoAtingeBaseIs base is inimigosAtivos
 
-            atualizaOnda :: Onda -> [Inimigo] -> Onda
-            atualizaOnda onda iAtivos = onda {inimigosOnda = iAtivos}
-
-            atualizaBase :: Base -> Inimigo -> Base
-            atualizaBase base inimigo = b {vidaBase = vidaBase base - ataqueInimigo inimigo}
+inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
+inimigoAtingeBaseB [] base = base
+inimigoAtingeBaseB (i:is) base = 
+    if posicaoInimigo i == posicaoBase base
+        then inimigoAtingeBaseB is (base {vidaBase = vidaBase base - ataqueInimigo i})
+        else inimigoAtingeBaseB is base
 
 
 

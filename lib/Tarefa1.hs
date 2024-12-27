@@ -16,7 +16,27 @@ import LI12425
 
 -- | A função 'validaJogo' verifica se um jogo é válido
 validaJogo :: Jogo -> Bool
-validaJogo = undefined
+validaJogo j = validaTorre j && validaBase j
+
+validaTorre :: Jogo -> Bool 
+validaTorre j =
+  let ts = torresJogo j
+      m = mapaJogo j
+  in validaPosicoesTorres ts m 
+      && alcanceTorresPositivo ts 
+      && rajadaTorresPositivo ts
+      && cicloTorresNaoNegativo ts
+      && naoSobrepostoTorres ts
+      
+validaBase :: Jogo -> Bool
+validaBase j =
+  let b = baseJogo j
+      m = mapaJogo j
+      ts = torresJogo j
+      ps = portaisJogo j
+  in validaPosicaoBase b m
+      && creditoNaoNegativoBase b
+      && naoSobrepostoBaseTorrePortal b ts ps
 
 {-| A função 'eTerra' verifica se uma determinada posição é terra. 
 
@@ -78,11 +98,7 @@ procuraTerreno (x, y) mapa =
     x1 = floor y -- Índice da linha (Y)
     y1 = floor x -- Índice da coluna (X)
 
--- TODO - o que esta função esta fazendo aqui?
-validaTorre :: Torre -> Bool 
-validaTorre t = 
-    alcanceTorre t > 0 
-      && rajadaTorre t > 0 
+
 
 {-| A função 'peloMenosUmPortal' verifica se existe pelo menos um portal 
 
@@ -285,10 +301,10 @@ validaPosicaoBase b m = eTerra (posicaoBase b) m
 creditoNaoNegativoBase :: Base -> Bool
 creditoNaoNegativoBase b = creditosBase b >= 0
 
-{-| A função 'sobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve False se houver sobreposição.
+{-| A função 'naoSobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve False se houver sobreposição.
 -}
-sobrepostoBaseTorrePortal :: Base -> [Torre] -> [Portal] -> Bool
-sobrepostoBaseTorrePortal b ts ps = sobrepostoBasePortal b ps && sobrepostoBaseTorres b ts
+naoSobrepostoBaseTorrePortal :: Base -> [Torre] -> [Portal] -> Bool
+naoSobrepostoBaseTorrePortal b ts ps = sobrepostoBasePortal b ps && sobrepostoBaseTorres b ts
   where
     sobrepostoBaseTorres :: Base -> [Torre] -> Bool
     sobrepostoBaseTorres b ts = not $ elem (posicaoBase b) pts

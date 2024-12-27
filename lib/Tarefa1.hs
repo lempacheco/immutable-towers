@@ -14,7 +14,7 @@ Módulo para a realização da Tarefa 1 de LI1 em 2024/25.
 module Tarefa1 where
 import LI12425
 
--- | A função 'validaJogo' verifica se um jogo é válido
+-- | A função 'validaJogo' verifica se um jogo é válido.
 validaJogo :: Jogo -> Bool
 validaJogo j = validaTorre j && validaBase j && validaPortal j && validaInimigo j 
 
@@ -40,8 +40,8 @@ validaBase j =
 
 validaPortal :: Jogo -> Bool 
 validaPortal jogo = (peloMenosUmPortal portais) && (validaPosicaoPortal portais mapa) &&
-                    (existeCaminho mapa portais base) && (sobrepostoBasePortal base portais) && 
-                    (sobrepostoTorrePortal torres portais)
+                    (existeCaminho mapa portais base) && (naoSobrepostoBasePortal base portais) && 
+                    (naoSobrepostoTorrePortal torres portais)
   where portais@(p:ps) = portaisJogo jogo
         existeCaminho mapa portais base = (existePeloMenosUmCaminho mapa p base) || (existeCaminho mapa portais base)
         torres@(t:ts) = torresJogo jogo
@@ -114,26 +114,26 @@ validaPosicaoPortal [] _ = True
 validaPosicaoPortal (p:ps) mapa =
   eTerra (posicaoPortal p) mapa && validaPosicaoPortal ps mapa
 
-{-| A função 'sobrepostoBasePortal' verifica se a base está sobreposta à algum portal. 
+{-| A função 'naoSobrepostoBasePortal' verifica se a base está sobreposta à algum portal. 
  Como para um bom funcionamento do jogo, a base não pode está sobreposta à nenhum portal, a função devolve *True* quando 
  não houver nenhum portal na mesma posição da base.
 
 -}
 
-sobrepostoBasePortal :: Base -> [Portal] -> Bool 
-sobrepostoBasePortal _ [] = True 
-sobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps 
+naoSobrepostoBasePortal :: Base -> [Portal] -> Bool 
+naoSobrepostoBasePortal _ [] = True 
+naoSobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps 
   where pps = map posicaoPortal ps 
 
-{-| A função 'sobrepostoTorrePortal' verifica se existe alguma torre sobreposta com algum portal. 
+{-| A função 'naoSobrepostoTorrePortal' verifica se existe alguma torre sobreposta com algum portal. 
  Como para um bom funcionamento do jogo, não pode haver torres sobrepostas com portais, a função devolve *True* quando 
  não houver nenhuma torre na mesma posição de um portal.
 
 -}
 
-sobrepostoTorrePortal :: [Torre] -> [Portal] -> Bool
-sobrepostoTorrePortal [] _ = True 
-sobrepostoTorrePortal (t:ts) ps = not ((posicaoTorre t) `elem` pps) && sobrepostoTorrePortal ts ps
+naoSobrepostoTorrePortal :: [Torre] -> [Portal] -> Bool
+naoSobrepostoTorrePortal [] _ = True 
+naoSobrepostoTorrePortal (t:ts) ps = not ((posicaoTorre t) `elem` pps) && naoSobrepostoTorrePortal ts ps
   where pps = map posicaoPortal ps 
 
 
@@ -302,7 +302,7 @@ creditoNaoNegativoBase b = creditosBase b >= 0
 {-| A função 'naoSobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve False se houver sobreposição.
 -}
 naoSobrepostoBaseTorrePortal :: Base -> [Torre] -> [Portal] -> Bool
-naoSobrepostoBaseTorrePortal b ts ps = sobrepostoBasePortal b ps && sobrepostoBaseTorres b ts
+naoSobrepostoBaseTorrePortal b ts ps = naoSobrepostoBasePortal b ps && sobrepostoBaseTorres b ts
   where
     sobrepostoBaseTorres :: Base -> [Torre] -> Bool
     sobrepostoBaseTorres b ts = not $ elem (posicaoBase b) pts

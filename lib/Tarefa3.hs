@@ -42,9 +42,6 @@ disparaTodasTorres (t:ts) is = let (inimigosPosDano,torreAtualizada) = disparaPr
                                    (inimigosAtualizados, restoTorresAtualizadas) = disparaTodasTorres ts inimigosPosDano 
                                in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas ) 
 
-{-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
--}
-
 atualizaInimigos :: Tempo -> Jogo -> Jogo
 atualizaInimigos t j =
     let is = inimigosJogo j
@@ -60,6 +57,8 @@ atualizaBase j =
         is = inimigosJogo j
     in j {baseJogo = inimigosSemVidaB is $ inimigoAtingeBaseB is b}
 
+{-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
+-}
 detetarInimigo :: Torre -> [Inimigo] -> [Inimigo]
 detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
 

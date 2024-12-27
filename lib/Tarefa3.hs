@@ -19,18 +19,33 @@ import Data.List
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo = undefined
 
+{-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada tore. 
+-}
+-- TODO : irrelevante?
 detetarInimigo :: Torre -> [Inimigo] -> [Inimigo]
 detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
 
-{-| -}
--- mesmo se não tiver inimigos o ciclo está funcionando?
+{-| A função 'disparaProjeteis' simula o disparo de projéteis de uma torre contra os inimigos ao seu alcance, 
+    respeitando o ciclo de recarga da torre. 
+    
+    == __ Comportamento: __
+    A cada chamada a função verifica se a torre está pronta para disparar, com base no parâmetro *tempoTorre*, 
+    o tempo restante. 
+
+    1. Se a torre não estiver pronta para disparar ('tempoTorre > 0') o tempo restante é decrementado, e os inimigos permanecem inalterados. 
+    2. Se a torre estiver pronta para disparar ('tempoTorre == 0'), verifica os inimigos dentro do alcance da torre: 
+       2.1. Não há inimigos: a função não realiza disparos. 
+       2.2. Há inimigos no alcance: a função realiza disparos, a lista de inimigos é atualizada, i.e. aplica-se 
+            os danos e os efeitos dos projéteis nos inimigos. E, após disparar o tempo de recarga da torre é reiniciado para o valor do ciclo ('cicloTorre').
+    -} 
+
 disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
-disparaProjeteis torre [] = ([], torre)
-disparaProjeteis torre is = 
-    if length (inimigosSobreviventes torre is) == 0 then ([],torre) 
-     else if tempoTorre torre > 0 && length (inimigosSobreviventes torre is) > 0 then (is, torre {tempoTorre = tempoTorre torre - 1})
-      else (inimigosSobreviventes torre is, novaTorre)
-       where novaTorre = torre {tempoTorre = cicloTorre torre} -- (quando chegar a zero dispara)
+disparaProjeteis torre [] = ([], torre) 
+disparaProjeteis torre is 
+    | tempoTorre torre > 0 = (is, torre {tempoTorre = tempoTorre torre - 1}) 
+    | null (inimigosNoAlcance torre is) = ([],torre)
+    | otherwise = (inimigosSobreviventesAlcance torre is, novaTorre)
+       where novaTorre = torre {tempoTorre = cicloTorre torre} 
 
 {-| A função 'inimigosOrdenados' ordena uma lista de inimigos com base na distância
   de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
@@ -44,21 +59,22 @@ disparaProjeteis torre is =
   [Inimigo {posicaoInimigo = (3.0, 3.0)}, Inimigo {posicaoInimigo = (1.0, 1.0)}]
   
 -}
+
 inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
 inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo torre inimigos)
 
+{-| A função 'inimigosSobreviventesAlcance' filtra os inimigos que estão no alcance de uma torre, e aplica 
+    os danos e os efeitos dos projéteis nestes inimigos, tendo em conta o número máximo de inimigos que 
+    podem ser atacados de uma só vez.
 
--- atualizar apenas o numero de tiros possiveis 
+-}
 
-{-| A função 'inimigosSobreviventes' -}
-
-inimigosSobreviventes :: Torre -> [Inimigo] -> [Inimigo]
-inimigosSobreviventes torre inimigos =
+inimigosSobreviventesAlcance :: Torre -> [Inimigo] -> [Inimigo]
+inimigosSobreviventesAlcance torre inimigos =
         let inimigosAtualizados torre inimigos = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
             nI = tirosPossiveis torre inimigos
             inimigosEmOrdem = inimigosOrdenados torre inimigos
-            inimigosSemDano = drop nI inimigosEmOrdem
-        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) ++ inimigosSemDano  
+        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) 
 
 {-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
 
@@ -84,8 +100,8 @@ tirosPossiveis :: Torre -> [Inimigo] -> Int
 tirosPossiveis torre is = if rajadaTorre torre < numeroInimigos then rajadaTorre torre else numeroInimigos
   where numeroInimigos = length (inimigosOrdenados torre is)
 
-
 {-
+
 atualizaInimigoGelo :: Inimigo -> Inimigo
 atualizaInimigoGelo i = i {velocidadeInimigo = 0}
 
@@ -156,26 +172,30 @@ inimigoAtingeBase i b
 
 -}
 
-{-}
--- devolve True, a onda esta ativa, logo pode lançar inimigos
+
+{-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
+    devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.
+-}
 ondaAtiva :: Onda -> Bool 
 ondaAtiva o = entradaOnda o <= 0 
 
+{-|A função 'lancaInimigo' 
+-}   
 
---
-lancaInimigos :: Portal -> [Inimigo] -> (Portal, [Inimigo]) 
-lancaInimigos p is = if ondaAtiva o && tempoOnda o <= 0 then ativaInimigo p is
-                     else if ondaAtiva && tempoOnda o > 0 then (p {ondasPortal = (o {tempoOnda  } :os)} , is) 
-    where (o:os) = ondasPortal p 
+lancaInimigo :: Portal -> [Inimigo] -> (Portal, [Inimigo])
+lancaInimigo p is = case ondasPortal p of 
+    [] -> (p, is)
+    (o:os)  
+        | not (ondaAtiva o) ->
+            let novoPortal = p {ondasPortal = o':os}
+                o' = (o {entradaOnda = (entradaOnda o) - 1})
+            in (novoPortal, is)
+        | tempoOnda o > 0 -> 
+            let o' = o {tempoOnda = (tempoOnda o) -1}
+                novoPortal = p {ondasPortal = o':os}
+            in (novoPortal, is)
+        | otherwise -> 
+            let o' = o {tempoOnda = cicloOnda o}
+                p' = p {ondasPortal = o':os}
+            in ativaInimigo p' is
 
-
-
-tempoDaOnda :: Portal -> Portal  
-tempoDaOnda p = case ondasPortal p of 
-    [] -> p 
-    (o:os) -> case tempoOnda o of 
-        (> 0) ->
-
-            -} 
-
-            

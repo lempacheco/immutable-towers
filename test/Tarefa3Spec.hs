@@ -8,7 +8,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, teste10]
+      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, teste10, teste11, teste12, teste13, teste14]
 
 -- detetarInimigos 
 teste1 :: Test
@@ -153,16 +153,60 @@ teste9 =
   TestLabel "Teste para a função atualizaInimigoFogo" $
     test
       [
-        inimigo1 {vidaInimigo = 5.0} ~=? atualizaInimigoFogo inimigo1
+        "Teste com um inimigo não afetado por Fogo" ~: [inimigo2] ~=? atualizaInimigoFogo [inimigo2],
+        "Teste com um inimigo afetado por Fogo" ~: [inimigo1 {vidaInimigo = 5.0}] ~=? atualizaInimigoFogo [inimigo1]
       ]
 
 teste10 :: Test
 teste10 = 
-  TestLabel "Teste para a função inimigosSemVida" $
+  TestLabel "Teste para a função inimigosSemVidaIs" $
     test
       [
-        "Teste só com inimigos com vida" ~: (portal1, base1 {creditosBase = 25}) ~=? inimigosSemVida portal1 base1
+        "Teste só com inimigos com vida" ~: [inimigo1,inimigo2] ~=? inimigosSemVidaIs [inimigo1,inimigo2],
+        "Teste só com inimigos sem vida" ~: [] ~=? inimigosSemVidaIs [inimigo3,inimigo4],
+        "Teste com inimigos com e sem vida" ~: [inimigo1] ~=? inimigosSemVidaIs [inimigo1,inimigo3]
       ]
+
+teste11 :: Test
+teste11 = 
+  TestLabel "Teste para a função inimigosSemVidaB" $
+    test
+      [
+        "Teste só com inimigos com vida" ~: base1 ~=? inimigosSemVidaB [inimigo1,inimigo2] base1,
+        "Teste só com inimigos sem vida" ~: base1 {creditosBase = 25} ~=? inimigosSemVidaB [inimigo3,inimigo4] base1,
+        "Teste com inimigos com e sem vida" ~: base1 {creditosBase = 15} ~=? inimigosSemVidaB [inimigo1,inimigo3] base1
+      ]
+
+teste12 :: Test
+teste12 = 
+  TestLabel "Teste para a função atualizaDistanciaPercorridaInimigos" $
+    test
+      [
+        "Teste com inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo1],
+        "Teste com inimigo com velocidade não nula" ~: [inimigo2 {posicaoInimigo = (10.5,0.5)}] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo2]
+      ]
+
+teste13 :: Test
+teste13 = 
+  TestLabel "Teste para a função inimigoAtingeBaseIs" $
+    test
+      [
+        "Teste só com inimigos com posições iguais à da base" ~: [] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo3] [inimigo1, inimigo3],
+        "Teste só com inimigos com posições diferentes da base" ~: [inimigo2, inimigo4] ~=? inimigoAtingeBaseIs base1 [inimigo2, inimigo4] [inimigo2, inimigo4],
+        "Teste com inimigos com posições iguais e diferentes da base" ~: [inimigo2] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo2] [inimigo1, inimigo2]
+      ]
+
+teste14 :: Test
+teste14 = 
+  TestLabel "Teste para a função inimigoAtingeBaseB" $
+    test
+      [
+        "Teste só com inimigos com posições iguais à da base" ~: base1 {vidaBase = 40.0} ~=? inimigoAtingeBaseB [inimigo1, inimigo3] base1,
+        "Teste só com inimigos com posições diferentes da base" ~: base1 ~=? inimigoAtingeBaseB [inimigo2, inimigo4] base1,
+        "Teste com inimigos com posições iguais e diferentes da base" ~: base1 {vidaBase = 45.0} ~=? inimigoAtingeBaseB [inimigo1, inimigo2] base1
+      ]
+
+
 
 {-
 mapa1 :: Mapa
@@ -273,25 +317,25 @@ projetil3 = Projetil
   duracaoProjetil = Infinita
  }
 
---inimigo com velocidade nula
+--inimigo com velocidade nula, afetado por todos os tipos de projetil e com posição igual à base1
 inimigo1 :: Inimigo 
 inimigo1 = Inimigo 
  {
-  posicaoInimigo = (0.5,0.5),
+  posicaoInimigo = (5.5,4.5),
   direcaoInimigo = Norte,
   vidaInimigo = 10.0,
   velocidadeInimigo = 0.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [projetil1, projetil2, projetil3] 
  }
 
---inimigo com velocidade não nula
+--inimigo com velocidade não nula, não afetado por nenhum projetil e com posição diferente da base1
 inimigo2 :: Inimigo 
 inimigo2 = Inimigo 
  {
   posicaoInimigo = (0.5,0.5),
-  direcaoInimigo = Norte,
+  direcaoInimigo = Este,
   vidaInimigo = 10.0,
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
@@ -299,12 +343,12 @@ inimigo2 = Inimigo
   projeteisInimigo = [] 
  }
 
---inimigo com vida nula e butim 5
+--inimigo com vida nula, butim 5 e com posição igual à base1
 inimigo3 :: Inimigo 
 inimigo3 = Inimigo 
  {
-  posicaoInimigo = (0.5,0.5),
-  direcaoInimigo = Norte,
+  posicaoInimigo = (5.5,4.5),
+  direcaoInimigo = Sul,
   vidaInimigo = 0.0,
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
@@ -312,7 +356,7 @@ inimigo3 = Inimigo
   projeteisInimigo = [] 
  }
 
---inimigo com vida nula e butim 10
+--inimigo com vida nula, butim 10 e com posição diferente da base1
 inimigo4 :: Inimigo 
 inimigo4 = Inimigo 
  {
@@ -325,52 +369,10 @@ inimigo4 = Inimigo
   projeteisInimigo = [] 
  }
 
---portal apenas com inimigos com vida
-portal1 :: Portal 
-portal1 = Portal 
-  { 
-    posicaoPortal = (0.5, 0.5),
-    ondasPortal = [onda1] 
-  }
-
-onda1 :: Onda
-onda1 = Onda
-  {
-    inimigosOnda = [inimigo1, inimigo2],
-    cicloOnda = 10,
-    tempoOnda = 5,
-    entradaOnda = 9
-  }
-
---portal apenas com inimigos sem vida
-portal2 :: Portal 
-portal2 = Portal 
-  { 
-    posicaoPortal = (0.5, 0.5),
-    ondasPortal = [onda2] 
-  }
-
-onda2 :: Onda
-onda2 = Onda
-  {
-    inimigosOnda = [inimigo3, inimigo4],
-    cicloOnda = 10,
-    tempoOnda = 5,
-    entradaOnda = 9
-  }
-
---portal com inimigos com e sem vida
-portal3 :: Portal 
-portal3 = Portal 
-  { 
-    posicaoPortal = (0.5, 0.5),
-    ondasPortal = [onda1, onda2] 
-  }
-
 base1 :: Base 
 base1 = Base 
   { 
-    vidaBase = 5,
+    vidaBase = 50.0,
     posicaoBase = (5.5, 4.5),
     creditosBase = 10
   }

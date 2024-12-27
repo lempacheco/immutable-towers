@@ -22,6 +22,26 @@ validaJogo = undefined
 
 -}
 
+validaPortal :: Jogo -> Bool 
+validaPortal jogo = (peloMenosUmPortal portais) && (validaPosicaoPortal portais mapa) &&
+                    (existeCaminho mapa portais base) && (sobrepostoBasePortal base portais) && 
+                    (sobrepostoTorrePortal torres portais)
+  where portais@(p:ps) = portaisJogo jogo
+        existeCaminho mapa portais base = (existePeloMenosUmCaminho mapa p base) || (existeCaminho mapa portais base)
+        torres@(t:ts) = torresJogo jogo
+        base = baseJogo jogo
+        mapa = mapaJogo jogo
+        
+validaInimigo :: Jogo -> Bool
+validaInimigo jogo = (inimigosInicio inimigos portais) && (inimigosTerra inimigos mapa) &&
+                     (inimigosTorre inimigos torres) && (velocidadeInimigos inimigos) && (normalizaInimigos inimigos) 
+  where inimigos@(i:is) = inimigosJogo jogo
+        portais@(p:ps) = portaisJogo jogo
+        torres@(t:ts) = torresJogo jogo
+        mapa = mapaJogo jogo
+
+
+
 eTerra :: Posicao -> Mapa -> Bool
 eTerra (x,y) mapa = case procuraTerreno (x,y) mapa of 
   Just Terra -> True 

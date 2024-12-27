@@ -19,6 +19,31 @@ import Data.List
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo = undefined
 
+atualizaTorresEInimigos :: Jogo -> Jogo 
+atualizaTorresEInimigos j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
+    where inimigos@(i:is) = inimigosJogo j 
+          torres@(t:ts) = torresJogo j 
+          (inimigosAtualizados, torresAtualizadas) = disparaTodasTorres torres inimigos 
+
+atualizaPortaisEInimigos :: Jogo -> Jogo 
+atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJogo = portaisAtualizado}
+    where inimigos@(i:is) = inimigosJogo j 
+          torres@(t:ts) = torresJogo j 
+          portais@(p:ps) = portaisJogo j 
+          (inimigosAtualizados, torresAtualizadas) = disparaTodasTorres torres inimigos
+          (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
+
+lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
+lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is 
+                                  (portaisAtualizados,inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos 
+                              in (portalAtualizado:portaisAtualizados, inimigosNovosAtualizados)
+
+disparaTodasTorres :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
+disparaTodasTorres [] is = (is, [])
+disparaTodasTorres (t:ts) is = let (inimigosPosDano,torreAtualizada) = disparaProjeteis t is  
+                                   (inimigosAtualizados, restoTorresAtualizadas) = disparaTodasTorres ts inimigosPosDano 
+                               in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas ) 
+
 {-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada tore. 
 -}
 -- TODO : irrelevante?
@@ -46,6 +71,8 @@ disparaProjeteis torre is
     | null (inimigosNoAlcance torre is) = ([],torre)
     | otherwise = (inimigosSobreviventesAlcance torre is, novaTorre)
        where novaTorre = torre {tempoTorre = cicloTorre torre} 
+
+ 
 -- disparaProjeteis torre [] = ([], torre)
 -- disparaProjeteis torre is =
 --     if length (inimigosSobreviventes torre is) == 0 then ([],torre)
@@ -80,7 +107,8 @@ inimigosSobreviventesAlcance torre inimigos =
         let inimigosAtualizados t = map (atingeInimigo t) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
             nI = tirosPossiveis torre inimigos
             inimigosEmOrdem = inimigosOrdenados torre inimigos
-        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre)) 
+            inimigosSemDano = drop nI inimigosEmOrdem
+        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre)) ++ inimigosSemDano
 
 {-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
 

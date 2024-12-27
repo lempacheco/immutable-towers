@@ -77,15 +77,16 @@ inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo to
 
 inimigosSobreviventesAlcance :: Torre -> [Inimigo] -> [Inimigo]
 inimigosSobreviventesAlcance torre inimigos =
-        let inimigosAtualizados torre inimigos = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
+        let inimigosAtualizados t = map (atingeInimigo t) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
             nI = tirosPossiveis torre inimigos
             inimigosEmOrdem = inimigosOrdenados torre inimigos
-        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre inimigos)) 
+        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre)) 
 
 {-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
 
 -}
 
+distinimigo :: Torre -> Inimigo -> Float
 distinimigo t i = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
         where (x1, y1) = posicaoInimigo i
               (x2, y2) = posicaoTorre t
@@ -163,15 +164,15 @@ atualizaDistanciaPercorridaInimigo t i =
         Este -> i {posicaoInimigo = (x + (v*t), y)}
     where
         atualizaVelocidadeInimigo :: Inimigo -> Float
-        atualizaVelocidadeInimigo i =
-            let tpsProjsInimigo = getTiposProjsInimigo i
+        atualizaVelocidadeInimigo inimigo =
+            let tpsProjsInimigo = getTiposProjsInimigo inimigo
             in if Gelo `elem` tpsProjsInimigo
                 then if Resina `elem` tpsProjsInimigo
-                    then velocidadeInimigo (atualizaInimigoGelo (atualizaInimigoResina i))
-                    else velocidadeInimigo (atualizaInimigoGelo i)
+                    then velocidadeInimigo (atualizaInimigoGelo (atualizaInimigoResina inimigo))
+                    else velocidadeInimigo (atualizaInimigoGelo inimigo)
                 else if Resina `elem` tpsProjsInimigo
-                    then velocidadeInimigo (atualizaInimigoResina i)
-                    else velocidadeInimigo i
+                    then velocidadeInimigo (atualizaInimigoResina inimigo)
+                    else velocidadeInimigo inimigo
 
 inimigoAtingeBase :: Inimigo -> Base -> Portal -> (Portal, Base)
 inimigoAtingeBase i b p

@@ -35,7 +35,7 @@ lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
 lancaTodosPortais [] is = ([], is)
 lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is 
                                   (restoPortaisAtualizados, inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos 
-                              in (portalAtualizado:portaisAtualizados, inimigosNovosAtualizados)
+                              in (portalAtualizado:restoPortaisAtualizados, inimigosNovosAtualizados)
 
 -- Processa todas as torres, disparando projéteis contra os inimigos
 disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])

@@ -26,23 +26,22 @@ itInicial texturas = ImmutableTowers {
 
 mapaInicial :: Mapa 
 mapaInicial = 
-  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r,r],
-    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r,r],
-    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r,r],
-    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r,r],
-    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r,r],
-    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,r,t],
-    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,r,t],
-    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,r,t],
-    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t,t],
-    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r,r],
-    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t,t],
-    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r,r]
+  [ [r,r,r,r,r,t,r,a,a,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [a,r,t,r,r,r,t,t,r,r,r,a,a,r,r,a],
+    [a,r,t,r,r,r,t,r,r,r,a,a,a,r,r,a],
+    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
+    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r],
+    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r],
+    [r,r,r,r,a,a,r,r,a,a,a,a,r,r,r,r]
   ]
   where
        t = Terra

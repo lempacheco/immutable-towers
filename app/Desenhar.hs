@@ -8,16 +8,19 @@ l :: Float
 l = 64
 
 altura :: Integer
-altura = 64*17
+altura = 64*18
 
 comprimento :: Integer
-comprimento = 64*17
+comprimento = 64*18
 
 desenha :: ImmutableTowers -> Picture
-desenha it = desenhoMapa
-    where desenhoMapa = desenhaMapa mapa textures
+desenha it = pictures [picMapa, picBase, picInimigos]
+    where picMapa = desenhaMapa mapa textures
           mapa = mapaJogo (jogoIT it)
           textures = texturasIT it
+        --  picBase = desenhaBase base -- indice  (textures) 
+        --  base = baseJogo (JogoIT it)
+       
 
 {- desenhaMapa :: Float -> Float -> Mapa -> Texturas -> [Picture]
 desenhaMapa _ _ [] _ = []
@@ -34,27 +37,21 @@ desenhaMapa mapa textures =
             selectTexture Terra = head textures
             selectTexture Relva = textures !! 1
             selectTexture Agua = textures !! 2
-            positions = [(x*l,y*l) | y <- [0..17], x <- [0..17]]
+            positions = [(x*l,y*l) | y <- [-9..9], x <- [-9..9]]
 
-{- desenhaLinha :: Float -> Float -> [Terreno] -> [Pictures] -> [Picture]
-desenhaLinha _ _ [] _ = []
-desenhaLinha x y (h:t) texturas = terreno : resto
-    where
-        terreno = desenhaTerreno x y h texturas
-        resto = desenhaLinha (x+l) y t texturas
- 
-desenhaTerreno :: Float -> Float -> Terreno -> [Pictures] -> Picture
-desenhaTerreno x y terreno texturas = Translate realX realY textura
-    where 
-        tuple = fromJust $ lookup terreno texturas
-        textura = fst tuple
-        realX = ((+x) . fst . snd) tuple
-        realY = ((+y) . snd . snd) tuple -}
+{- desenhaInimigo :: Inimigo -> [Picture] -> Picture
+desenhaInimigo  -}
 
-{- lookup' :: (Eq a) => a -> [(a,b)] -> b
-lookup' n ((x,y):t)
-    | n == x = y
-    | otherwise = lookup' n t -}
+desenhaBase :: Base -> Picture -> Picture
+desenhaBase base textura =
+    let (x,y) = posicaoBase base
+    in translate x y textura 
+
+desenhaInimigo :: Inimigo -> Picture -> Picture 
+desenhaInimigo inimigo textura = 
+    let (x,y) = posicaoInimigo inimigo
+    in translate x y textura
+
 
 desenhaPortais :: [Portal] -> Picture
 desenhaPortais (p:ps) = undefined

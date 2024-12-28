@@ -35,7 +35,7 @@ lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
 lancaTodosPortais [] is = ([], is)
 lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is 
                                   (restoPortaisAtualizados, inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos 
-                              in (portalAtualizado:portaisAtualizados, inimigosNovosAtualizados)
+                              in (portalAtualizado:restoPortaisAtualizados, inimigosNovosAtualizados)
 
 -- Processa todas as torres, disparando projéteis contra os inimigos
 disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
@@ -114,7 +114,7 @@ disparaProjeteis torre is
 -}
 
 inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
-inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo torre inimigos)
+inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (inimigos)
 
 {-| A função 'inimigosSobreviventesAlcance' filtra os inimigos que estão no alcance de uma torre, e aplica 
     os danos e os efeitos dos projéteis nestes inimigos, tendo em conta o número máximo de inimigos que 
@@ -124,11 +124,11 @@ inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (detetarInimigo to
 
 inimigosSobreviventesAlcance :: Torre -> [Inimigo] -> [Inimigo]
 inimigosSobreviventesAlcance torre inimigos =
-        let inimigosAtualizados t = map (atingeInimigo t) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
-            nI = tirosPossiveis torre inimigos
+        let nI = tirosPossiveis torre inimigos
             inimigosEmOrdem = inimigosOrdenados torre inimigos
+            inimigosAtualizados = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
             inimigosSemDano = drop nI inimigosEmOrdem
-        in (filter (\i -> vidaInimigo i > 0) (inimigosAtualizados torre)) ++ inimigosSemDano
+        in (filter (\i -> vidaInimigo i > 0) inimigosAtualizados) ++ inimigosSemDano
 
 {-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
 
@@ -152,10 +152,11 @@ distinimigo t i = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
 -}
 
 tirosPossiveis :: Torre -> [Inimigo] -> Int
-tirosPossiveis torre is = if rajadaTorre torre < numeroInimigos then rajadaTorre torre else numeroInimigos
-  where numeroInimigos = length (inimigosOrdenados torre is)
-
-
+tirosPossiveis torre is = 
+    if rajadaTorre torre < numeroInimigos 
+        then rajadaTorre torre 
+        else numeroInimigos
+  where numeroInimigos = length (detetarInimigo torre (inimigosOrdenados torre is))
 
 
 atualizaInimigoGelo :: Inimigo -> Inimigo

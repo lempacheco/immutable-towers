@@ -7,7 +7,7 @@ import ImmutableTowers
 import Tempo
 import LI12425
 
-itInicial :: Texturas -> ImmutableTowers
+itInicial :: [Picture] -> ImmutableTowers
 itInicial texturas = ImmutableTowers { 
   jogoIT = Jogo {
         baseJogo = Base {
@@ -62,9 +62,9 @@ main = do
         fr 
         (itInicial 
           [
-            (Terra, (terra, (64,64))),
-            (Agua, (agua, (64,64))),
-            (Relva, (relva, (64,64)))
+            terra,
+            relva,
+            agua
           ]
         ) 
         desenha 

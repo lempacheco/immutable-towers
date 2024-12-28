@@ -54,9 +54,10 @@ vazia = Color black (Polygon [(0,0),(l,0),(l,l),(0,l),(0,0)]) -}
 main :: IO ()
 main = do
   putStrLn "Hello from Immutable Towers!"
-  terra <- loadBMP "resources/textures/Terra.bmp"
-  agua <- loadBMP "resources/textures/Terra.bmp"
-  relva <- loadBMP "resources/textures/Relva.bmp"
+  terra <- loadBMP "resources/textures/map/Terra.bmp"
+  agua <- loadBMP "resources/textures/map/Agua.bmp"
+  relva <- loadBMP "resources/textures/map/Relva.bmp"
+  inimigo1 <- loadBMP "resources/textures/entities/Inimigo1.bmp"
   play janela 
         fundo 
         fr 
@@ -64,7 +65,8 @@ main = do
           [
             terra,
             relva,
-            agua
+            agua,
+            inimigo1
           ]
         ) 
         desenha 

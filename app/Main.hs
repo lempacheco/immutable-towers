@@ -24,20 +24,30 @@ itInicial texturas = ImmutableTowers {
   texturasIT = texturas
 }
 
-mapaInicial :: Mapa
-mapaInicial =
- [ [t, t, r, a, a, a],
-   [r, t, r, a, r, r],                     
-   [r, t, r, a, r, t],
-   [r, t, r, a, t, t],
-   [r, t, t, t, t, t],
-   [a, a, a, a, r, r]
- ]
- where
+mapaInicial :: Mapa 
+mapaInicial = 
+  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r,r],
+    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r,r],
+    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r,r],
+    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,r,t],
+    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,r,t],
+    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,r,t],
+    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t,t],
+    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r,r],
+    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t,t],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r,r]
+  ]
+  where
        t = Terra
        r = Relva
        a = Agua
-
 
 janela :: Display
 janela = InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)

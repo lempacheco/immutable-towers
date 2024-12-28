@@ -9,10 +9,10 @@ l :: Float
 l = 64
 
 altura :: Integer
-altura = 1080
+altura = 64*17
 
 comprimento :: Integer
-comprimento = 1920
+comprimento = 64*17
 
 desenha :: ImmutableTowers -> Picture
 desenha it = desenhoMapa
@@ -35,7 +35,7 @@ desenhaMapa mapa textures =
             selectTexture Terra = head textures
             selectTexture Relva = textures !! 1
             selectTexture Agua = textures !! 2
-            positions = [(x*l,y*l) | y <- [0..5], x <- [0..5]]
+            positions = [(x*l,y*l) | y <- [0..17], x <- [0..17]]
 
 {- desenhaLinha :: Float -> Float -> [Terreno] -> [Pictures] -> [Picture]
 desenhaLinha _ _ [] _ = []

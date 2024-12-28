@@ -3,7 +3,6 @@ module Desenhar where
 import Graphics.Gloss
 import ImmutableTowers
 import LI12425
-import Data.Maybe
 
 l :: Float
 l = 64
@@ -56,3 +55,6 @@ desenhaTerreno x y terreno texturas = Translate realX realY textura
 lookup' n ((x,y):t)
     | n == x = y
     | otherwise = lookup' n t -}
+
+desenhaPortais :: [Portal] -> Picture
+desenhaPortais (p:ps) = undefined

@@ -56,8 +56,7 @@ atualizaInimigos t j =
     in j {inimigosJogo = inimigoAtingeBaseIs b is
                             $ atualizaDistanciaPercorridaInimigos t
                             $ inimigosSemVidaIs
-                            $ atualizaInimigoFogo
-                            $ map moveInimigo' is}
+                            $ atualizaInimigoFogo is}
 
 atualizaBase :: Jogo -> Jogo
 atualizaBase j =
@@ -224,8 +223,8 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
         (x,y) = posicaoInimigo i
         d = direcaoInimigo i
     in case d of
-        Norte -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
-        Sul -> i {posicaoInimigo = (x, y + (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Norte -> i {posicaoInimigo = (x, y + (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Sul -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
         Oeste -> i {posicaoInimigo = (x - (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
         Este -> i {posicaoInimigo = (x + (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
     where
@@ -301,45 +300,3 @@ lancaInimigo p is = case ondasPortal p of
             let o' = o {tempoOnda = cicloOnda o}
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
-
-geraUmCaminhoTds :: [Inimigo] -> Mapa -> Base -> [Inimigo]
-geraUmCaminhoTds [] _ _ = []
-geraUmCaminhoTds (i:is) m b = geraUmCaminho i m b : geraUmCaminhoTds is m b
-
-geraUmCaminho :: Inimigo -> Mapa -> Base -> Inimigo
-geraUmCaminho i m b =
-    let posI = posicaoInimigo i
-        posB = posicaoBase b
-    {- in if caminhoInimigo i == []
-        then i {caminhoInimigo = map transformaEmCoordsReais (snd $ atualizaPos m posI posB [])}
-        else i -}
-    in i {caminhoInimigo = map transformaEmCoordsReais (snd $ atualizaPos m posI posB [])}
-
-transformaEmCoordsReais :: Posicao -> Posicao
-transformaEmCoordsReais (x,y) = (x-(7.5*64), y-(7.5*64))
-
-{- moveInimigo :: Mapa -> Base -> [Inimigo] -> [Inimigo]
-moveInimigo _ _ [] = []
-moveInimigo m b (i:is) = if caminhoInimigo i == [] then (moveInimigo' $ geraUmCaminho i m b) : moveInimigo m b is else moveInimigo' i : moveInimigo m b (i:is)
- -}
-moveInimigo' :: Inimigo -> Inimigo
-moveInimigo' i = 
-    let (a,b) = posicaoInimigo i
-        (x,y) = head $ caminhoInimigo i
-    in case direcaoInimigo i of
-        Norte -> if b >= y then alteraDirecao i {caminhoInimigo = tail $ caminhoInimigo i} else i
-        Sul -> if b <= y then alteraDirecao i {caminhoInimigo = tail $ caminhoInimigo i} else i
-        Este -> if a >= x then alteraDirecao i {caminhoInimigo = tail $ caminhoInimigo i} else i
-        Oeste -> if a <= x then alteraDirecao i {caminhoInimigo = tail $ caminhoInimigo i} else i
-
-
-alteraDirecao :: Inimigo -> Inimigo
-alteraDirecao i
-  | a == x = if b < y
-                then i {direcaoInimigo = Este}
-                else i {direcaoInimigo = Oeste}
-  | a < x = i {direcaoInimigo = Norte}
-  | otherwise = i {direcaoInimigo = Sul}
-  where
-      (a, b) = posicaoInimigo i
-      (x, y) = head $ caminhoInimigo i

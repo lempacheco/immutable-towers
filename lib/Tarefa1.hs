@@ -221,7 +221,7 @@ existePeloMenosUmCaminho mapa p b =
   in fst (atualizaPos mapa posP posB [])
 
 eFronteiras :: Posicao -> Bool
-eFronteiras (x,y) = x < 0 || y < 0 || x>=6 || y >= 6
+eFronteiras (x,y) = x <= -8 || y <= -8 || x>=8 || y >= 8
 
 jaPassou :: Posicao -> [Posicao] -> Bool
 jaPassou _ [] = False
@@ -232,16 +232,16 @@ chegouBase (px,py) (bx,by) = px == bx && py == by
 
 verificaDirecaoTerra :: Mapa -> Posicao -> [Posicao] -> Direcao -> Bool
 verificaDirecaoTerra m (x,y) lpos d = case d of
-  Norte -> not (jaPassou (x,y-1) lpos) && not (eFronteiras (x,y-1)) && eTerra (x,y-1) m
-  Sul -> not (jaPassou (x,y+1) lpos) && not (eFronteiras (x,y+1)) && eTerra (x,y+1) m
+  Norte -> not (jaPassou (x,y-1) lpos) && not (eFronteiras (x,y-1)) && eTerra (x,y+1) m
+  Sul -> not (jaPassou (x,y+1) lpos) && not (eFronteiras (x,y+1)) && eTerra (x,y-1) m
   Este -> not (jaPassou (x+1,y) lpos) && not (eFronteiras (x+1,y)) && eTerra (x+1,y) m
   Oeste -> not (jaPassou (x-1,y) lpos) && not (eFronteiras (x-1,y)) && eTerra (x-1,y) m
 
 atualizaPos :: Mapa -> Posicao -> Posicao -> [Posicao] -> (Bool, [Posicao])
 atualizaPos m pos@(x,y) posB lpos
   | chegouBase pos posB = (True, lpos)
-  | verificaDirecaoTerra m pos lpos Norte = atualizaPos m (x,y-1) posB (lpos++[(x,y)])
-  | verificaDirecaoTerra m pos lpos Sul = atualizaPos m (x,y+1) posB (lpos++[(x,y)])
+  | verificaDirecaoTerra m pos lpos Norte = atualizaPos m (x,y+1) posB (lpos++[(x,y)])
+  | verificaDirecaoTerra m pos lpos Sul = atualizaPos m (x,y-1) posB (lpos++[(x,y)])
   | verificaDirecaoTerra m pos lpos Este = atualizaPos m (x+1,y) posB (lpos++[(x,y)])
   | verificaDirecaoTerra m pos lpos Oeste = atualizaPos m (x-1,y) posB (lpos++[(x,y)])
   | otherwise = (False, lpos)

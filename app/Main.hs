@@ -57,9 +57,6 @@ fundo = white
 fr :: Int
 fr = 60
 
-{- vazia :: Picture
-vazia = Color black (Polygon [(0,0),(l,0),(l,l),(0,l),(0,0)]) -}
-
 main :: IO ()
 main = do
   putStrLn "Hello from Immutable Towers!"

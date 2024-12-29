@@ -8,15 +8,10 @@ l :: Integer
 l = 64
 
 altura :: Integer
-altura = 64*18
+altura = 64*16
 
 comprimento :: Integer
-comprimento = 64*18
-
---altura = 64*16
-
---comprimento :: Integer
---comprimento = 64*16
+comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
 desenha it = pictures [picMapa, picInimigo]
@@ -27,15 +22,7 @@ desenha it = pictures [picMapa, picInimigo]
          -- base = baseJogo (jogoIT it)
          picInimigo = desenhaInimigos inimigos (textures !! 3)
          inimigos = inimigosJogo (jogoIT it)
- 
-       
 
-{- desenhaMapa :: Float -> Float -> Mapa -> Texturas -> [Picture]
-desenhaMapa _ _ [] _ = []
-desenhaMapa x y (h:t) texturas = linha ++ resto
-    where
-        linha = desenhaLinha x y h texturas
-        resto = desenhaMapa x (y-l) t texturas -}
 
 desenhaMapa :: Mapa -> [Picture] -> Picture
 desenhaMapa mapa textures =
@@ -54,13 +41,11 @@ getMapaTexturas :: Mapa -> [Picture] -> [[Picture]]
 getMapaTexturas [] _ = []
 getMapaTexturas (h:t) textures = map (textures `selectTexture`) h : getMapaTexturas t textures
 
-{- desenhaInimigo :: Inimigo -> [Picture] -> Picture
-desenhaInimigo  -}
 
-{- desenhaBase :: Base -> Picture -> Picture
+desenhaBase :: Base -> Picture -> Picture
 desenhaBase base textura =
     let (x,y) = posicaoBase base
-    in translate x y textura  -}
+    in translate x y textura  
 
 desenhaInimigos :: [Inimigo] -> Picture -> Picture
 desenhaInimigos inimigos textura = pictures [translate (fromInteger x * 64) (fromInteger y * 64) textura | Inimigo {posicaoInimigo = (x, y)} <- inimigos]

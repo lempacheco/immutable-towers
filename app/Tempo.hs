@@ -14,8 +14,3 @@ geraUmcaminho m i b =
     let posI = posicaoInimigo i 
         posB = posicaoBase b
     in snd $ atualizaPos m posI posB []
-
-        
-moveInimigo :: Inimigo -> [Posicao] -> Inimigo 
-moveInimigo i ps = 
-     

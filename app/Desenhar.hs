@@ -14,13 +14,15 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = desenhoMapa
-    where desenhoMapa = desenhaMapa mapa textures
-          mapa = mapaJogo (jogoIT it)
+desenha it = Pictures [picMapa, picInimigo]
+    where picMapa = picMapa mapa textures
+          jogo = JogoIT it
+          mapa = mapaJogo jogo
+          texturas = texturasIT it 
          -- picBase = desenhaBase base (textures !! 4)
          -- base = baseJogo (jogoIT it)
-         picInimigo = desenhaInimigos inimigos (textures !! 3)
-         inimigos = inimigosJogo (jogoIT it)
+          picInimigo = desenhaInimigos inimigos (texturas !! 3)
+          inimigos = inimigosJogo jogo
 
 
 desenhaMapa :: Mapa -> [Picture] -> Picture

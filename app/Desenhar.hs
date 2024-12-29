@@ -14,17 +14,19 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = Pictures [picMapa,picInimigo, picTorre]
+desenha it = Pictures [picMapa,picInimigo,Pictures picPortais, picBase, picTorre]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
           mapa = mapaJogo jogo
           texturas = texturasIT it
-         -- picBase = desenhaBase base (textures !! 4)
-         -- base = baseJogo (jogoIT it)
-          picInimigo = desenhaInimigos inimigos texturas 
+          picBase = desenhaBase base (texturas !! 6)
+          base = baseJogo jogo
+          picInimigo = desenhaInimigos inimigos texturas
           inimigos = inimigosJogo jogo
+          picPortais = desenhaPortais portais (texturas !! 7)
+          portais = portaisJogo jogo
           picTorre = desenhaTorres torres texturas 
-          torres = torresJogo jogo 
+          torres = torresJogo jogo
 
 
 desenhaMapa :: Mapa -> [Picture] -> Picture
@@ -48,7 +50,7 @@ getMapaTexturas (h:t) textures = map (textures `selectTexture`) h : getMapaTextu
 desenhaBase :: Base -> Picture -> Picture
 desenhaBase base textura =
     let (x,y) = posicaoBase base
-    in translate x y textura  
+    in translate x (y  + (104-64)/2) textura  
 
 {- desenhaInimigos :: [Inimigo] -> Picture -> Picture
 desenhaInimigos inimigos textura = pictures [translate (x * 64) (y * 64) textura | Inimigo {posicaoInimigo = (x, y)} <- inimigos] -}
@@ -77,6 +79,8 @@ desenhaUmaTorre torre texturas =
             Fogo -> texturas !! 5
     in translate x y textura 
 
-
-desenhaPortais :: [Portal] -> Picture
-desenhaPortais (p:ps) = undefined
+desenhaPortais :: [Portal] -> Picture -> [Picture]
+desenhaPortais [] _ = []
+desenhaPortais (p:ps) textura = 
+    let (x,y) = posicaoPortal p
+    in translate x (y  + (128-64)/2) textura : desenhaPortais ps textura

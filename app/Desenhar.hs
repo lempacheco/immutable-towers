@@ -14,16 +14,14 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = pictures [picMapa, picInimigo]
-    where textures = texturasIT it
-          picMapa = desenhaMapa mapa textures
+desenha it = desenhoMapa
+    where desenhoMapa = desenhaMapa mapa textures
           mapa = mapaJogo (jogoIT it)
           textures = texturasIT it
 
 desenhaMapa :: Mapa -> [Picture] -> Picture
 desenhaMapa mapa textures =
     let t = getMapaTexturas mapa textures
-    in pictures [translate ((fromInteger x * fromInteger l )-7.5*64) ((fromInteger y * fromInteger l) +7.5*64 ) ((t!!abs(fromInteger y))!!fromInteger x) | (x,y) <- positions]
     in pictures [translate ((fromInteger x * fromInteger l )-7.5*64) ((fromInteger y * fromInteger l) +7.5*64 ) ((t!!abs(fromInteger y))!!fromInteger x) | (x,y) <- positions]
 
 selectTexture :: [Picture] -> Terreno -> Picture

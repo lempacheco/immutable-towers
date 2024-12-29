@@ -15,7 +15,7 @@ module LI12425 (
     -- ** Mapas
     Mapa, Terreno(..),
     -- ** Entidades
-    Base(..), Torre(..), Portal(..), Inimigo(..), TipoProjetil(..), Projetil(..),
+    Base(..), Torre(..), Portal(..), Inimigo(..), TipoInimigo(..), TipoProjetil(..), Projetil(..),
     -- ** Jogo
     Jogo(..), Onda(..), Loja,
     -- * Funções auxiliares

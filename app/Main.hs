@@ -31,7 +31,7 @@ itInicial texturas = ImmutableTowers {
                              cicloTorre = 2,
                              tempoTorre = 0}],
         portaisJogo = [
-                        Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (10.5,10.5), tipoInimigo = GuerreiroFogo, projeteisInimigo = [], vidaInimigo = 6, butimInimigo = 4, direcaoInimigo = Este, ataqueInimigo = 5, velocidadeInimigo = 7}, Inimigo {posicaoInimigo = (1.5,1.5), tipoInimigo = MulherLanca, projeteisInimigo = [], vidaInimigo = 6, butimInimigo = 4, direcaoInimigo = Este, ataqueInimigo = 5, velocidadeInimigo = 7}],
+                        Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (-(7*64),-(1*64)), tipoInimigo = GuerreiroFogo, projeteisInimigo = [], vidaInimigo = 6, butimInimigo = 4, direcaoInimigo = Este, ataqueInimigo = 5, velocidadeInimigo = 50, caminhoInimigo = [(-6*64,-1*64), (-6*64,0*64), (-5*64,0*64)]}{-,  Inimigo {posicaoInimigo = (1.5,1.5), tipoInimigo = MulherLanca, projeteisInimigo = [], vidaInimigo = 6, butimInimigo = 4, direcaoInimigo = Este, ataqueInimigo = 5, velocidadeInimigo = 7} -}],
                                 cicloOnda = 2*60,
                                 tempoOnda = 0,
                                 entradaOnda = 0}]}

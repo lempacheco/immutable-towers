@@ -12,14 +12,12 @@ module Tarefa3 where
 import LI12425
 import Tarefa2
 import Tarefa1
-
 import Data.List
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
-
-atualizaTorres :: Jogo -> Jogo
+atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
     where inimigos = inimigosJogo j
           torres = torresJogo j
@@ -33,6 +31,7 @@ atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJo
           portais = portaisJogo j
           (inimigosAtualizados, _) = disparaTodosProjeteis torres inimigos
           (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
+
 
 -- Processa todos os portais, lançando todos os inimigos
 lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
@@ -300,3 +299,4 @@ lancaInimigo p is = case ondasPortal p of
             let o' = o {tempoOnda = cicloOnda o}
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
+

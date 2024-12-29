@@ -57,15 +57,15 @@ desenhaInimigos inimigos textura = pictures [translate (x * 64) (y * 64) textura
 
 desenhaInimigos :: [Inimigo] -> [Picture] -> Picture
 desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas) inimigos 
-    
 
 desenhaUmInimigo :: Inimigo -> [Picture] -> Picture 
 desenhaUmInimigo inimigo texturas = 
     let (x, y) = posicaoInimigo inimigo
+        numeroDaVida = translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo 
         textura = case tipoInimigo inimigo of
             MulherLanca   -> texturas !! 9
             GuerreiroFogo -> texturas !! 8
-    in translate x y textura
+    in Pictures [translate x y textura, numeroDaVida]
 
 desenhaTorres :: [Torre] -> [Picture] -> Picture 
 desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 

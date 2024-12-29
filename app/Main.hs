@@ -66,16 +66,28 @@ main = do
   terra <- loadBMP "resources/textures/map/Terra.bmp"
   agua <- loadBMP "resources/textures/map/Agua.bmp"
   relva <- loadBMP "resources/textures/map/Relva.bmp"
-  inimigo1 <- loadBMP "resources/textures/entities/Inimigo1.bmp"
+  torreGelo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
+  torreResina <- loadBMP "resources/textures/towers/TorreResina.bmp"
+  torreFogo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
+  base <- loadBMP "resources/textures/base/Base.bmp"
+  portal <- loadBMP "resources/textures/portal/Portal.bmp"
+  guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
+  mulherLanca <- loadBMP "resources/textures/entities/MulherLanca.bmp"
   play janela 
         fundo 
         fr 
         (itInicial 
           [
-            terra,
-            relva,
-            agua,
-            inimigo1
+            terra,         --0
+            relva,         --1
+            agua,          --2
+            torreGelo,     --3
+            torreResina,   --4
+            torreFogo,     --5
+            base,          --6
+            portal,        --7
+            guerreiroFogo, --8
+            mulherLanca    --9
           ]
         ) 
         desenha 

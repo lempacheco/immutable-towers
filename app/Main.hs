@@ -16,9 +16,11 @@ itInicial texturas = ImmutableTowers {
           creditosBase = 0
           },
         portaisJogo = [],
-        torresJogo = [],
+        torresJogo = [Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo}}, 
+                      Torre {posicaoTorre = (-4.5*64, 4.5*64), projetilTorre = Projetil {tipoProjetil = Resina}}, 
+                      Torre {posicaoTorre = (6.5*64, 0.5*64), projetilTorre = Projetil {tipoProjetil = Fogo}}],
         mapaJogo = mapaInicial,
-        inimigosJogo = [inimigo1],
+        inimigosJogo = [Inimigo {posicaoInimigo = (10.5,10.5), tipoInimigo = GuerreiroFogo}, Inimigo {posicaoInimigo = (1.5,1.5), tipoInimigo = MulherLanca}],
         lojaJogo = []
       },
   texturasIT = texturas
@@ -32,9 +34,9 @@ mapaInicial =
     [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
     [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
     [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,r],
-    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,r],
-    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,r],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
     [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
     [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r],
     [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t],
@@ -65,7 +67,7 @@ main = do
   relva <- loadBMP "resources/textures/map/Relva.bmp"
   torreGelo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
   torreResina <- loadBMP "resources/textures/towers/TorreResina.bmp"
-  torreFogo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
+  torreFogo <- loadBMP "resources/textures/towers/TorreFogo.bmp"
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"

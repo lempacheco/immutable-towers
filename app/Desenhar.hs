@@ -14,15 +14,17 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = Pictures [picMapa, picInimigo]
-    where picMapa = picMapa mapa textures
-          jogo = JogoIT it
+desenha it = Pictures [picMapa,picInimigo, picTorre]
+    where picMapa = desenhaMapa mapa texturas
+          jogo = jogoIT it
           mapa = mapaJogo jogo
-          texturas = texturasIT it 
+          texturas = texturasIT it
          -- picBase = desenhaBase base (textures !! 4)
          -- base = baseJogo (jogoIT it)
-          picInimigo = desenhaInimigos inimigos (texturas !! 3)
+          picInimigo = desenhaInimigos inimigos texturas 
           inimigos = inimigosJogo jogo
+          picTorre = desenhaTorres torres texturas 
+          torres = torresJogo jogo 
 
 
 desenhaMapa :: Mapa -> [Picture] -> Picture
@@ -48,9 +50,32 @@ desenhaBase base textura =
     let (x,y) = posicaoBase base
     in translate x y textura  
 
-desenhaInimigos :: [Inimigo] -> Picture -> Picture
-desenhaInimigos inimigos textura = pictures [translate (fromInteger x * 64) (fromInteger y * 64) textura | Inimigo {posicaoInimigo = (x, y)} <- inimigos]
+{- desenhaInimigos :: [Inimigo] -> Picture -> Picture
+desenhaInimigos inimigos textura = pictures [translate (x * 64) (y * 64) textura | Inimigo {posicaoInimigo = (x, y)} <- inimigos] -}
 
+desenhaInimigos :: [Inimigo] -> [Picture] -> Picture
+desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas) inimigos 
+    
+
+desenhaUmInimigo :: Inimigo -> [Picture] -> Picture 
+desenhaUmInimigo inimigo texturas = 
+    let (x, y) = posicaoInimigo inimigo
+        textura = case tipoInimigo inimigo of
+            MulherLanca   -> texturas !! 9
+            GuerreiroFogo -> texturas !! 8
+    in translate x y textura
+
+desenhaTorres :: [Torre] -> [Picture] -> Picture 
+desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 
+
+desenhaUmaTorre :: Torre -> [Picture] -> Picture
+desenhaUmaTorre torre texturas = 
+    let (x,y) = posicaoTorre torre 
+        textura = case tipoProjetil (projetilTorre torre) of 
+            Gelo -> texturas !! 3
+            Resina -> texturas !! 4 
+            Fogo -> texturas !! 5
+    in translate x y textura 
 
 
 desenhaPortais :: [Portal] -> Picture

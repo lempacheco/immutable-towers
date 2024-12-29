@@ -12,13 +12,16 @@ itInicial texturas = ImmutableTowers {
   jogoIT = Jogo {
         baseJogo = Base {
           vidaBase = 50,
-          posicaoBase = (0,0),
+          posicaoBase = (7.5*64,-(1.5*64)),
           creditosBase = 0
           },
-        portaisJogo = [],
         torresJogo = [Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo}}, 
                       Torre {posicaoTorre = (-4.5*64, 4.5*64), projetilTorre = Projetil {tipoProjetil = Resina}}, 
                       Torre {posicaoTorre = (6.5*64, 0.5*64), projetilTorre = Projetil {tipoProjetil = Fogo}}],
+        portaisJogo = [
+                        Portal {posicaoPortal = (-(7.5*64),-(1.5*64))}, 
+                        Portal {posicaoPortal = (-(2.5*64),7.5*64)}
+                      ],
         mapaJogo = mapaInicial,
         inimigosJogo = [Inimigo {posicaoInimigo = (10.5,10.5), tipoInimigo = GuerreiroFogo}, Inimigo {posicaoInimigo = (1.5,1.5), tipoInimigo = MulherLanca}],
         lojaJogo = []
@@ -51,7 +54,7 @@ mapaInicial =
        a = Agua
 
 janela :: Display
-janela = InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)
+janela = {- InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0) -} FullScreen
 
 fundo :: Color
 fundo = white
@@ -77,16 +80,16 @@ main = do
         fr 
         (itInicial 
           [
-            terra,         --0
-            relva,         --1
-            agua,          --2
-            torreGelo,     --3
-            torreResina,   --4
-            torreFogo,     --5
-            base,          --6
-            portal,        --7
-            guerreiroFogo, --8
-            mulherLanca    --9
+            terra,         --0; 64x64 px
+            relva,         --1; 64x64 px
+            agua,          --2; 64x64 px
+            torreGelo,     --3; 64x106 px
+            torreResina,   --4; 64x114 px
+            torreFogo,     --5; 64x121 px
+            base,          --6; 64x104 px
+            portal,        --7; 64x128 px
+            guerreiroFogo, --8; 27x47 px
+            mulherLanca    --9; 27x50 px
           ]
         ) 
         desenha 

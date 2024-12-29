@@ -12,10 +12,13 @@ itInicial texturas = ImmutableTowers {
   jogoIT = Jogo {
         baseJogo = Base {
           vidaBase = 50,
-          posicaoBase = (0,0),
+          posicaoBase = (7.5*64,-(1.5*64)),
           creditosBase = 0
           },
-        portaisJogo = [],
+        portaisJogo = [
+                        Portal {posicaoPortal = (-(7.5*64),-(1.5*64))}, 
+                        Portal {posicaoPortal = (-(2.5*64),7.5*64)}
+                      ],
         torresJogo = [],
         mapaJogo = mapaInicial,
         inimigosJogo = [],
@@ -49,7 +52,7 @@ mapaInicial =
        a = Agua
 
 janela :: Display
-janela = InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)
+janela = {- InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0) -} FullScreen
 
 fundo :: Color
 fundo = white
@@ -65,7 +68,7 @@ main = do
   relva <- loadBMP "resources/textures/map/Relva.bmp"
   torreGelo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
   torreResina <- loadBMP "resources/textures/towers/TorreResina.bmp"
-  torreFogo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
+  torreFogo <- loadBMP "resources/textures/towers/TorreFogo.bmp"
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
@@ -75,16 +78,16 @@ main = do
         fr 
         (itInicial 
           [
-            terra,         --0
-            relva,         --1
-            agua,          --2
-            torreGelo,     --3
-            torreResina,   --4
-            torreFogo,     --5
-            base,          --6
-            portal,        --7
-            guerreiroFogo, --8
-            mulherLanca    --9
+            terra,         --0; 64x64 px
+            relva,         --1; 64x64 px
+            agua,          --2; 64x64 px
+            torreGelo,     --3; 64x106 px
+            torreResina,   --4; 64x114 px
+            torreFogo,     --5; 64x121 px
+            base,          --6; 64x104 px
+            portal,        --7; 64x128 px
+            guerreiroFogo, --8; 27x47 px
+            mulherLanca    --9; 27x50 px
           ]
         ) 
         desenha 

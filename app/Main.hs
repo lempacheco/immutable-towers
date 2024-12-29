@@ -18,7 +18,7 @@ itInicial texturas = ImmutableTowers {
         portaisJogo = [],
         torresJogo = [],
         mapaJogo = mapaInicial,
-        inimigosJogo = [inimigo1],
+        inimigosJogo = [],
         lojaJogo = []
       },
   texturasIT = texturas

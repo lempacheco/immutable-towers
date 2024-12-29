@@ -17,11 +17,13 @@ import Data.List
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
+
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
     where inimigos@(i:is) = inimigosJogo j 
           torres@(t:ts) = torresJogo j 
           (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos 
+
 
 atualizaPortaisEInimigos :: Jogo -> Jogo 
 atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJogo = portaisAtualizado}
@@ -31,6 +33,7 @@ atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJo
           (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos
           (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
 
+-- Processa todos os portais, lançando todos os inimigos
 lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
 lancaTodosPortais [] is = ([], is)
 lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is 
@@ -261,7 +264,22 @@ inimigoAtingeBaseB (i:is) base =
 ondaAtiva :: Onda -> Bool 
 ondaAtiva o = entradaOnda o <= 0 
 
-{-|A função 'lancaInimigo' 
+{-|A função 'lancaInimigo' é responsável por gerenciar o lançamento de inimigos de um portal. 
+
+  == __Comportamneto: __ 
+
+  1. **Sem Ondas**: 
+      Se o portal não possui ondas, a função apenas retorna o portal e a lista de inimigos inalterada.
+  2. **Ondas Inativas**:
+      Caso a onda ativa no portal ainda não esteja pronta (parâmetro `entradaOnda` > 0), 
+      reduz o tempo restante para ativação da onda (`entradaOnda - 1`) e atualiza o portal.
+  3. **Onda Ativa com Tempo Restante**:
+      Se a onda está ativa, mas o tempo para lançar o próximo inimigo ainda não chegou (`tempoOnda > 0`),
+      reduz o tempo restante (`tempoOnda - 1`) e atualiza o portal.
+  4. **Onda Ativa Pronta para Lançar**:
+      Se o tempo para lançar o próximo inimigo chegou a 0, reinicia o contador (`tempoOnda` = `cicloOnda`),
+      chama a função 'ativaInimigo' para mover o próximo inimigo da onda para a lista de inimigos ativos,
+      e atualiza o portal. 
 -}   
 
 lancaInimigo :: Portal -> [Inimigo] -> (Portal, [Inimigo])

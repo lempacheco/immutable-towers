@@ -254,6 +254,26 @@ teste15 =
                                                                                                                   inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 10}]
       ]
 
+teste16 :: Test 
+teste16 = 
+   TestLabel "Testes para a função lancaTodosInimigos" $
+    test
+     [
+      "Sem portais e inimigos" ~:
+      ([], []) ~=? lancaTodosPortais [] [],
+
+      "Sem inimigos ativos" ~: ([portalA3 {ondasPortal = [ondaD'3, ondaA3]}, portalB3 {ondasPortal = [ondaC'3, ondaB3]}], [inimigoB3])
+         ~=? lancaTodosPortais [portalA3 {ondasPortal = [ondaD3, ondaA3]}, portalB3 {ondasPortal = [ondaC3, ondaB3]}] [], 
+
+      "Inimigos ja no mapa" ~: ([portalA3 {ondasPortal = [ondaD'3, ondaA3]}, 
+                                 portalB3 {ondasPortal = [ondaC3 {tempoOnda = 3, entradaOnda = 0}, ondaB3]}], 
+                                 [inimigoB3, inimigoA3, Inimigo {vidaInimigo = 2, posicaoInimigo = (5.5, 2.5)}]) 
+         ~=? lancaTodosPortais [portalA3 {ondasPortal = [ondaD3, ondaA3]}, 
+                                portalB3 {ondasPortal = [ondaC3 {entradaOnda = 0}, ondaB3]}] 
+                               [Inimigo {vidaInimigo = 2, posicaoInimigo = (5.5, 2.5)}]
+
+      
+     ]
 
 {-
 mapa1 :: Mapa
@@ -285,6 +305,7 @@ torreA3 = Torre
     projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}
  }
 
+-- Torre com resina
 torreB3 :: Torre 
 torreB3 = Torre 
  {
@@ -305,6 +326,12 @@ portalA3 = Portal
     ondasPortal = [ondaA3, ondaB3] 
  }
 
+portalB3 :: Portal 
+portalB3 = Portal 
+ {
+    posicaoPortal = (0.5, 0.5),
+    ondasPortal = [ondaA3, ondaB3] 
+ }
 
 ondaA3 :: Onda
 ondaA3 = Onda 
@@ -333,6 +360,41 @@ ondaB3 = Onda
     entradaOnda = 0
  }
 
+ondaC3 :: Onda 
+ondaC3 = Onda 
+ {
+   inimigosOnda = [inimigoA3, inimigoC3],
+   cicloOnda = 3,
+   tempoOnda = 0,
+   entradaOnda = 2
+ }
+
+ondaC'3 :: Onda 
+ondaC'3 = Onda 
+ {
+   inimigosOnda = [inimigoA3, inimigoC3],
+   cicloOnda = 3,
+   tempoOnda = 0,
+   entradaOnda = 1
+ }
+
+ondaD3 :: Onda 
+ondaD3 = Onda 
+ {
+   inimigosOnda = [inimigoB3, inimigoD3],
+   cicloOnda = 3,
+   tempoOnda = 0,
+   entradaOnda = 0
+ }
+
+ondaD'3 :: Onda 
+ondaD'3 = Onda 
+ {
+   inimigosOnda = [inimigoD3],
+   cicloOnda = 3,
+   tempoOnda = 3,
+   entradaOnda = 0
+ }
 inimigoA3 :: Inimigo 
 inimigoA3 = Inimigo 
  {
@@ -356,6 +418,33 @@ inimigoB3 = Inimigo
   butimInimigo = 5, 
   projeteisInimigo = []
  }
+
+inimigoC3 :: Inimigo 
+inimigoC3 = Inimigo 
+ {
+  posicaoInimigo = (0.5, 0.5),
+  direcaoInimigo = Oeste,
+  vidaInimigo = 6.0,
+  ataqueInimigo = 5.0, 
+  velocidadeInimigo = 0.0,
+  butimInimigo = 5, 
+  projeteisInimigo = []
+ }
+
+inimigoD3 :: Inimigo 
+inimigoD3 = Inimigo 
+ {
+  posicaoInimigo = (1.5, 0.5),
+  direcaoInimigo = Este,
+  vidaInimigo = 6.0,
+  ataqueInimigo = 5.0, 
+  velocidadeInimigo = 0.0,
+  butimInimigo = 5, 
+  projeteisInimigo = []
+ }
+
+
+
 --projetil de tipo Fogo
 projetil1 :: Projetil
 projetil1 = Projetil

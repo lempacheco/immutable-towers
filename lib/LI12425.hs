@@ -127,8 +127,13 @@ data Inimigo = Inimigo
     -- | Créditos que o jogador recebe ao derrotar o inimigo.
     butimInimigo :: Creditos,
     -- | Efeitos secundários ativos no inimigo.
-    projeteisInimigo :: [Projetil]
+    projeteisInimigo :: [Projetil],
+    -- | Tipo do inimigo.
+    tipoInimigo :: TipoInimigo
   }
+  deriving (Show, Eq)
+
+data TipoInimigo = GuerreiroFogo | MulherLanca
   deriving (Show, Eq)
 
 -- | Onda de inimigos que saem de um portal.

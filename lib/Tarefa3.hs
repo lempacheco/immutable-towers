@@ -20,17 +20,17 @@ atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaPortaisEInimigo
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
-    where inimigos@(i:is) = inimigosJogo j 
-          torres@(t:ts) = torresJogo j 
+    where inimigos = inimigosJogo j 
+          torres = torresJogo j 
           (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos 
 
 
 atualizaPortaisEInimigos :: Jogo -> Jogo 
 atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJogo = portaisAtualizado}
-    where inimigos@(i:is) = inimigosJogo j 
-          torres@(t:ts) = torresJogo j 
-          portais@(p:ps) = portaisJogo j 
-          (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos
+    where inimigos = inimigosJogo j 
+          torres = torresJogo j 
+          portais = portaisJogo j 
+          (inimigosAtualizados, _) = disparaTodosProjeteis torres inimigos
           (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
 
 -- Processa todos os portais, lançando todos os inimigos

@@ -284,3 +284,4 @@ moveInimigo :: Inimigo -> Inimigo
 moveInimigo i
     | acDirecao i /= 64 = i {acDirecao = acDirecao i + 1}
     | otherwise = i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = 0, direcaoInimigo = head $ tail $ caminhoInimigo i}
+

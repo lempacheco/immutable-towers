@@ -167,11 +167,11 @@ fatorVelocidadeInimigoResina = 0.9 --atualizaInimigoResina reduz a velocidade po
 atualizaInimigoFogo :: [Inimigo] -> [Inimigo]
 atualizaInimigoFogo [] = []
 atualizaInimigoFogo (i:is)
-    | Fogo `elem` getTiposProjsInimigo i = i {vidaInimigo = vidaInimigo i - taxaVelocidadeInimigoFogo} : atualizaInimigoFogo is
+    | Fogo `elem` getTiposProjsInimigo i = i {vidaInimigo = vidaInimigo i - taxaDanoInimigoFogo} : atualizaInimigoFogo is
     | otherwise = i : atualizaInimigoFogo is
 
-taxaVelocidadeInimigoFogo :: Float
-taxaVelocidadeInimigoFogo = 5
+taxaDanoInimigoFogo :: Float
+taxaDanoInimigoFogo = 5
 
 inimigosSemVidaIs :: [Inimigo] -> [Inimigo]
 inimigosSemVidaIs [] = []

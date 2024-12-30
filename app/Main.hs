@@ -17,7 +17,7 @@ itInicial texturas = ImmutableTowers {
           posicaoBase = (7.5*64,-(1.5*64)),
           creditosBase = 0
           },
-        torresJogo = [{- Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo,duracaoProjetil = Finita 10}, danoTorre = 0,
+        torresJogo = [Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo,duracaoProjetil = Finita 10}, danoTorre = 0,
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
                              cicloTorre = 2,
@@ -31,7 +31,7 @@ itInicial texturas = ImmutableTowers {
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
                              cicloTorre = 2,
-                             tempoTorre = 0} -}],
+                             tempoTorre = 0} ],
         portaisJogo = [
                         Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (-(7.5*64),-(1.5*64)), 
                                                                                                                      tipoInimigo = GuerreiroFogo, 

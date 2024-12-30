@@ -39,7 +39,10 @@ itInicial texturas = ImmutableTowers {
                       ],
         mapaJogo = mapaInicial,
         inimigosJogo = [{- Inimigo {posicaoInimigo = (10.5,10.5), tipoInimigo = GuerreiroFogo}, Inimigo {posicaoInimigo = (1.5,1.5), tipoInimigo = MulherLanca} -}],
-        lojaJogo = []
+        lojaJogo = [(1000, Torre{projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 10}}),
+                    (1000, Torre{projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}}),
+                    (1000, Torre{projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}})
+                   ]
       },
   texturasIT = texturas
 }
@@ -72,7 +75,7 @@ janela :: Display
 janela = {- InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0) -} FullScreen
 
 fundo :: Color
-fundo = white
+fundo = makeColorI 61 19 8 0
 
 fr :: Int
 fr = 60
@@ -90,21 +93,31 @@ main = do
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
   mulherLanca <- loadBMP "resources/textures/entities/MulherLanca.bmp"
+  painel1 <- loadBMP "resources/textures/ui/painel1.bmp"
+  banner1_1 <- loadBMP "resources/textures/ui/banner1_1.bmp"
+  banner1_2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
+  banner1_3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
+  creditos <- loadBMP "resources/textures/ui/creditos.bmp"
   play janela 
         fundo 
         fr 
         (itInicial 
           [
-            terra,         --0; 64x64 px
-            relva,         --1; 64x64 px
-            agua,          --2; 64x64 px
-            torreGelo,     --3; 64x106 px
-            torreResina,   --4; 64x114 px
-            torreFogo,     --5; 64x121 px
-            base,          --6; 64x104 px
-            portal,        --7; 64x128 px
-            guerreiroFogo, --8; 27x47 px
-            mulherLanca    --9; 27x50 px
+            terra,         --0;  64x64 px
+            relva,         --1;  64x64 px
+            agua,          --2;  64x64 px
+            torreGelo,     --3;  64x106 px
+            torreResina,   --4;  64x114 px
+            torreFogo,     --5;  64x121 px
+            base,          --6;  64x104 px
+            portal,        --7; 
+            guerreiroFogo, --8;  27x47 px
+            mulherLanca,   --9;  27x50 px
+            painel1,       --10; 32x32 px
+            banner1_1,     --11; 32x32 px
+            banner1_2,     --12; 32x32 px
+            banner1_3,      --13; 32x32 px
+            creditos       --14; 35x28 px
           ]
         ) 
         desenha 

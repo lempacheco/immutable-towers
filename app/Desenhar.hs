@@ -14,7 +14,7 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = Pictures [picMapa,picInimigo,Pictures picPortais, picBase, picTorre]
+desenha it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picBase, picTorre]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
           mapa = mapaJogo jogo
@@ -27,6 +27,8 @@ desenha it = Pictures [picMapa,picInimigo,Pictures picPortais, picBase, picTorre
           portais = portaisJogo jogo
           picTorre = desenhaTorres torres texturas 
           torres = torresJogo jogo
+          picLoja = desenhaLoja loja texturas
+          loja = lojaJogo jogo
 
 
 desenhaMapa :: Mapa -> [Picture] -> Picture
@@ -84,3 +86,19 @@ desenhaPortais [] _ = []
 desenhaPortais (p:ps) textura = 
     let (x,y) = posicaoPortal p
     in translate x (y  + (128-64)/2) textura : desenhaPortais ps textura
+    
+desenhaLoja :: Loja -> [Picture] -> Picture
+desenhaLoja loja ts = Pictures $ map desenhaTorre loja
+    where x = -800
+          y = 100
+          espacamento = 200
+          tamanhoTorre = 0.75
+          tamanhoCreditos = 0.2
+          desenhaTorre :: (Creditos, Torre) -> Picture
+          desenhaTorre (cs,t) = case tipoProjetil $ projetilTorre t of
+            Gelo -> Pictures [translate x y $ scale tamanhoTorre tamanhoTorre (ts!!3), translate (x+50) (y) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs, translate (x+135) (y+10) (ts!!14)]
+            Resina -> Pictures [translate x (y-espacamento) $ scale tamanhoTorre tamanhoTorre (ts!!4), translate (x+50) (y-espacamento) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs, translate (x+150) (y-espacamento+14) (ts!!14)]
+            Fogo -> Pictures [translate x (y-2*espacamento) $ scale tamanhoTorre tamanhoTorre (ts!!5), translate (x+50) (y-2*espacamento) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs, translate (x+150) (y-2*espacamento+14) (ts!!14)]
+    
+-- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
+-- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo

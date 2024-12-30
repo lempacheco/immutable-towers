@@ -55,7 +55,9 @@ atualizaInimigos t j =
     in j { inimigosJogo = inimigoAtingeBaseIs b is 
                             $ atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
-                            $ atualizaInimigoFogo is 
+                            $ atualizaInimigoFogo 
+                            $ map moveInimigo 
+                            $ geraCaminho is m b
                            }
 
 atualizaBase :: Jogo -> Jogo
@@ -261,3 +263,24 @@ lancaInimigo p is = case ondasPortal p of
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
 
+geraCaminho :: [Inimigo] -> Mapa -> Base -> [Inimigo]
+geraCaminho [] _ _ = []
+geraCaminho (i:is) m b =
+    let (xI, yI) = posicaoInimigo i
+        (xB, yB) = posicaoBase b
+        (_,_,l) = atualizaPos' m ((xI/64) + 7.5,abs ((yI/64) - 7.5)) ((xB/64) + 7.5,abs ((yB/64) - 7.5)) [] []
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminho is m b else i : geraCaminho is m b
+
+atualizaPos' :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
+atualizaPos' m pos@(x,y) posB lpos ld
+  | chegouBase pos posB = (True, lpos, ld)
+  | verificaDirecaoTerra m pos lpos Norte = atualizaPos' m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte])
+  | verificaDirecaoTerra m pos lpos Sul = atualizaPos' m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul])
+  | verificaDirecaoTerra m pos lpos Este = atualizaPos' m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este])
+  | verificaDirecaoTerra m pos lpos Oeste = atualizaPos' m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste])
+  | otherwise = (False, lpos, ld)
+
+moveInimigo :: Inimigo -> Inimigo
+moveInimigo i
+    | acDirecao i /= 64 = i {acDirecao = acDirecao i + 1}
+    | otherwise = i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = 0, direcaoInimigo = head $ tail $ caminhoInimigo i}

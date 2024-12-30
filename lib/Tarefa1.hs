@@ -221,7 +221,7 @@ existePeloMenosUmCaminho mapa p b =
   in fst (atualizaPos mapa posP posB [])
 
 eFronteiras :: Posicao -> Bool
-eFronteiras (x,y) = x <= -8 || y <= -8 || x>=8 || y >= 8
+eFronteiras (x,y) = x < 0 || y < 0 || x>=16 || y >= 16
 
 jaPassou :: Posicao -> [Posicao] -> Bool
 jaPassou _ [] = False

@@ -9,7 +9,7 @@ testesTarefa1 :: Test
 testesTarefa1 =
   TestLabel "Testes Tarefa 1" $
     test
-      [ testesFaux, testesPortais, testesInimigos, testesTorres, testesBase] 
+      [ testesFaux, testesPortais, testesInimigos, testesTorres, testesBase, testesExistePeloMenosUmCaminho] 
 
 testesFaux :: Test 
 testesFaux = 
@@ -132,6 +132,41 @@ testesBase =
         "naoSobrepostoBaseTorrePortal - teste com uma base não válida (sobreposta a uma torre)" ~: False ~=? naoSobrepostoBaseTorrePortal base4 [torre1] [portal1],
         "naoSobrepostoBaseTorrePortal - teste com uma base não válida (sobreposta a um portal)" ~: False ~=? naoSobrepostoBaseTorrePortal base5 [torre1] [portal1]
       ]
+
+testesExistePeloMenosUmCaminho :: Test
+testesExistePeloMenosUmCaminho = test [
+    "existePeloMenosUmCaminho" ~: True ~=? existePeloMenosUmCaminho mapaInicial portalInicial baseInicial
+  ]
+
+mapaInicial :: Mapa 
+mapaInicial = 
+  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
+    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
+    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r],
+    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r]
+  ]
+  where
+       t = Terra
+       r = Relva
+       a = Agua
+
+portalInicial :: Portal
+portalInicial = Portal {posicaoPortal = (0,9)}
+
+baseInicial :: Base
+baseInicial = Base {posicaoBase = (15,9)}
 
 portal1 = Portal {
   posicaoPortal = (0.5,0.5),

@@ -63,7 +63,7 @@ desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas)
 desenhaUmInimigo :: Inimigo -> [Picture] -> Picture 
 desenhaUmInimigo inimigo texturas = 
     let (x, y) = posicaoInimigo inimigo
-        numeroDaVida = translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo 
+        numeroDaVida = translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ acDirecao inimigo 
         textura = case tipoInimigo inimigo of
             MulherLanca   -> texturas !! 9
             GuerreiroFogo -> texturas !! 8

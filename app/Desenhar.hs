@@ -23,8 +23,8 @@ desenhaMenu :: ImmutableTowers -> Picture
 desenhaMenu it = Pictures 
     [fundo,
     translate 0 0 $ botaoPlay, 
-    translate (0) (-2) $ botaoCredito, 
-    translate  (0) (-4) $ botaoLevel
+    translate (0) (-56) $ botaoCredito, 
+    translate  (0) (-112) $ botaoLevel
          ]
      where texturas = texturasIT it 
            fundo = texturas !! 15 

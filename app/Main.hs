@@ -10,6 +10,7 @@ import LI12425
 
 itInicial :: [Picture] -> ImmutableTowers
 itInicial texturas = ImmutableTowers { 
+  estadoIT = Menu, 
   jogoIT = Jogo {
         baseJogo = Base {
           vidaBase = 50,
@@ -121,10 +122,10 @@ main = do
   banner1_2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
   banner1_3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
   creditos <- loadBMP "resources/textures/ui/creditos.bmp"
-  fundoMenu <- loadBMP "resources/texturas/menuFundo/fundoMenu.webp"
-  botaoPlay <- loadBMP ""
-  botaoCredito <- loadBMP ""
-  botaoLevel <- loadBMP ""
+  fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
+  botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
+  botaoCredito <- loadBMP "resources/textures/menuFundo/botaoCredits.bmp"
+  botaoLevel <- loadBMP "resources/textures/menuFundo/botaoLevel.bmp"
   play janela 
         fundo 
         fr 

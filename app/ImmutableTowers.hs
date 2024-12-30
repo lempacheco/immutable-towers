@@ -14,4 +14,5 @@ data EstadoJogo = Menu
                 | Jogando 
                 | Pausado 
                 | GameOver
-                | YouWon
+                | YouWon 
+                deriving (Eq, Show)

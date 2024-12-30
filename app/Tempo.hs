@@ -7,4 +7,4 @@ import Tarefa1
 
 reageTempo :: Tempo -> ImmutableTowers -> ImmutableTowers
 reageTempo t it = it {jogoIT = atualizaJogo t $ jogoIT it}
-
+ 

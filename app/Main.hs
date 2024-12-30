@@ -1,3 +1,4 @@
+
 module Main where
 
 import Desenhar
@@ -31,10 +32,26 @@ itInicial texturas = ImmutableTowers {
                              cicloTorre = 2,
                              tempoTorre = 0}],
         portaisJogo = [
-                        Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (10.5,10.5), tipoInimigo = GuerreiroFogo, projeteisInimigo = [], vidaInimigo = 6, butimInimigo = 4, direcaoInimigo = Este, ataqueInimigo = 5, velocidadeInimigo = 50}, Inimigo {posicaoInimigo = (1.5,1.5), tipoInimigo = MulherLanca, projeteisInimigo = [], vidaInimigo = 6, butimInimigo = 4, direcaoInimigo = Este, ataqueInimigo = 5, velocidadeInimigo = 7}],
-                                cicloOnda = 2*60,
-                                tempoOnda = 0,
-                                entradaOnda = 0}]}
+                        Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (0.5, 0.5), 
+                                                                                                                     tipoInimigo = GuerreiroFogo, 
+                                                                                                                     projeteisInimigo = [], 
+                                                                                                                     vidaInimigo = 6, 
+                                                                                                                     butimInimigo = 4, 
+                                                                                                                     direcaoInimigo = Este, 
+                                                                                                                     ataqueInimigo = 5, 
+                                                                                                                     velocidadeInimigo = 50}, 
+                                                                                                                     
+                                                                                                            Inimigo {posicaoInimigo = (-(19.5*5),-(11.5*5)), 
+                                                                                                                     tipoInimigo = MulherLanca, 
+                                                                                                                     projeteisInimigo = [], 
+                                                                                                                     vidaInimigo = 6, 
+                                                                                                                     butimInimigo = 4, 
+                                                                                                                     direcaoInimigo = Este, 
+                                                                                                                     ataqueInimigo = 5, 
+                                                                                                                     velocidadeInimigo = 7}],
+                                                                       cicloOnda = 2*60,
+                                                                       tempoOnda = 0,
+                                                                       entradaOnda = 0}]}
                       --  Portal {posicaoPortal = (-(2.5*64),7.5*64)}
                       ],
         mapaJogo = mapaInicial,
@@ -69,7 +86,7 @@ mapaInicial =
        a = Agua
 
 janela :: Display
-janela = {- InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0) -} FullScreen
+janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
 
 fundo :: Color
 fundo = white

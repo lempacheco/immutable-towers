@@ -66,7 +66,7 @@ itInicial texturas = ImmutableTowers {
                                                                                                                      butimInimigo = 4, 
                                                                                                                      direcaoInimigo = Norte, 
                                                                                                                      ataqueInimigo = 5, 
-                                                                                                                     velocidadeInimigo = 50, 
+                                                                                                                     velocidadeInimigo = 200, 
                                                                                                                      caminhoInimigo = [],
                                                                                                                      acDirecao = (-(2.5*64),7.5*64)},
 

@@ -146,6 +146,7 @@ main = do
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
   botaoCredito <- loadBMP "resources/textures/menuFundo/botaoCredits.bmp"
   botaoLevel <- loadBMP "resources/textures/menuFundo/botaoLevel.bmp"
+  fundoJogo <- loadBMP "resources/textures/menuFundo/fundoJogo.bmp"
   play janela 
         fundo 
         fr 
@@ -165,7 +166,8 @@ main = do
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
             ("botaoCredito",botaoCredito), 
-            ("botaoLevel",botaoLevel) 
+            ("botaoLevel",botaoLevel),
+            ("fundoJogo", fundoJogo) --1920x1080 px
           ]
         ) 
         desenha 

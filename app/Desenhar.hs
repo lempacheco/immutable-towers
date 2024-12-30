@@ -54,7 +54,7 @@ desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picB
 desenhaMapa :: Mapa -> [Textura] -> Picture
 desenhaMapa mapa textures =
     let t = getMapaTexturas mapa textures
-    in pictures [translate ((fromInteger x * fromInteger l )-7.5*64) ((fromInteger y * fromInteger l) +7.5*64 ) ((t!!abs(fromInteger y))!!fromInteger x) | (x,y) <- positions]
+    in Pictures [translate 0 0 (fromJust $ lookup "fundoJogo" textures), pictures [translate ((fromInteger x * fromInteger l )-7.5*64) ((fromInteger y * fromInteger l) +7.5*64 ) ((t!!abs(fromInteger y))!!fromInteger x) | (x,y) <- positions]]
 
 selectTexture :: [Textura] -> Terreno -> Picture
 selectTexture textures Terra = fromJust $ lookup "terra" textures

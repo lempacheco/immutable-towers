@@ -52,16 +52,17 @@ atualizaInimigos t j =
     let is = inimigosJogo j
         b = baseJogo j
         m = mapaJogo j
-    in j {inimigosJogo = inimigoAtingeBaseIs b is
-                            $ atualizaDistanciaPercorridaInimigos t
+    in j { inimigosJogo = inimigoAtingeBaseIs b is 
+                            $ atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
-                            $ atualizaInimigoFogo is}
+                            $ atualizaInimigoFogo is 
+                           }
 
 atualizaBase :: Jogo -> Jogo
 atualizaBase j =
     let b = baseJogo j
         is = inimigosJogo j
-    in j {baseJogo = inimigosSemVidaB is $ inimigoAtingeBaseB is b}
+    in j {baseJogo = inimigosSemVidaB is $ inimigoAtingeBaseB is b} 
 
 {-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
 -}
@@ -82,12 +83,6 @@ detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
             os danos e os efeitos dos projéteis nos inimigos. E, após disparar o tempo de recarga da torre é reiniciado para o valor do ciclo ('cicloTorre').
     -}
 
--- disparaProjeteisTds :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
--- disparaProjeteisTds (t:ts) is = 
---     let (nIs, t) = disparaProjeteis t is
---     in disparaProjeteisTds nIs 
---(fst $ disparaProjeteis t is, snd $ disparaProjeteis t is : snd $ disparaProjeteisTds ts is)
-
 disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
 disparaProjeteis torre [] = ([], torre)
 disparaProjeteis torre is
@@ -97,13 +92,6 @@ disparaProjeteis torre is
        where novaTorre = torre {tempoTorre = cicloTorre torre}
 
 
--- disparaProjeteis torre [] = ([], torre)
--- disparaProjeteis torre is =
---     if length (inimigosSobreviventes torre is) == 0 then ([],torre)
---      else if tempoTorre torre > 0 && length (inimigosSobreviventes torre is) > 0 then (is, torre {tempoTorre = tempoTorre torre - 1})
---       else (inimigosSobreviventes torre is, novaTorre)
---        where novaTorre = torre {tempoTorre = cicloTorre torre} -- (quando chegar a zero dispara)
-
 {-| A função 'inimigosOrdenados' ordena uma lista de inimigos com base na distância
   de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
   primeiro na lista resultante.
@@ -112,7 +100,7 @@ disparaProjeteis torre is
 
   >>> let torre = Torre {posicaoTorre = (2.0, 3.0)}
   >>> let inimigos = [Inimigo {posicaoInimigo = (1.0, 1.0)}, Inimigo {posicaoInimigo = (3.0, 3.0)}]
-  >>> inimigosOrdenados torre inimigos
+  >>> inimigosOrdenados torre ini[] -> error "não existe um caminho válido"  migos
   [Inimigo {posicaoInimigo = (3.0, 3.0)}, Inimigo {posicaoInimigo = (1.0, 1.0)}]
   
 -}
@@ -189,26 +177,6 @@ inimigosSemVidaIs (i:is)
     | vidaInimigo i <= 0 = inimigosSemVidaIs is
     | otherwise = i : inimigosSemVidaIs is
 
-    --(p {ondasPortal = (head (ondasPortal p)){inimigosOnda = comVida inimigosAtivos} : tail (ondasPortal p)}, atualizaBase (semVida inimigosAtivos) b)
---         where
---             semVida :: [Inimigo] -> [Inimigo]
---             semVida [] = []
---             semVida (i:is) = if vidaInimigo i == 0
---                                             then i : semVida is
---                                             else semVida is
---             comVida :: [Inimigo] -> [Inimigo]
---             comVida [] = []
---             comVida (i:is) = if vidaInimigo i == 0
---                                             then comVida is
---                                             else i : comVida is
---             atualizaBase :: [Inimigo] -> Base -> Base
---             atualizaBase is base = b {creditosBase = creditosBase base + getButins is}
-
---             getButins :: [Inimigo] -> Int
---             getButins is = 
---                 let butins = map butimInimigo is
---                 in sum butins
-
 inimigosSemVidaB :: [Inimigo] -> Base -> Base
 inimigosSemVidaB [] b = b
 inimigosSemVidaB (i:is) b
@@ -236,18 +204,14 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
                     else velocidadeInimigo (atualizaInimigoGelo inimigo)
                 else if Resina `elem` tpsProjsInimigo
                     then velocidadeInimigo (atualizaInimigoResina inimigo)
-                    else velocidadeInimigo inimigo
+                    else velocidadeInimigo inimigo 
 
--- inimigoAtingeBase :: Inimigo -> Base -> Portal -> (Portal, Base)
--- inimigoAtingeBase i b p
---     | posicaoInimigo i == posicaoBase b = (atualizaPortal p i, atualizaBase b i)
---     | otherwise = (p,b)
 
 inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo] -> [Inimigo]
 inimigoAtingeBaseIs _ [] inimigosAtivos = inimigosAtivos
 inimigoAtingeBaseIs base (i:is) inimigosAtivos = if posicaoInimigo i == posicaoBase base
                                                     then inimigoAtingeBaseIs base is (delete i inimigosAtivos)
-                                                    else inimigoAtingeBaseIs base is inimigosAtivos
+                                                    else inimigoAtingeBaseIs base is inimigosAtivos 
 
 inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
 inimigoAtingeBaseB [] base = base
@@ -255,9 +219,6 @@ inimigoAtingeBaseB (i:is) base =
     if posicaoInimigo i == posicaoBase base
         then inimigoAtingeBaseB is (base {vidaBase = vidaBase base - ataqueInimigo i})
         else inimigoAtingeBaseB is base
-
-
-
 
 {-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
     devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.

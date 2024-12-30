@@ -131,7 +131,7 @@ data Inimigo = Inimigo
     -- | Tipo do inimigo.
     tipoInimigo :: TipoInimigo,
     caminhoInimigo :: [Direcao],
-    acDirecao :: Int
+    acDirecao :: Posicao
   }
   deriving (Show, Eq)
 

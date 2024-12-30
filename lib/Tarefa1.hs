@@ -232,8 +232,8 @@ chegouBase (px,py) (bx,by) = px == bx && py == by
 
 verificaDirecaoTerra :: Mapa -> Posicao -> [Posicao] -> Direcao -> Bool
 verificaDirecaoTerra m (x,y) lpos d = case d of
-  Norte -> not (jaPassou (x,y-1) lpos) && not (eFronteiras (x,y-1)) && eTerra (x,y+1) m
-  Sul -> not (jaPassou (x,y+1) lpos) && not (eFronteiras (x,y+1)) && eTerra (x,y-1) m
+  Norte -> not (jaPassou (x,y+1) lpos) && not (eFronteiras (x,y+1)) && eTerra (x,y+1) m
+  Sul -> not (jaPassou (x,y-1) lpos) && not (eFronteiras (x,y-1)) && eTerra (x,y-1) m
   Este -> not (jaPassou (x+1,y) lpos) && not (eFronteiras (x+1,y)) && eTerra (x+1,y) m
   Oeste -> not (jaPassou (x-1,y) lpos) && not (eFronteiras (x-1,y)) && eTerra (x-1,y) m
 

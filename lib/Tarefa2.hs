@@ -28,7 +28,7 @@ inimigosNoAlcance t is =
 -}
 
 danoInimigo :: Torre -> Inimigo -> Inimigo 
-danoInimigo t i = i {vidaInimigo =  (vidaInimigo i - danoTorre t)}
+danoInimigo t i = i {vidaInimigo =  vidaInimigo i - danoTorre t}
 
 
 getTiposProjsInimigo :: Inimigo -> [TipoProjetil]
@@ -107,7 +107,7 @@ terminouJogo j = ganhouJogo j || perdeuJogo j
 
 ganhouJogo :: Jogo -> Bool
 ganhouJogo j = null (inimigosJogo j) 
-               && (vidaBase $ baseJogo j) > 0 
+               && vidaBase  (baseJogo j) > 0 
                && all verificaPortal (portaisJogo j) 
 
 {-| A função 'verificaPortal', verifica se um portal está "inativo". Um portal é considerado inativo se:

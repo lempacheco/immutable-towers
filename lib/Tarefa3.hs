@@ -192,8 +192,8 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
         (x,y) = posicaoInimigo i
         d = direcaoInimigo i
     in case d of
-        Norte -> i {posicaoInimigo = (x, y + (v*t))} : atualizaDistanciaPercorridaInimigos t is
-        Sul -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Norte -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Sul -> i {posicaoInimigo = (x, y + (v*t))} : atualizaDistanciaPercorridaInimigos t is
         Oeste -> i {posicaoInimigo = (x - (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
         Este -> i {posicaoInimigo = (x + (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
     where
@@ -211,9 +211,12 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
 
 inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo] -> [Inimigo]
 inimigoAtingeBaseIs _ [] inimigosAtivos = inimigosAtivos
-inimigoAtingeBaseIs base (i:is) inimigosAtivos = if posicaoInimigo i == posicaoBase base
-                                                    then inimigoAtingeBaseIs base is (delete i inimigosAtivos)
-                                                    else inimigoAtingeBaseIs base is inimigosAtivos 
+inimigoAtingeBaseIs base (i:is) inimigosAtivos = 
+    let (xI, yI) = posicaoInimigo i
+        (xB, yB) = posicaoBase base
+    in if (xI <= xB-32 || xI >= xB+32) && (yI <= yB-32 || yI >= yB+32)
+        then inimigoAtingeBaseIs base is (delete i inimigosAtivos)
+        else inimigoAtingeBaseIs base is inimigosAtivos 
 
 inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
 inimigoAtingeBaseB [] base = base
@@ -268,20 +271,24 @@ geraCaminho [] _ _ = []
 geraCaminho (i:is) m b =
     let (xI, yI) = posicaoInimigo i
         (xB, yB) = posicaoBase b
-        (_,_,l) = atualizaPos' m ((xI/64) + 7.5,abs ((yI/64) - 7.5)) ((xB/64) + 7.5,abs ((yB/64) - 7.5)) [] []
+        posI = ((xI/64) + 7.5,abs ((yI/64) - 7.5))
+        posB = ((xB/64) + 7.5,abs ((yB/64) - 7.5))
+        (_,_,l) = geraUmCaminho m posI posB [] []
     in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminho is m b else i : geraCaminho is m b
 
-atualizaPos' :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
-atualizaPos' m pos@(x,y) posB lpos ld
+geraUmCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
+geraUmCaminho m pos@(x,y) posB lpos ld
   | chegouBase pos posB = (True, lpos, ld)
-  | verificaDirecaoTerra m pos lpos Norte = atualizaPos' m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte])
-  | verificaDirecaoTerra m pos lpos Sul = atualizaPos' m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul])
-  | verificaDirecaoTerra m pos lpos Este = atualizaPos' m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este])
-  | verificaDirecaoTerra m pos lpos Oeste = atualizaPos' m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste])
+  | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte])
+  | verificaDirecaoTerra m pos lpos Sul = geraUmCaminho m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul])
+  | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este])
+  | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste])
   | otherwise = (False, lpos, ld)
 
 moveInimigo :: Inimigo -> Inimigo
-moveInimigo i
-    | acDirecao i /= 64 = i {acDirecao = acDirecao i + 1}
-    | otherwise = i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = 0, direcaoInimigo = head $ tail $ caminhoInimigo i}
-
+moveInimigo i =
+    let (xInicial, yInicial) = acDirecao i
+        (xAtual, yAtual) = posicaoInimigo i
+    in if sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 64
+        then i
+        else i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = posicaoInimigo i, direcaoInimigo = head $ tail $ caminhoInimigo i}

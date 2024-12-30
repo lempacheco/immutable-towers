@@ -42,7 +42,7 @@ itInicial texturas = ImmutableTowers {
                                                                                                                      ataqueInimigo = 5, 
                                                                                                                      velocidadeInimigo = 50, 
                                                                                                                      caminhoInimigo = [],
-                                                                                                                     acDirecao = 0},
+                                                                                                                     acDirecao = (-(7.5*64),-(1.5*64))},
 
                                                                                                                      
                                                                                                             Inimigo {posicaoInimigo = (-(7.5*64),-(1.5*64)), 
@@ -54,13 +54,37 @@ itInicial texturas = ImmutableTowers {
                                                                                                                      ataqueInimigo = 5, 
                                                                                                                      velocidadeInimigo = 7,
                                                                                                                      caminhoInimigo = [],
-                                                                                                                     acDirecao = 0
+                                                                                                                     acDirecao = (-(7.5*64),-(1.5*64))
                                                                                                                      }],
                                                                        cicloOnda = 2*60,
                                                                        tempoOnda = 0,
-                                                                       entradaOnda = 0}]}
-                      --  Portal {posicaoPortal = (-(2.5*64),7.5*64)}
-                      ],
+                                                                       entradaOnda = 0}]},
+                       Portal {posicaoPortal = (-(2.5*64),7.5*64), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (-(2.5*64),7.5*64), 
+                                                                                                                     tipoInimigo = GuerreiroFogo, 
+                                                                                                                     projeteisInimigo = [], 
+                                                                                                                     vidaInimigo = 1000, 
+                                                                                                                     butimInimigo = 4, 
+                                                                                                                     direcaoInimigo = Norte, 
+                                                                                                                     ataqueInimigo = 5, 
+                                                                                                                     velocidadeInimigo = 50, 
+                                                                                                                     caminhoInimigo = [],
+                                                                                                                     acDirecao = (-(2.5*64),7.5*64)},
+
+                                                                                                                     
+                                                                                                            Inimigo {posicaoInimigo = (-(2.5*64),7.5*64), 
+                                                                                                                     tipoInimigo = MulherLanca, 
+                                                                                                                     projeteisInimigo = [], 
+                                                                                                                     vidaInimigo = 6, 
+                                                                                                                     butimInimigo = 4, 
+                                                                                                                     direcaoInimigo = Norte, 
+                                                                                                                     ataqueInimigo = 5, 
+                                                                                                                     velocidadeInimigo = 7,
+                                                                                                                     caminhoInimigo = [],
+                                                                                                                     acDirecao = (-(2.5*64),7.5*64)
+                                                                                                                     }],
+                                                                       cicloOnda = 2*60,
+                                                                       tempoOnda = 0,
+                                                                       entradaOnda = 0}]}],
         mapaJogo = mapaInicial,
         inimigosJogo = [{- Inimigo {posicaoInimigo = (10.5,10.5), tipoInimigo = GuerreiroFogo}, Inimigo {posicaoInimigo = (1.5,1.5), tipoInimigo = MulherLanca} -}],
         lojaJogo = [(1000, Torre{projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 10}}),

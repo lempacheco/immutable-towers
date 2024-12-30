@@ -238,7 +238,8 @@ inimigoA = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [projetilC]          
+  projeteisInimigo = [projetilC], 
+  tipoInimigo = MulherLanca        
  }
 
 inimigoB :: Inimigo 
@@ -250,7 +251,8 @@ inimigoB = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [projetilB]  
+  projeteisInimigo = [projetilB],
+  tipoInimigo = MulherLanca    
  }
 
 inimigoC :: Inimigo
@@ -262,7 +264,8 @@ inimigoC = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [projetilA]  
+  projeteisInimigo = [projetilA],
+  tipoInimigo = MulherLanca    
  }
 
 projetilA :: Projetil

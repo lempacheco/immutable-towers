@@ -8,7 +8,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, teste10, teste11, teste12, teste13, teste14, teste15]
+      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, teste10, teste11, teste12, teste13, teste14, teste15, teste16]
 
 -- detetarInimigos 
 teste1 :: Test
@@ -267,13 +267,28 @@ teste16 =
 
       "Inimigos ja no mapa" ~: ([portalA3 {ondasPortal = [ondaD'3, ondaA3]}, 
                                  portalB3 {ondasPortal = [ondaC3 {tempoOnda = 3, entradaOnda = 0}, ondaB3]}], 
-                                 [inimigoB3, inimigoA3, Inimigo {vidaInimigo = 2, posicaoInimigo = (5.5, 2.5)}]) 
+                                 [inimigoB3, inimigoA3, Inimigo {vidaInimigo = 2, 
+                                                                 direcaoInimigo = Norte, 
+                                                                 posicaoInimigo = (5.5, 2.5), 
+                                                                 velocidadeInimigo = 10.0,
+                                                                 ataqueInimigo = 5.0, 
+                                                                 butimInimigo = 5, 
+                                                                 projeteisInimigo = [], 
+                                                                 tipoInimigo = MulherLanca}]) 
          ~=? lancaTodosPortais [portalA3 {ondasPortal = [ondaD3, ondaA3]}, 
                                 portalB3 {ondasPortal = [ondaC3 {entradaOnda = 0}, ondaB3]}] 
-                               [Inimigo {vidaInimigo = 2, posicaoInimigo = (5.5, 2.5)}]
+                               [Inimigo {vidaInimigo = 2, 
+                                         direcaoInimigo = Norte, 
+                                         posicaoInimigo = (5.5, 2.5), 
+                                         velocidadeInimigo = 10.0,
+                                         ataqueInimigo = 5.0, 
+                                         butimInimigo = 5, 
+                                         projeteisInimigo = [], 
+                                         tipoInimigo = MulherLanca}]
 
       
      ]
+
 
 {-
 mapa1 :: Mapa
@@ -404,7 +419,8 @@ inimigoA3 = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca
  }
 
 inimigoB3 :: Inimigo 
@@ -416,7 +432,8 @@ inimigoB3 = Inimigo
   ataqueInimigo = 5.0, 
   velocidadeInimigo = 0.0,
   butimInimigo = 5, 
-  projeteisInimigo = []
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca
  }
 
 inimigoC3 :: Inimigo 
@@ -428,7 +445,8 @@ inimigoC3 = Inimigo
   ataqueInimigo = 5.0, 
   velocidadeInimigo = 0.0,
   butimInimigo = 5, 
-  projeteisInimigo = []
+  projeteisInimigo = [],
+  tipoInimigo = MulherLanca
  }
 
 inimigoD3 :: Inimigo 
@@ -440,7 +458,8 @@ inimigoD3 = Inimigo
   ataqueInimigo = 5.0, 
   velocidadeInimigo = 0.0,
   butimInimigo = 5, 
-  projeteisInimigo = []
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca
  }
 
 
@@ -476,7 +495,8 @@ inimigo1 = Inimigo
   velocidadeInimigo = 0.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [projetil1, projetil2, projetil3] 
+  projeteisInimigo = [projetil1, projetil2, projetil3],
+  tipoInimigo = MulherLanca
  }
 
 --inimigo com velocidade não nula, não afetado por nenhum projetil e com posição diferente da base1
@@ -489,7 +509,8 @@ inimigo2 = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca 
  }
 
 --inimigo com vida nula, butim 5 e com posição igual à base1
@@ -502,7 +523,8 @@ inimigo3 = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [],
+  tipoInimigo = MulherLanca 
  }
 
 --inimigo com vida nula, butim 10 e com posição diferente da base1
@@ -515,7 +537,8 @@ inimigo4 = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 10, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca 
  }
 
 base1 :: Base 

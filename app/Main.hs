@@ -115,6 +115,10 @@ main = do
   banner1_2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
   banner1_3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
   creditos <- loadBMP "resources/textures/ui/creditos.bmp"
+  fundoMenu <- loadBMP "resources/texturas/menuFundo/fundoMenu.webp"
+  botaoPlay <- loadBMP ""
+  botaoCredito <- loadBMP ""
+  botaoLevel <- loadBMP ""
   play janela 
         fundo 
         fr 
@@ -134,7 +138,11 @@ main = do
             banner1_1,     --11; 32x32 px
             banner1_2,     --12; 32x32 px
             banner1_3,      --13; 32x32 px
-            creditos       --14; 35x28 px
+            creditos,       --14; 35x28 px
+            fundoMenu, 
+            botaoPlay, 
+            botaoCredito, 
+            botaoLevel 
           ]
         ) 
         desenha 

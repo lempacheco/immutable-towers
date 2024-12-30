@@ -102,3 +102,14 @@ desenhaLoja loja ts = Pictures $ map desenhaTorre loja
     
 -- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
 -- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
+
+desenhaMenu :: [Picture] -> Picture 
+desenhaMenu texturas = pictures [fundo,
+    translate 0 0 $ botaoPlay, 
+    translate (0) (-2) $ botaoCredito, 
+    translate  (0) (-4) $ botaoLevel
+         ]
+     where fundo = texturas !! 15 
+           botaoPlay = texturas !! 16
+           botaoCredito = texturas !! 17
+           botaoLevel = texturas !! 18

@@ -129,7 +129,9 @@ data Inimigo = Inimigo
     -- | Efeitos secundários ativos no inimigo.
     projeteisInimigo :: [Projetil],
     -- | Tipo do inimigo.
-    tipoInimigo :: TipoInimigo
+    tipoInimigo :: TipoInimigo,
+    caminhoInimigo :: [Direcao],
+    acDirecao :: Int
   }
   deriving (Show, Eq)
 

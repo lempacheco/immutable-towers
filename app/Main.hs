@@ -8,7 +8,7 @@ import ImmutableTowers
 import Tempo
 import LI12425
 
-itInicial :: [Picture] -> ImmutableTowers
+itInicial :: [(String, Picture)] -> ImmutableTowers
 itInicial texturas = ImmutableTowers { 
   estadoIT = Menu, 
   jogoIT = Jogo {
@@ -40,7 +40,7 @@ itInicial texturas = ImmutableTowers {
                                                                                                                      butimInimigo = 4, 
                                                                                                                      direcaoInimigo = Este, 
                                                                                                                      ataqueInimigo = 5, 
-                                                                                                                     velocidadeInimigo = 50, 
+                                                                                                                     velocidadeInimigo = 70, 
                                                                                                                      caminhoInimigo = [],
                                                                                                                      acDirecao = (-(7.5*64),-(1.5*64))},
 
@@ -52,7 +52,7 @@ itInicial texturas = ImmutableTowers {
                                                                                                                      butimInimigo = 4, 
                                                                                                                      direcaoInimigo = Este, 
                                                                                                                      ataqueInimigo = 5, 
-                                                                                                                     velocidadeInimigo = 7,
+                                                                                                                     velocidadeInimigo = 70,
                                                                                                                      caminhoInimigo = [],
                                                                                                                      acDirecao = (-(7.5*64),-(1.5*64))
                                                                                                                      }],
@@ -66,7 +66,7 @@ itInicial texturas = ImmutableTowers {
                                                                                                                      butimInimigo = 4, 
                                                                                                                      direcaoInimigo = Norte, 
                                                                                                                      ataqueInimigo = 5, 
-                                                                                                                     velocidadeInimigo = 200, 
+                                                                                                                     velocidadeInimigo = 70, 
                                                                                                                      caminhoInimigo = [],
                                                                                                                      acDirecao = (-(2.5*64),7.5*64)},
 
@@ -78,7 +78,7 @@ itInicial texturas = ImmutableTowers {
                                                                                                                      butimInimigo = 4, 
                                                                                                                      direcaoInimigo = Norte, 
                                                                                                                      ataqueInimigo = 5, 
-                                                                                                                     velocidadeInimigo = 7,
+                                                                                                                     velocidadeInimigo = 70,
                                                                                                                      caminhoInimigo = [],
                                                                                                                      acDirecao = (-(2.5*64),7.5*64)
                                                                                                                      }],
@@ -123,7 +123,7 @@ janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
 
 fundo :: Color
-fundo = makeColorI 61 19 8 0
+fundo = makeColorI 20 60 85 100
 
 fr :: Int
 fr = 60
@@ -141,10 +141,6 @@ main = do
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
   mulherLanca <- loadBMP "resources/textures/entities/MulherLanca.bmp"
-  painel1 <- loadBMP "resources/textures/ui/painel1.bmp"
-  banner1_1 <- loadBMP "resources/textures/ui/banner1_1.bmp"
-  banner1_2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
-  banner1_3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
   creditos <- loadBMP "resources/textures/ui/creditos.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
@@ -155,25 +151,21 @@ main = do
         fr 
         (itInicial 
           [
-            terra,         --0;  64x64 px
-            relva,         --1;  64x64 px
-            agua,          --2;  64x64 px
-            torreGelo,     --3;  64x106 px
-            torreResina,   --4;  64x114 px
-            torreFogo,     --5;  64x121 px
-            base,          --6;  64x104 px
-            portal,        --7; 
-            guerreiroFogo, --8;  27x47 px
-            mulherLanca,   --9;  27x50 px
-            painel1,       --10; 32x32 px
-            banner1_1,     --11; 32x32 px
-            banner1_2,     --12; 32x32 px
-            banner1_3,      --13; 32x32 px
-            creditos,       --14; 35x28 px
-            fundoMenu, 
-            botaoPlay, 
-            botaoCredito, 
-            botaoLevel 
+            ("terra",terra),         --64x64 px
+            ("relva",relva),         --64x64 px
+            ("agua",agua),          --64x64 px
+            ("torreGelo",torreGelo),     --64x106 px
+            ("torreResina",torreResina),   --64x114 px
+            ("torreFogo",torreFogo),     --64x121 px
+            ("base",base),          --64x104 px
+            ("portal",portal),         
+            ("guerreiroFogo",guerreiroFogo), --27x47 px
+            ("mulherLanca",mulherLanca),   --27x50 px
+            ("creditos",creditos),       --35x28 px
+            ("fundoMenu",fundoMenu), 
+            ("botaoPlay",botaoPlay), 
+            ("botaoCredito",botaoCredito), 
+            ("botaoLevel",botaoLevel) 
           ]
         ) 
         desenha 

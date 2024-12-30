@@ -2,12 +2,12 @@ module ImmutableTowers where
 import LI12425
 import Graphics.Gloss
 
---type Texturas = [(Terreno, (Picture, (Float,Float)))] --correspondencia entre um Terreno e a sua textura respetiva, juntamente com as suas coordenadas
+type Textura = (String,Picture)
 
 data ImmutableTowers = ImmutableTowers {
     estadoIT :: EstadoJogo,
     jogoIT :: Jogo,
-    texturasIT :: [Picture]
+    texturasIT :: [Textura]
 }
 
 data EstadoJogo = Menu 

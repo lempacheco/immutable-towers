@@ -119,6 +119,40 @@ mapaInicial =
        r = Relva
        a = Agua
 
+{- torreGelo :: Torre 
+torreGelo = Torre { -- Exemplo de torre que pode ser comprada
+                   posicaoTorre = (x,y),
+                   danoTorre = 10,
+                   alcanceTorre = 3,
+                   rajadaTorre = 2,
+                   cicloTorre = 1,
+                   tempoTorre = 0,
+                   projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3}
+                  }                
+
+torreFogo :: Torre 
+torreFogo = Torre { -- Exemplo de torre que pode ser comprada
+                   posicaoTorre = (x,y),
+                   danoTorre = 10,
+                   alcanceTorre = 3,
+                   rajadaTorre = 2,
+                   cicloTorre = 1,
+                   tempoTorre = 0,
+                   projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 3}
+                  }                
+
+torreResina :: Torre 
+torreResina = Torre { -- Exemplo de torre que pode ser comprada
+                   posicaoTorre = (x,y),
+                   danoTorre = 10,
+                   alcanceTorre = 3,
+                   rajadaTorre = 2,
+                   cicloTorre = 1,
+                   tempoTorre = 0,
+                   projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}
+                  }                
+
+ -}
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
 

@@ -52,7 +52,7 @@ atualizaInimigos t j =
     let is = inimigosJogo j
         b = baseJogo j
         m = mapaJogo j
-    in j { inimigosJogo = inimigoAtingeBaseIs b is 
+    in j { inimigosJogo = inimigoAtingeBaseIs b 
                             $ atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
                             $ atualizaInimigoFogo 
@@ -209,14 +209,14 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
                     else velocidadeInimigo inimigo 
 
 
-inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo] -> [Inimigo]
-inimigoAtingeBaseIs _ [] inimigosAtivos = inimigosAtivos
-inimigoAtingeBaseIs base (i:is) inimigosAtivos = 
+inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo]
+inimigoAtingeBaseIs _ [] = []
+inimigoAtingeBaseIs base (i:is) = 
     let (xI, yI) = posicaoInimigo i
         (xB, yB) = posicaoBase base
-    in if (xI <= xB-32 || xI >= xB+32) && (yI <= yB-32 || yI >= yB+32)
-        then inimigoAtingeBaseIs base is (delete i inimigosAtivos)
-        else inimigoAtingeBaseIs base is inimigosAtivos 
+    in if (xI >= xB-32 && xI <= xB+32) && (yI >= yB-32 && yI <= yB+32)
+        then inimigoAtingeBaseIs base is
+        else i : inimigoAtingeBaseIs base is 
 
 inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
 inimigoAtingeBaseB [] base = base

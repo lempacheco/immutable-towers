@@ -19,6 +19,22 @@ desenha it = case estadoIT it of
      Menu -> desenhaMenu  it 
      Jogando -> desenhaJogo it 
      Comprando -> desenhaComprando it
+     ColocandoTorre -> desenhaTorreNova it
+
+desenhaTorreNova :: ImmutableTowers -> Picture 
+desenhaTorreNova it = Pictures [desenhaJogo it, desenhaUmaTorre torre texturas]
+   where jogo = jogoIT it 
+         torre = Torre { -- Exemplo de torre que pode ser comprada
+                   posicaoTorre = posicaoTorreComprada it,
+                   danoTorre = 10,
+                   alcanceTorre = 3,
+                   rajadaTorre = 2,
+                   cicloTorre = 1,
+                   tempoTorre = 0,
+                   projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3}
+                  } 
+         texturas = texturasIT it 
+        
 
 desenhaComprando :: ImmutableTowers -> Picture 
 desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]

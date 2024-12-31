@@ -17,7 +17,7 @@ itInicial texturas = ImmutableTowers {
           posicaoBase = (7.5*64,-(1.5*64)),
           creditosBase = 0
           },
-        torresJogo = [Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo,duracaoProjetil = Finita 10}, danoTorre = 0,
+        torresJogo = [{- Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo,duracaoProjetil = Finita 10}, danoTorre = 0,
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
                              cicloTorre = 2,
@@ -31,7 +31,7 @@ itInicial texturas = ImmutableTowers {
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
                              cicloTorre = 2,
-                             tempoTorre = 0} ],
+                             tempoTorre = 0} -}],
         portaisJogo = [
                         Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (-(7.5*64),-(1.5*64)), 
                                                                                                                      tipoInimigo = GuerreiroFogo, 
@@ -119,50 +119,6 @@ mapaInicial =
        r = Relva
        a = Agua
 
-{- torreGelo :: Torre 
-torreGelo = Torre { -- Exemplo de torre que pode ser comprada
-                   posicaoTorre = (x,y),
-                   danoTorre = 10,
-                   alcanceTorre = 3,
-                   rajadaTorre = 2,
-                   cicloTorre = 1,
-                   tempoTorre = 0,
-                   projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3}
-                  }                
-
-torreFogo :: Torre 
-torreFogo = Torre { -- Exemplo de torre que pode ser comprada
-                   posicaoTorre = (x,y),
-                   danoTorre = 10,
-                   alcanceTorre = 3,
-                   rajadaTorre = 2,
-                   cicloTorre = 1,
-                   tempoTorre = 0,
-                   projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 3}
-                  }                
-
-torreResina :: Torre 
-torreResina = Torre { -- Exemplo de torre que pode ser comprada
-                   posicaoTorre = (x,y),
-                   danoTorre = 10,
-                   alcanceTorre = 3,
-                   rajadaTorre = 2,
-                   cicloTorre = 1,
-                   tempoTorre = 0,
-                   projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}
-                  }                
-
- -}
-filePathsAnimacoesTorres :: Int -> TipoProjetil -> [FilePath]
-filePathsAnimacoesTorres ac t
-  | ac /= 30 = ("resources/textures/towers/animacoesTorre" ++ (show t) ++ "/" ++ (show ac) ++ ".bmp") : filePathsAnimacoesTorres (ac+1) t
-  | otherwise = []
-
-idsAnimacoesTorres :: Int -> TipoProjetil -> [String]
-idsAnimacoesTorres ac t
-  | ac /= 30 = ("animacaoTorre" ++ (show t) ++ (show ac)) : idsAnimacoesTorres (ac+1) t
-  | otherwise = []
-
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
 
@@ -181,8 +137,6 @@ main = do
   torreGelo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
   torreResina <- loadBMP "resources/textures/towers/TorreResina.bmp"
   torreFogo <- loadBMP "resources/textures/towers/TorreFogo.bmp"
-  animacoesTorreGelo <- mapM loadBMP (filePathsAnimacoesTorres 1 Gelo)
-  let idsAnimacoesTorresGelo = idsAnimacoesTorres 1 Gelo
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
@@ -197,14 +151,13 @@ main = do
         fundo 
         fr 
         (itInicial 
-          ([
+          [
             ("terra",terra),         --64x64 px
             ("relva",relva),         --64x64 px
             ("agua",agua),          --64x64 px
             ("torreGelo",torreGelo),     --64x106 px
             ("torreResina",torreResina),   --64x114 px
             ("torreFogo",torreFogo),     --64x121 px
-            --("animacaoTorreGelo1",animacaoTorreGelo1), --64x64 px
             ("base",base),          --64x104 px
             ("portal",portal),         
             ("guerreiroFogo",guerreiroFogo), --27x47 px
@@ -215,7 +168,7 @@ main = do
             ("botaoCredito",botaoCredito), 
             ("botaoLevel",botaoLevel),
             ("fundoJogo", fundoJogo) --1920x1080 px
-          ] ++ (zip idsAnimacoesTorresGelo animacoesTorreGelo))
+          ]
         ) 
         desenha 
         reageEventos 

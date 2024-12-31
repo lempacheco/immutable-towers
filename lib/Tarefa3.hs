@@ -15,7 +15,7 @@ import Tarefa1
 import Data.List
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaInimigos t $ atualizaAnimacoesTorres $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
+atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -23,14 +23,6 @@ atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtua
           torres = torresJogo j
           (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos
 
-atualizaAnimacoesTorres :: Jogo -> Jogo
-atualizaAnimacoesTorres j = 
-    let ts = torresJogo j
-    in j{torresJogo = atualizaAcAnimacaoTorre ts}
-        where 
-            atualizaAcAnimacaoTorre :: [Torre] -> [Torre]
-            atualizaAcAnimacaoTorre [] = []
-            atualizaAcAnimacaoTorre (h:t) = h {acAnimacaoTorre = acAnimacaoTorre h + 0.5} : atualizaAcAnimacaoTorre t
 
 atualizaPortaisEInimigos :: Jogo -> Jogo
 atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJogo = portaisAtualizado}
@@ -175,11 +167,11 @@ fatorVelocidadeInimigoResina = 0.9 --atualizaInimigoResina reduz a velocidade po
 atualizaInimigoFogo :: [Inimigo] -> [Inimigo]
 atualizaInimigoFogo [] = []
 atualizaInimigoFogo (i:is)
-    | Fogo `elem` getTiposProjsInimigo i = i {vidaInimigo = vidaInimigo i - taxaDanoInimigoFogo} : atualizaInimigoFogo is
+    | Fogo `elem` getTiposProjsInimigo i = i {vidaInimigo = vidaInimigo i - taxaVelocidadeInimigoFogo} : atualizaInimigoFogo is
     | otherwise = i : atualizaInimigoFogo is
 
-taxaDanoInimigoFogo :: Float
-taxaDanoInimigoFogo = 5
+taxaVelocidadeInimigoFogo :: Float
+taxaVelocidadeInimigoFogo = 5
 
 inimigosSemVidaIs :: [Inimigo] -> [Inimigo]
 inimigosSemVidaIs [] = []

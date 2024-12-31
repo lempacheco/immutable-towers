@@ -84,8 +84,7 @@ data Torre = Torre
     -- | Tempo restante para a próxima rajada de tiros.
     tempoTorre :: Tempo,
     -- | Efeito secundário associado ao tipo de projétil da torre.
-    projetilTorre :: Projetil,
-    acAnimacaoTorre :: Float
+    projetilTorre :: Projetil
   }
   deriving (Show,Eq)
 

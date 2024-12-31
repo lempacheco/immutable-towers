@@ -18,7 +18,18 @@ desenha :: ImmutableTowers -> Picture
 desenha it = case estadoIT it of
      Menu -> desenhaMenu  it 
      Jogando -> desenhaJogo it 
-   
+     Comprando -> desenhaComprando it
+
+desenhaComprando :: ImmutableTowers -> Picture 
+desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
+  where
+    selec = posicaoTorreComprada it
+
+-- Função para desenhar a seleção no mapa
+desenhaSelecao :: (Float, Float) -> Picture
+desenhaSelecao (x, y) =
+    translate (x * 64) (y * 64) $
+    color (withAlpha 0.5 red) $ rectangleSolid 64 64
 
 desenhaMenu :: ImmutableTowers -> Picture 
 desenhaMenu it = Pictures 

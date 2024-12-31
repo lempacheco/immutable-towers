@@ -7,11 +7,13 @@ type Textura = (String,Picture)
 data ImmutableTowers = ImmutableTowers {
     estadoIT :: EstadoJogo,
     jogoIT :: Jogo,
-    texturasIT :: [Textura]
+    texturasIT :: [Textura], 
+    posicaoTorreComprada :: (Float, Float)
 }
 
 data EstadoJogo = Menu 
                 | Jogando 
+                | Comprando 
                 | Pausado 
                 | GameOver
                 | YouWon 

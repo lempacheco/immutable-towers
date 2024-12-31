@@ -92,7 +92,8 @@ itInicial texturas = ImmutableTowers {
                     (1000, Torre{projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}})
                    ]
       },
-  texturasIT = texturas
+  texturasIT = texturas, 
+  posicaoTorreComprada = (0.5,0.5)
 }
 
 mapaInicial :: Mapa 

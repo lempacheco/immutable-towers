@@ -99,6 +99,17 @@ desenhaUmaTorre torre texturas =
             Gelo -> fromJust $ lookup "torreGelo" texturas
             Resina -> fromJust $ lookup "torreResina" texturas
             Fogo -> fromJust $ lookup "torreFogo" texturas
+        texturaAnimacao = desenhaAnimacaoTorre torre texturas
+    in pictures [translate x y texturaAnimacao, translate x y textura]
+
+desenhaAnimacaoTorre :: Torre -> [Textura] -> Picture
+desenhaAnimacaoTorre t ts = 
+    let (x,y) = posicaoTorre t 
+        ac = floor $ acAnimacaoTorre t --desta forma, incrementando 0.5 a cada frame, e cada animacao sendo composta por 29 frames, uma animacao completa demora + ou - 1 segundo
+        textura = case tipoProjetil (projetilTorre t) of 
+            Gelo -> fromJust $ lookup ("animacaoTorreGelo" ++ show ac) ts
+            Resina -> fromJust $ lookup "torreResina" ts
+            Fogo -> fromJust $ lookup "torreFogo" ts
     in translate x y textura 
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]

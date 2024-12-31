@@ -153,6 +153,16 @@ torreResina = Torre { -- Exemplo de torre que pode ser comprada
                   }                
 
  -}
+filePathsAnimacoesTorres :: Int -> TipoProjetil -> [FilePath]
+filePathsAnimacoesTorres ac t
+  | ac /= 30 = ("resources/textures/towers/animacoesTorre" ++ (show t) ++ "/" ++ (show ac) ++ ".bmp") : filePathsAnimacoesTorres (ac+1) t
+  | otherwise = []
+
+idsAnimacoesTorres :: Int -> TipoProjetil -> [String]
+idsAnimacoesTorres ac t
+  | ac /= 30 = ("animacaoTorre" ++ (show t) ++ (show ac)) : idsAnimacoesTorres (ac+1) t
+  | otherwise = []
+
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
 
@@ -171,6 +181,8 @@ main = do
   torreGelo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
   torreResina <- loadBMP "resources/textures/towers/TorreResina.bmp"
   torreFogo <- loadBMP "resources/textures/towers/TorreFogo.bmp"
+  animacoesTorreGelo <- mapM loadBMP (filePathsAnimacoesTorres 1 Gelo)
+  let idsAnimacoesTorresGelo = idsAnimacoesTorres 1 Gelo
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
@@ -185,13 +197,14 @@ main = do
         fundo 
         fr 
         (itInicial 
-          [
+          ([
             ("terra",terra),         --64x64 px
             ("relva",relva),         --64x64 px
             ("agua",agua),          --64x64 px
             ("torreGelo",torreGelo),     --64x106 px
             ("torreResina",torreResina),   --64x114 px
             ("torreFogo",torreFogo),     --64x121 px
+            --("animacaoTorreGelo1",animacaoTorreGelo1), --64x64 px
             ("base",base),          --64x104 px
             ("portal",portal),         
             ("guerreiroFogo",guerreiroFogo), --27x47 px
@@ -202,7 +215,7 @@ main = do
             ("botaoCredito",botaoCredito), 
             ("botaoLevel",botaoLevel),
             ("fundoJogo", fundoJogo) --1920x1080 px
-          ]
+          ] ++ (zip idsAnimacoesTorresGelo animacoesTorreGelo))
         ) 
         desenha 
         reageEventos 

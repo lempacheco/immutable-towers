@@ -16,8 +16,8 @@ comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
 desenha it = case estadoIT it of
-     Menu -> desenhaMenu  it 
-     Jogando -> desenhaJogo it 
+     Menu -> desenhaMenu  it
+     Jogando -> desenhaJogo it
      Comprando -> desenhaComprando it
      ColocandoTorre -> desenhaTorreNova it
 
@@ -36,7 +36,7 @@ desenhaTorreNova it = Pictures [desenhaJogo it, desenhaUmaTorre torre texturas]
          texturas = texturasIT it 
         
 
-desenhaComprando :: ImmutableTowers -> Picture 
+desenhaComprando :: ImmutableTowers -> Picture
 desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
   where
     selec = posicaoTorreComprada it
@@ -47,15 +47,15 @@ desenhaSelecao (x, y) =
     translate (x * 64) (y * 64) $
     color (withAlpha 0.5 red) $ rectangleSolid 64 64
 
-desenhaMenu :: ImmutableTowers -> Picture 
-desenhaMenu it = Pictures 
+desenhaMenu :: ImmutableTowers -> Picture
+desenhaMenu it = Pictures
     [fundo,
-    translate 0 0 $ botaoPlay, 
-    translate (0) (-56) $ botaoCredito, 
+    translate 0 0 $ botaoPlay,
+    translate (0) (-56) $ botaoCredito,
     translate  (0) (-112) $ botaoLevel
          ]
-     where texturas = texturasIT it 
-           fundo = fromJust $ lookup "fundoMenu" texturas 
+     where texturas = texturasIT it
+           fundo = fromJust $ lookup "fundoMenu" texturas
            botaoPlay = fromJust $ lookup "botaoPlay" texturas
            botaoCredito = fromJust $ lookup "botaoCredito" texturas
            botaoLevel = fromJust $ lookup "botaoLevel" texturas
@@ -72,7 +72,7 @@ desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picB
           inimigos = inimigosJogo jogo
           picPortais = desenhaPortais portais (fromJust $ lookup "portal" texturas)
           portais = portaisJogo jogo
-          picTorre = desenhaTorres torres texturas 
+          picTorre = desenhaTorres torres texturas
           torres = torresJogo jogo
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
@@ -81,7 +81,7 @@ desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picB
 desenhaMapa :: Mapa -> [Textura] -> Picture
 desenhaMapa mapa textures =
     let t = getMapaTexturas mapa textures
-    in Pictures [translate 0 0 (fromJust $ lookup "fundoJogo" textures), pictures [translate ((fromInteger x * fromInteger l )-7.5*64) ((fromInteger y * fromInteger l) +7.5*64 ) ((t!!abs(fromInteger y))!!fromInteger x) | (x,y) <- positions]]
+    in Pictures [translate 0 0 (fromJust $ lookup "fundoJogo" textures), pictures [translate ((fromInteger x * fromInteger l )-7.5*64) ((fromInteger y * fromInteger l) +7.5*64 ) ((t!!abs (fromInteger y))!!fromInteger x) | (x,y) <- positions]]
 
 selectTexture :: [Textura] -> Terreno -> Picture
 selectTexture textures Terra = fromJust $ lookup "terra" textures
@@ -99,41 +99,55 @@ getMapaTexturas (h:t) textures = map (textures `selectTexture`) h : getMapaTextu
 desenhaBase :: Base -> Picture -> Picture
 desenhaBase base textura =
     let (x,y) = posicaoBase base
-    in translate x (y  + (104-64)/2) textura  
+    in translate x (y  + (104-64)/2) textura
 
 {- desenhaInimigos :: [Inimigo] -> Picture -> Picture
 desenhaInimigos inimigos textura = pictures [translate (x * 64) (y * 64) textura | Inimigo {posicaoInimigo = (x, y)} <- inimigos] -}
 
 desenhaInimigos :: [Inimigo] -> [Textura] -> Picture
-desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas) inimigos 
+desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas) inimigos
 
-desenhaUmInimigo :: Inimigo -> [Textura] -> Picture 
-desenhaUmInimigo inimigo texturas = 
+desenhaUmInimigo :: Inimigo -> [Textura] -> Picture
+desenhaUmInimigo inimigo texturas =
     let (x, y) = posicaoInimigo inimigo
-        numeroDaVida = translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo 
+        numeroDaVida = translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
         textura = case tipoInimigo inimigo of
             MulherLanca   -> fromJust $ lookup "mulherLanca" texturas
             GuerreiroFogo -> fromJust $ lookup "guerreiroFogo" texturas
     in Pictures [translate x y textura, numeroDaVida]
 
-desenhaTorres :: [Torre] -> [Textura] -> Picture 
-desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 
+desenhaTorres :: [Torre] -> [Textura] -> Picture
+desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres
 
 desenhaUmaTorre :: Torre -> [Textura] -> Picture
-desenhaUmaTorre torre texturas = 
-    let (x,y) = posicaoTorre torre 
-        textura = case tipoProjetil (projetilTorre torre) of 
+desenhaUmaTorre torre texturas =
+    let (x,y) = posicaoTorre torre
+        textura = case tipoProjetil (projetilTorre torre) of
             Gelo -> fromJust $ lookup "torreGelo" texturas
             Resina -> fromJust $ lookup "torreResina" texturas
             Fogo -> fromJust $ lookup "torreFogo" texturas
-    in translate x y textura 
+        texturaAnimacao = desenhaAnimacaoTorre torre texturas
+    in pictures [translate x y textura, texturaAnimacao]
+
+desenhaAnimacaoTorre :: Torre -> [Textura] -> Picture
+desenhaAnimacaoTorre t ts =
+    let (x,y) = posicaoTorre t
+        iteracoes = iteracoesDesdeInicioAnimacao t
+        textura = case tipoProjetil (projetilTorre t) of
+            Gelo -> fromJust $ lookup ("animacaoTorreGelo" ++ show iteracoes) ts
+            Resina -> fromJust $ lookup ("animacaoTorreResina" ++ show iteracoes) ts
+            Fogo -> fromJust $ lookup ("animacaoTorreFogo" ++ show iteracoes) ts
+    in case tipoProjetil (projetilTorre t) of
+            Gelo -> translate x (y+53-(15/2)) textura
+            Resina -> translate x (y+53-(7/2)) textura
+            Fogo -> translate x (y+53) textura
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]
 desenhaPortais [] _ = []
-desenhaPortais (p:ps) textura = 
+desenhaPortais (p:ps) textura =
     let (x,y) = posicaoPortal p
     in translate x (y  + (128-64)/2) textura : desenhaPortais ps textura
-    
+
 desenhaLoja :: Loja -> [Textura] -> Picture
 desenhaLoja loja ts = Pictures $ map desenhaTorre loja
     where x = -800
@@ -146,7 +160,7 @@ desenhaLoja loja ts = Pictures $ map desenhaTorre loja
             Gelo -> Pictures [translate x y $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreGelo" ts), translate (x+50) (y) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs, translate (x+135) (y+10) (fromJust $ lookup "creditos" ts)]
             Resina -> Pictures [translate x (y-espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreResina" ts), translate (x+50) (y-espacamento) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs, translate (x+150) (y-espacamento+14) (fromJust $ lookup "creditos" ts)]
             Fogo -> Pictures [translate x (y-2*espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreFogo" ts), translate (x+50) (y-2*espacamento) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs, translate (x+150) (y-2*espacamento+14) (fromJust $ lookup "creditos" ts)]
-    
+
 -- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
 -- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
 

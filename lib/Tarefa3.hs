@@ -53,7 +53,7 @@ atualizaAnimacaoTorres t j = j {torresJogo = atualizaAnimacaoUmaTorre t (torresJ
 atualizaAnimacaoUmaTorre :: Tempo -> [Torre] -> [Inimigo] -> [Torre]
 atualizaAnimacaoUmaTorre _ [] _ = []
 atualizaAnimacaoUmaTorre tempo (t:ts) is
-    | its == 58 = t {iteracoesDesdeInicioAnimacao = 1} : atualizaAnimacaoUmaTorre tempo ts is
+    | its == 29 = t {iteracoesDesdeInicioAnimacao = 1} : atualizaAnimacaoUmaTorre tempo ts is
     | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : atualizaAnimacaoUmaTorre tempo ts is
     | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : atualizaAnimacaoUmaTorre tempo ts is
     | otherwise = t : atualizaAnimacaoUmaTorre tempo ts is

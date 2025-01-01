@@ -86,7 +86,7 @@ data Torre = Torre
     -- | Efeito secundário associado ao tipo de projétil da torre.
     projetilTorre :: Projetil,
     --tempoInicialAnimacao :: Tempo,
-    iteracoesDesdeInicioAnimacao :: Float
+    iteracoesDesdeInicioAnimacao :: Int
   }
   deriving (Show,Eq)
 

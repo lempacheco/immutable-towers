@@ -118,9 +118,9 @@ desenhaAnimacaoTorre t ts =
     let (x,y) = posicaoTorre t
         iteracoes = iteracoesDesdeInicioAnimacao t
         textura = case tipoProjetil (projetilTorre t) of
-            Gelo -> fromJust $ lookup ("animacaoTorreGelo" ++ show (ceiling(iteracoes/2))) ts
-            Resina -> fromJust $ lookup ("animacaoTorreResina" ++ show (ceiling(iteracoes/2))) ts
-            Fogo -> fromJust $ lookup ("animacaoTorreFogo" ++ show (ceiling(iteracoes/2))) ts
+            Gelo -> fromJust $ lookup ("animacaoTorreGelo" ++ show iteracoes) ts
+            Resina -> fromJust $ lookup ("animacaoTorreResina" ++ show iteracoes) ts
+            Fogo -> fromJust $ lookup ("animacaoTorreFogo" ++ show iteracoes) ts
     in case tipoProjetil (projetilTorre t) of
             Gelo -> translate x (y+53-(15/2)) textura
             Resina -> translate x (y+53-(7/2)) textura

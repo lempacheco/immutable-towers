@@ -22,17 +22,19 @@ itInicial texturas = ImmutableTowers {
                              rajadaTorre = 3,
                              cicloTorre = 2,
                              tempoTorre = 5,
-                             iteracoesDesdeInicioAnimacao = 1}
-                      {- Torre {posicaoTorre = (-4.5*64, 4.5*64), projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}, danoTorre = 0,
+                             iteracoesDesdeInicioAnimacao = 1},
+                      Torre {posicaoTorre = (-4.5*64, 4.5*64), projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}, danoTorre = 0,
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
                              cicloTorre = 2,
-                             tempoTorre = 0}, 
+                             tempoTorre = 0,
+                             iteracoesDesdeInicioAnimacao = 1}, 
                       Torre {posicaoTorre = (6.5*64, 0.5*64), projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}, danoTorre = 0,
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
                              cicloTorre = 2,
-                             tempoTorre = 0} -}],
+                             tempoTorre = 0,
+                             iteracoesDesdeInicioAnimacao = 1}],
         portaisJogo = [
                         Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (-(7.5*64),-(1.5*64)), 
                                                                                                                      tipoInimigo = GuerreiroFogo, 
@@ -168,6 +170,64 @@ main = do
   animacaoTorreGelo27 <- loadBMP "resources/textures/towers/animacoesTorreGelo/27.bmp"
   animacaoTorreGelo28 <- loadBMP "resources/textures/towers/animacoesTorreGelo/28.bmp"
   animacaoTorreGelo29 <- loadBMP "resources/textures/towers/animacoesTorreGelo/29.bmp"
+  animacaoTorreFogo1 <- loadBMP "resources/textures/towers/animacoesTorreFogo/1.bmp"
+  animacaoTorreFogo2 <- loadBMP "resources/textures/towers/animacoesTorreFogo/2.bmp"
+  animacaoTorreFogo3 <- loadBMP "resources/textures/towers/animacoesTorreFogo/3.bmp"
+  animacaoTorreFogo4 <- loadBMP "resources/textures/towers/animacoesTorreFogo/4.bmp"
+  animacaoTorreFogo5 <- loadBMP "resources/textures/towers/animacoesTorreFogo/5.bmp"
+  animacaoTorreFogo6 <- loadBMP "resources/textures/towers/animacoesTorreFogo/6.bmp"
+  animacaoTorreFogo7 <- loadBMP "resources/textures/towers/animacoesTorreFogo/7.bmp"
+  animacaoTorreFogo8 <- loadBMP "resources/textures/towers/animacoesTorreFogo/8.bmp"
+  animacaoTorreFogo9 <- loadBMP "resources/textures/towers/animacoesTorreFogo/9.bmp"
+  animacaoTorreFogo10 <- loadBMP "resources/textures/towers/animacoesTorreFogo/10.bmp"
+  animacaoTorreFogo11 <- loadBMP "resources/textures/towers/animacoesTorreFogo/11.bmp"
+  animacaoTorreFogo12 <- loadBMP "resources/textures/towers/animacoesTorreFogo/12.bmp"
+  animacaoTorreFogo13 <- loadBMP "resources/textures/towers/animacoesTorreFogo/13.bmp"
+  animacaoTorreFogo14 <- loadBMP "resources/textures/towers/animacoesTorreFogo/14.bmp"
+  animacaoTorreFogo15 <- loadBMP "resources/textures/towers/animacoesTorreFogo/15.bmp"
+  animacaoTorreFogo16 <- loadBMP "resources/textures/towers/animacoesTorreFogo/16.bmp"
+  animacaoTorreFogo17 <- loadBMP "resources/textures/towers/animacoesTorreFogo/17.bmp"
+  animacaoTorreFogo18 <- loadBMP "resources/textures/towers/animacoesTorreFogo/18.bmp"
+  animacaoTorreFogo19 <- loadBMP "resources/textures/towers/animacoesTorreFogo/19.bmp"
+  animacaoTorreFogo20 <- loadBMP "resources/textures/towers/animacoesTorreFogo/20.bmp"
+  animacaoTorreFogo21 <- loadBMP "resources/textures/towers/animacoesTorreFogo/21.bmp"
+  animacaoTorreFogo22 <- loadBMP "resources/textures/towers/animacoesTorreFogo/22.bmp"
+  animacaoTorreFogo23 <- loadBMP "resources/textures/towers/animacoesTorreFogo/23.bmp"
+  animacaoTorreFogo24 <- loadBMP "resources/textures/towers/animacoesTorreFogo/24.bmp"
+  animacaoTorreFogo25 <- loadBMP "resources/textures/towers/animacoesTorreFogo/25.bmp"
+  animacaoTorreFogo26 <- loadBMP "resources/textures/towers/animacoesTorreFogo/26.bmp"
+  animacaoTorreFogo27 <- loadBMP "resources/textures/towers/animacoesTorreFogo/27.bmp"
+  animacaoTorreFogo28 <- loadBMP "resources/textures/towers/animacoesTorreFogo/28.bmp"
+  animacaoTorreFogo29 <- loadBMP "resources/textures/towers/animacoesTorreFogo/29.bmp"
+  animacaoTorreResina1 <- loadBMP "resources/textures/towers/animacoesTorreResina/1.bmp"
+  animacaoTorreResina2 <- loadBMP "resources/textures/towers/animacoesTorreResina/2.bmp"
+  animacaoTorreResina3 <- loadBMP "resources/textures/towers/animacoesTorreResina/3.bmp"
+  animacaoTorreResina4 <- loadBMP "resources/textures/towers/animacoesTorreResina/4.bmp"
+  animacaoTorreResina5 <- loadBMP "resources/textures/towers/animacoesTorreResina/5.bmp"
+  animacaoTorreResina6 <- loadBMP "resources/textures/towers/animacoesTorreResina/6.bmp"
+  animacaoTorreResina7 <- loadBMP "resources/textures/towers/animacoesTorreResina/7.bmp"
+  animacaoTorreResina8 <- loadBMP "resources/textures/towers/animacoesTorreResina/8.bmp"
+  animacaoTorreResina9 <- loadBMP "resources/textures/towers/animacoesTorreResina/9.bmp"
+  animacaoTorreResina10 <- loadBMP "resources/textures/towers/animacoesTorreResina/10.bmp"
+  animacaoTorreResina11 <- loadBMP "resources/textures/towers/animacoesTorreResina/11.bmp"
+  animacaoTorreResina12 <- loadBMP "resources/textures/towers/animacoesTorreResina/12.bmp"
+  animacaoTorreResina13 <- loadBMP "resources/textures/towers/animacoesTorreResina/13.bmp"
+  animacaoTorreResina14 <- loadBMP "resources/textures/towers/animacoesTorreResina/14.bmp"
+  animacaoTorreResina15 <- loadBMP "resources/textures/towers/animacoesTorreResina/15.bmp"
+  animacaoTorreResina16 <- loadBMP "resources/textures/towers/animacoesTorreResina/16.bmp"
+  animacaoTorreResina17 <- loadBMP "resources/textures/towers/animacoesTorreResina/17.bmp"
+  animacaoTorreResina18 <- loadBMP "resources/textures/towers/animacoesTorreResina/18.bmp"
+  animacaoTorreResina19 <- loadBMP "resources/textures/towers/animacoesTorreResina/19.bmp"
+  animacaoTorreResina20 <- loadBMP "resources/textures/towers/animacoesTorreResina/20.bmp"
+  animacaoTorreResina21 <- loadBMP "resources/textures/towers/animacoesTorreResina/21.bmp"
+  animacaoTorreResina22 <- loadBMP "resources/textures/towers/animacoesTorreResina/22.bmp"
+  animacaoTorreResina23 <- loadBMP "resources/textures/towers/animacoesTorreResina/23.bmp"
+  animacaoTorreResina24 <- loadBMP "resources/textures/towers/animacoesTorreResina/24.bmp"
+  animacaoTorreResina25 <- loadBMP "resources/textures/towers/animacoesTorreResina/25.bmp"
+  animacaoTorreResina26 <- loadBMP "resources/textures/towers/animacoesTorreResina/26.bmp"
+  animacaoTorreResina27 <- loadBMP "resources/textures/towers/animacoesTorreResina/27.bmp"
+  animacaoTorreResina28 <- loadBMP "resources/textures/towers/animacoesTorreResina/28.bmp"
+  animacaoTorreResina29 <- loadBMP "resources/textures/towers/animacoesTorreResina/29.bmp"
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
@@ -227,7 +287,65 @@ main = do
             ("animacaoTorreGelo26", animacaoTorreGelo26),
             ("animacaoTorreGelo27", animacaoTorreGelo27),
             ("animacaoTorreGelo28", animacaoTorreGelo28),
-            ("animacaoTorreGelo29", animacaoTorreGelo29)
+            ("animacaoTorreGelo29", animacaoTorreGelo29),
+            ("animacaoTorreFogo1", animacaoTorreFogo1),
+            ("animacaoTorreFogo2", animacaoTorreFogo2),
+            ("animacaoTorreFogo3", animacaoTorreFogo3),
+            ("animacaoTorreFogo4", animacaoTorreFogo4),
+            ("animacaoTorreFogo5", animacaoTorreFogo5),
+            ("animacaoTorreFogo6", animacaoTorreFogo6),
+            ("animacaoTorreFogo7", animacaoTorreFogo7),
+            ("animacaoTorreFogo8", animacaoTorreFogo8),
+            ("animacaoTorreFogo9", animacaoTorreFogo9),
+            ("animacaoTorreFogo10", animacaoTorreFogo10),
+            ("animacaoTorreFogo11", animacaoTorreFogo11),
+            ("animacaoTorreFogo12", animacaoTorreFogo12),
+            ("animacaoTorreFogo13", animacaoTorreFogo13),
+            ("animacaoTorreFogo14", animacaoTorreFogo14),
+            ("animacaoTorreFogo15", animacaoTorreFogo15),
+            ("animacaoTorreFogo16", animacaoTorreFogo16),
+            ("animacaoTorreFogo17", animacaoTorreFogo17),
+            ("animacaoTorreFogo18", animacaoTorreFogo18),
+            ("animacaoTorreFogo19", animacaoTorreFogo19),
+            ("animacaoTorreFogo20", animacaoTorreFogo20),
+            ("animacaoTorreFogo21", animacaoTorreFogo21),
+            ("animacaoTorreFogo22", animacaoTorreFogo22),
+            ("animacaoTorreFogo23", animacaoTorreFogo23),
+            ("animacaoTorreFogo24", animacaoTorreFogo24),
+            ("animacaoTorreFogo25", animacaoTorreFogo25),
+            ("animacaoTorreFogo26", animacaoTorreFogo26),
+            ("animacaoTorreFogo27", animacaoTorreFogo27),
+            ("animacaoTorreFogo28", animacaoTorreFogo28),
+            ("animacaoTorreFogo29", animacaoTorreFogo29),
+            ("animacaoTorreResina1", animacaoTorreResina1),
+            ("animacaoTorreResina2", animacaoTorreResina2),
+            ("animacaoTorreResina3", animacaoTorreResina3),
+            ("animacaoTorreResina4", animacaoTorreResina4),
+            ("animacaoTorreResina5", animacaoTorreResina5),
+            ("animacaoTorreResina6", animacaoTorreResina6),
+            ("animacaoTorreResina7", animacaoTorreResina7),
+            ("animacaoTorreResina8", animacaoTorreResina8),
+            ("animacaoTorreResina9", animacaoTorreResina9),
+            ("animacaoTorreResina10", animacaoTorreResina10),
+            ("animacaoTorreResina11", animacaoTorreResina11),
+            ("animacaoTorreResina12", animacaoTorreResina12),
+            ("animacaoTorreResina13", animacaoTorreResina13),
+            ("animacaoTorreResina14", animacaoTorreResina14),
+            ("animacaoTorreResina15", animacaoTorreResina15),
+            ("animacaoTorreResina16", animacaoTorreResina16),
+            ("animacaoTorreResina17", animacaoTorreResina17),
+            ("animacaoTorreResina18", animacaoTorreResina18),
+            ("animacaoTorreResina19", animacaoTorreResina19),
+            ("animacaoTorreResina20", animacaoTorreResina20),
+            ("animacaoTorreResina21", animacaoTorreResina21),
+            ("animacaoTorreResina22", animacaoTorreResina22),
+            ("animacaoTorreResina23", animacaoTorreResina23),
+            ("animacaoTorreResina24", animacaoTorreResina24),
+            ("animacaoTorreResina25", animacaoTorreResina25),
+            ("animacaoTorreResina26", animacaoTorreResina26),
+            ("animacaoTorreResina27", animacaoTorreResina27),
+            ("animacaoTorreResina28", animacaoTorreResina28),
+            ("animacaoTorreResina29", animacaoTorreResina29)
           ]
         ) 
         desenha 

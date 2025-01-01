@@ -17,23 +17,23 @@ itInicial texturas = ImmutableTowers {
           posicaoBase = (7.5*64,-(1.5*64)),
           creditosBase = 1000
           },
-        torresJogo = [Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo,duracaoProjetil = Finita 10}, danoTorre = 0,
+        torresJogo = [Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo,duracaoProjetil = Finita 1}, danoTorre = 5,
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
-                             cicloTorre = 2,
-                             tempoTorre = 5,
+                             cicloTorre = 180,
+                             tempoTorre = 180,
                              iteracoesDesdeInicioAnimacao = 1},
-                      Torre {posicaoTorre = (-4.5*64, 4.5*64), projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}, danoTorre = 0,
+                      Torre {posicaoTorre = (-4.5*64, 4.5*64), projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}, danoTorre = 3,
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
-                             cicloTorre = 2,
-                             tempoTorre = 5,
+                             cicloTorre = 180,
+                             tempoTorre = 180,
                              iteracoesDesdeInicioAnimacao = 1}, 
                       Torre {posicaoTorre = (6.5*64, 0.5*64), projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}, danoTorre = 1,
                              alcanceTorre = 5*64,
                              rajadaTorre = 3,
-                             cicloTorre = 2,
-                             tempoTorre = 0,
+                             cicloTorre = 180,
+                             tempoTorre = 180,
                              iteracoesDesdeInicioAnimacao = 1}],
         portaisJogo = [
                         Portal {posicaoPortal = (-(7.5*64),-(1.5*64)), ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (-(7.5*64),-(1.5*64)), 
@@ -237,7 +237,7 @@ main = do
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
   botaoCredito <- loadBMP "resources/textures/menuFundo/botaoCredits.bmp"
   botaoLevel <- loadBMP "resources/textures/menuFundo/botaoLevel.bmp"
-  fundoJogo <- loadBMP "resources/textures/menuFundo/fundoJogo.bmp"
+  fundoJogo <- loadBMP "resources/textures/menuFundo/novoFundoJogo.bmp"
   play janela 
         fundo 
         fr 

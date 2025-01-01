@@ -37,11 +37,12 @@ reageEventos (EventKey (Char 'g') Down _ _) it
             torre = Torre
               { posicaoTorre = posFinal, -- sincroniza posição da torre com a seleção
                 danoTorre = 10,
-                alcanceTorre = 3,
+                alcanceTorre = 5*64,
                 rajadaTorre = 2,
-                cicloTorre = 1,
-                tempoTorre = 0,
-                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3}
+                cicloTorre = 180,
+                tempoTorre = 180,
+                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3},
+                iteracoesDesdeInicioAnimacao = 1
               }
             custoTorre = 50
             jogoAtualizado = compraTorre torre custoTorre $ colocaTorreNaPos torre posFinal jogo

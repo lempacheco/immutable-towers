@@ -27,11 +27,12 @@ desenhaTorreNova it = Pictures [desenhaJogo it, desenhaUmaTorre torre texturas]
          torre = Torre { -- Exemplo de torre que pode ser comprada
                    posicaoTorre = posicaoTorreComprada it,
                    danoTorre = 10,
-                   alcanceTorre = 3,
+                   alcanceTorre = 5*64,
                    rajadaTorre = 2,
-                   cicloTorre = 1,
-                   tempoTorre = 0,
-                   projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3}
+                   cicloTorre = 180,
+                   tempoTorre = 180,
+                   projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3},
+                   iteracoesDesdeInicioAnimacao = 1 
                   } 
          texturas = texturasIT it 
         

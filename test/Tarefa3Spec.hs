@@ -314,7 +314,7 @@ mapa1 =
  where
        t = Terra
        r = Relva
-       a = Aguas
+       a = Agua
 
 
 jogoInicial :: Jogo 

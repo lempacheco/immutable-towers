@@ -290,8 +290,18 @@ teste16 =
       
      ]
 
+teste17 :: Test 
+teste17 = 
+   TestLabel "Testes para a função atualizaPortaisEInimigos" $
+    test
+     [
+      "Recebe um jogo no estado inicial" ~: jogoInicial {portaisJogo = [portalA3{ondasPortal = [ondaA'3, ondaB3]}]}
+                                         ~=? atualizaPortaisEInimigos jogoInicial, 
+      "O jogo ja tem inimigos" ~: jogoInicial {inimigosJogo = [inimigoC3, inimigoD3, inimigoA3], portaisJogo = [portalA3{ondasPortal = [ondaB3]}]} 
+                              ~=? atualizaPortaisEInimigos jogoInicial {inimigosJogo = [inimigoC3, inimigoD3], portaisJogo = [portalA3 {ondasPortal = [ondaA'3,ondaB3]}]}
+     ]
 
-{-
+
 mapa1 :: Mapa
 mapa1 =
  [ [t, t, r, a, a, a],
@@ -306,7 +316,19 @@ mapa1 =
        r = Relva
        a = Aguas
 
--}
+
+jogoInicial :: Jogo 
+jogoInicial = Jogo 
+ {
+  baseJogo = base1 ,
+  portaisJogo = [portalA3],
+  torresJogo = [],
+  mapaJogo = mapa1, 
+  inimigosJogo = [], 
+  lojaJogo = lojaA
+ }
+lojaA :: Loja
+lojaA = [(50, torreA3)]
 
 -- Torre com gelo
 torreA3 :: Torre

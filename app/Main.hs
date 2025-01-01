@@ -15,7 +15,7 @@ itInicial texturas = ImmutableTowers {
         baseJogo = Base {
           vidaBase = 50,
           posicaoBase = (7.5*64,-(1.5*64)),
-          creditosBase = 0
+          creditosBase = 1000
           },
         torresJogo = [{- Torre {posicaoTorre = (-5.5*64, -5.5*64), projetilTorre = Projetil {tipoProjetil = Gelo,duracaoProjetil = Finita 10}, danoTorre = 0,
                              alcanceTorre = 5*64,

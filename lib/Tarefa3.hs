@@ -15,7 +15,7 @@ import Tarefa1
 import Data.List
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
+atualizaJogo t j = atualizaInimigos t $ atualizaAnimacaoTorres t $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -46,6 +46,18 @@ disparaTodosProjeteis [] is = (is, [])
 disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = disparaProjeteis t is
                                       (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo
                                   in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas )
+
+atualizaAnimacaoTorres :: Tempo -> Jogo -> Jogo
+atualizaAnimacaoTorres t j = j {torresJogo = atualizaAnimacaoUmaTorre t (torresJogo j) (inimigosJogo j)}
+
+atualizaAnimacaoUmaTorre :: Tempo -> [Torre] -> [Inimigo] -> [Torre]
+atualizaAnimacaoUmaTorre _ [] _ = []
+atualizaAnimacaoUmaTorre tempo (t:ts) is
+    | its == 58 = t {iteracoesDesdeInicioAnimacao = 1} : atualizaAnimacaoUmaTorre tempo ts is
+    | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : atualizaAnimacaoUmaTorre tempo ts is
+    | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : atualizaAnimacaoUmaTorre tempo ts is
+    | otherwise = t : atualizaAnimacaoUmaTorre tempo ts is
+        where its = iteracoesDesdeInicioAnimacao t
 
 atualizaInimigos :: Tempo -> Jogo -> Jogo
 atualizaInimigos t j =

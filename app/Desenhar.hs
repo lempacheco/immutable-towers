@@ -118,12 +118,13 @@ desenhaAnimacaoTorre t ts =
     let (x,y) = posicaoTorre t
         iteracoes = iteracoesDesdeInicioAnimacao t
         textura = case tipoProjetil (projetilTorre t) of
-            Gelo -> if lookup ("animacaoTorreGelo" ++ show (ceiling(iteracoes/2))) ts == Nothing
-                    then error ("animacaoTorreGelo" ++ show (ceiling(iteracoes/2)))
-                    else fromJust $ lookup ("animacaoTorreGelo" ++ show (ceiling(iteracoes/2))) ts
-            Resina -> fromJust $ lookup "torreResina" ts
-            Fogo -> fromJust $ lookup "torreFogo" ts
-    in translate x (y+48) textura
+            Gelo -> fromJust $ lookup ("animacaoTorreGelo" ++ show (ceiling(iteracoes/2))) ts
+            Resina -> fromJust $ lookup ("animacaoTorreResina" ++ show (ceiling(iteracoes/2))) ts
+            Fogo -> fromJust $ lookup ("animacaoTorreFogo" ++ show (ceiling(iteracoes/2))) ts
+    in case tipoProjetil (projetilTorre t) of
+            Gelo -> translate x (y+53-(15/2)) textura
+            Resina -> translate x (y+53-(7/2)) textura
+            Fogo -> translate x (y+53) textura
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]
 desenhaPortais [] _ = []

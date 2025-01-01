@@ -13,7 +13,7 @@ data ImmutableTowers = ImmutableTowers {
 
 data EstadoJogo = Menu 
                 | Jogando 
-                | ColocandoTorre
+                -- | ColocandoTorre
                 | Comprando 
                 | Pausado 
                 | GameOver

@@ -15,7 +15,7 @@ import Tarefa1
 import Data.List
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaInimigos t $ atualizaAnimacaoTorres t $ atualizaTorres $ atualizaPortaisEInimigos $ atualizaBase j
+atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres t $ atualizaPortaisEInimigos $ atualizaBase j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -183,7 +183,7 @@ atualizaInimigoFogo (i:is)
     | otherwise = i : atualizaInimigoFogo is
 
 taxaVelocidadeInimigoFogo :: Float
-taxaVelocidadeInimigoFogo = 5
+taxaVelocidadeInimigoFogo = 5/60 --framerate = 60, logo vai retirar 5 de vida por segundo
 
 inimigosSemVidaIs :: [Inimigo] -> [Inimigo]
 inimigosSemVidaIs [] = []

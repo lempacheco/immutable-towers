@@ -19,9 +19,9 @@ desenha it = case estadoIT it of
      Menu -> desenhaMenu  it
      Jogando -> desenhaJogo it
      Comprando -> desenhaComprando it
-     ColocandoTorre -> desenhaTorreNova it
+     --ColocandoTorre -> desenhaTorreNova it
 
-desenhaTorreNova :: ImmutableTowers -> Picture 
+{- desenhaTorreNova :: ImmutableTowers -> Picture 
 desenhaTorreNova it = Pictures [desenhaJogo it, desenhaUmaTorre torre texturas]
    where jogo = jogoIT it 
          torre = Torre { -- Exemplo de torre que pode ser comprada
@@ -34,7 +34,7 @@ desenhaTorreNova it = Pictures [desenhaJogo it, desenhaUmaTorre torre texturas]
                    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3},
                    iteracoesDesdeInicioAnimacao = 1 
                   } 
-         texturas = texturasIT it 
+         texturas = texturasIT it  -}
         
 
 desenhaComprando :: ImmutableTowers -> Picture
@@ -111,7 +111,7 @@ desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas)
 desenhaUmInimigo :: Inimigo -> [Textura] -> Picture
 desenhaUmInimigo inimigo texturas =
     let (x, y) = posicaoInimigo inimigo
-        numeroDaVida = translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
+        numeroDaVida = translate x (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
         textura = case tipoInimigo inimigo of
             MulherLanca   -> fromJust $ lookup "mulherLanca" texturas
             GuerreiroFogo -> fromJust $ lookup "guerreiroFogo" texturas

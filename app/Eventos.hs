@@ -32,10 +32,10 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
 
 reageEventos (EventKey (Char 'g') Down _ _) it
     | estadoIT it == Comprando =
-        let posFinal = posicaoTorreComprada it -- posição da seleção vermelha
+        let posFinal@(xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
             jogo = jogoIT it
             torre = Torre
-              { posicaoTorre = posFinal, -- sincroniza posição da torre com a seleção
+              { posicaoTorre = (xF*64,yF*64), -- sincroniza posição da torre com a seleção
                 danoTorre = 10,
                 alcanceTorre = 5*64,
                 rajadaTorre = 2,
@@ -46,7 +46,7 @@ reageEventos (EventKey (Char 'g') Down _ _) it
               }
             custoTorre = 50
             jogoAtualizado = compraTorre torre custoTorre $ colocaTorreNaPos torre posFinal jogo
-         in it {jogoIT = jogoAtualizado, estadoIT = ColocandoTorre}
+         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
 
 reageEventos _ it = it 
 

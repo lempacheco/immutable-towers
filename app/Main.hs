@@ -140,12 +140,13 @@ main = do
   banner1 <- loadBMP "resources/textures/ui/banner1_1.bmp"
   banner2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
   banner3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
-  lojaFundo <- loadBMP "resources/textures/ui/fundoLoja.bmp"
-  moldura <- loadBMP "resources/textures/ui/moldura.bmp"
+  lojaFundo <- loadBMP "resources/textures/ui/fundoLoja2.bmp"
+  bannerLoja <- loadBMP "resources/textures/ui/banner_.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
   iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
   iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
   fundoTorre <- loadBMP "resources/textures/ui/fundoTorre.bmp"
+  molduraMapa <- loadBMP "resources/textures/ui/molduraMapa.bmp"
   sM <- loadBMP "resources/textures/letras/S.bmp"
   t <- loadBMP "resources/textures/letras/t.bmp"
   o <- loadBMP "resources/textures/letras/o.bmp"
@@ -275,17 +276,18 @@ main = do
             ("banner2", banner2),
             ("banner3", banner3),
             ("lojaFundo", lojaFundo),
+            ("bannerLoja", bannerLoja),
             ("iconeLoja", iconeLoja),
             ("creditosJogador", creditosJogador),
             ("iconeVidaJg", iconeVidaJg),
             ("fundoTorre", fundoTorre),
+            ("molduraMapa", molduraMapa),
             ("S", sM),
             ("t", t), 
             ("o", o),
             ("r", r),
             ("e", e),
-            ("player", player),
-            ("moldura", moldura)
+            ("player", player)
           ]
         ) 
         desenha 

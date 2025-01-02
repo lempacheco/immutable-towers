@@ -4,9 +4,10 @@ import Graphics.Gloss
 import ImmutableTowers
 import LI12425
 import Data.Maybe (fromJust)
+import GHC.Float (int2Float)
 
-l :: Integer
-l = 64
+lado :: Integer
+lado = 64
 
 altura :: Integer
 altura = 64*16
@@ -35,7 +36,7 @@ desenhaTorreNova it = Pictures [desenhaJogo it, desenhaUmaTorre torre texturas]
                    iteracoesDesdeInicioAnimacao = 1 
                   } 
          texturas = texturasIT it  -}
-        
+
 
 desenhaComprando :: ImmutableTowers -> Picture
 desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
@@ -82,7 +83,7 @@ desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picB
 desenhaMapa :: Mapa -> [Textura] -> Picture
 desenhaMapa mapa textures =
     let t = getMapaTexturas mapa textures
-    in Pictures [translate 0 0 (fromJust $ lookup "fundoJogo" textures), pictures [translate ((fromInteger x * fromInteger l )-7.5*64) ((fromInteger y * fromInteger l) +7.5*64 ) ((t!!abs (fromInteger y))!!fromInteger x) | (x,y) <- positions]]
+    in Pictures [translate 0 0 (fromJust $ lookup "fundoJogo" textures), pictures [translate ((fromInteger x * fromInteger lado )-7.5*64) ((fromInteger y * fromInteger lado) +7.5*64 ) ((t!!abs (fromInteger y))!!fromInteger x) | (x,y) <- positions]]
 
 selectTexture :: [Textura] -> Terreno -> Picture
 selectTexture textures Terra = fromJust $ lookup "terra" textures
@@ -105,17 +106,28 @@ desenhaBase base textura =
 {- desenhaInimigos :: [Inimigo] -> Picture -> Picture
 desenhaInimigos inimigos textura = pictures [translate (x * 64) (y * 64) textura | Inimigo {posicaoInimigo = (x, y)} <- inimigos] -}
 
+string2FonteNumeros :: String -> [Textura] -> Picture
+string2FonteNumeros s ts = Pictures $ auxString2FonteNumeros s ts 0
+
+auxString2FonteNumeros :: String -> [Textura] -> Float -> [Picture]
+auxString2FonteNumeros [] _ _ = []
+auxString2FonteNumeros (h:t) ts ac = (translate (ac*espacamento) 0 $ fromJust $ lookup ("numero" ++ [h]) ts) : auxString2FonteNumeros t ts (ac+1)
+    where espacamento = 13
+
 desenhaInimigos :: [Inimigo] -> [Textura] -> Picture
 desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas) inimigos
 
 desenhaUmInimigo :: Inimigo -> [Textura] -> Picture
 desenhaUmInimigo inimigo texturas =
     let (x, y) = posicaoInimigo inimigo
-        numeroDaVida = translate x (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
+        comprimentoNumeroVidaPxs = int2Float (length (show $ ceiling $ vidaInimigo inimigo) * 13)
+        offsetNumeroVida = (comprimentoNumeroVidaPxs+27+18)/2*0.5 --metade do comprimento da vida, da largura do inimigo e da largura do coração, escalado a 0.5
+        numeroDaVida = translate (x-offsetNumeroVida) (y+40) $ scale 0.5 0.5 $ string2FonteNumeros (show $ ceiling $ vidaInimigo inimigo) texturas
+        coracaoVida = translate (x+offsetNumeroVida) (y+40-(16/2*0.7)) $ scale 0.7 0.7 $ fromJust $ lookup "vida" texturas
         textura = case tipoInimigo inimigo of
             MulherLanca   -> fromJust $ lookup "mulherLanca" texturas
             GuerreiroFogo -> fromJust $ lookup "guerreiroFogo" texturas
-    in Pictures [translate x y textura, numeroDaVida]
+    in Pictures [translate x y textura, numeroDaVida, coracaoVida]
 
 desenhaTorres :: [Torre] -> [Textura] -> Picture
 desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres

@@ -120,12 +120,23 @@ main = do
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
   mulherLanca <- loadBMP "resources/textures/entities/MulherLanca.bmp"
-  creditos <- loadBMP "resources/textures/ui/creditos.bmp"
+  creditos <- loadBMP "resources/textures/ui/novoCreditos.bmp"
+  vida <- loadBMP "resources/textures/ui/vida.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
   botaoCredito <- loadBMP "resources/textures/menuFundo/botaoCredits.bmp"
   botaoLevel <- loadBMP "resources/textures/menuFundo/botaoLevel.bmp"
   fundoJogo <- loadBMP "resources/textures/menuFundo/novoFundoJogo.bmp"
+  numero0 <- loadBMP "resources/textures/numbers/0.bmp"
+  numero1 <- loadBMP "resources/textures/numbers/1.bmp"
+  numero2 <- loadBMP "resources/textures/numbers/2.bmp"
+  numero3 <- loadBMP "resources/textures/numbers/3.bmp"
+  numero4 <- loadBMP "resources/textures/numbers/4.bmp"
+  numero5 <- loadBMP "resources/textures/numbers/5.bmp"
+  numero6 <- loadBMP "resources/textures/numbers/6.bmp"
+  numero7 <- loadBMP "resources/textures/numbers/7.bmp"
+  numero8 <- loadBMP "resources/textures/numbers/8.bmp"
+  numero9 <- loadBMP "resources/textures/numbers/9.bmp"
   play janela 
         fundo 
         fr 
@@ -141,7 +152,8 @@ main = do
             ("portal",portal),         
             ("guerreiroFogo",guerreiroFogo), --27x47 px
             ("mulherLanca",mulherLanca),   --27x50 px
-            ("creditos",creditos),       --35x28 px
+            ("creditos",creditos),       --13x21 px
+            ("vida", vida), --18x16 px
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
             ("botaoCredito",botaoCredito), 
@@ -233,7 +245,17 @@ main = do
             ("animacaoTorreResina26", animacaoTorreResina26),
             ("animacaoTorreResina27", animacaoTorreResina27),
             ("animacaoTorreResina28", animacaoTorreResina28),
-            ("animacaoTorreResina29", animacaoTorreResina29)
+            ("animacaoTorreResina29", animacaoTorreResina29),
+            ("numero0", numero0),
+            ("numero1", numero1),
+            ("numero2", numero2),
+            ("numero3", numero3),
+            ("numero4", numero4),
+            ("numero5", numero5),
+            ("numero6", numero6),
+            ("numero7", numero7),
+            ("numero8", numero8),
+            ("numero9", numero9)
           ]
         ) 
         desenha 

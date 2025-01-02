@@ -238,6 +238,19 @@ main = do
   botaoCredito <- loadBMP "resources/textures/menuFundo/botaoCredits.bmp"
   botaoLevel <- loadBMP "resources/textures/menuFundo/botaoLevel.bmp"
   fundoJogo <- loadBMP "resources/textures/menuFundo/novoFundoJogo.bmp"
+  banner1 <- loadBMP "resources/textures/ui/banner1_1.bmp"
+  banner2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
+  banner3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
+  lojaFundo <- loadBMP "resources/textures/ui/fundoLoja1.bmp"
+  creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
+  iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
+  iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
+  fundoTorre <- loadBMP "resources/textures/ui/fundoTorre.bmp"
+  sM <- loadBMP "resources/textures/letras/S.bmp"
+  t <- loadBMP "resources/textures/letras/t.bmp"
+  o <- loadBMP "resources/textures/letras/o.bmp"
+  r <- loadBMP "resources/textures/letras/r.bmp"
+  e <- loadBMP "resources/textures/letras/e.bmp"
   play janela 
         fundo 
         fr 
@@ -345,7 +358,20 @@ main = do
             ("animacaoTorreResina26", animacaoTorreResina26),
             ("animacaoTorreResina27", animacaoTorreResina27),
             ("animacaoTorreResina28", animacaoTorreResina28),
-            ("animacaoTorreResina29", animacaoTorreResina29)
+            ("animacaoTorreResina29", animacaoTorreResina29),
+            ("banner1", banner1), 
+            ("banner2", banner2),
+            ("banner3", banner3),
+            ("lojaFundo", lojaFundo),
+            ("iconeLoja", iconeLoja),
+            ("creditosJogador", creditosJogador),
+            ("iconeVidaJg", iconeVidaJg),
+            ("fundoTorre", fundoTorre),
+            ("S", sM),
+            ("t", t), 
+            ("o", o),
+            ("r", r),
+            ("e", e)
           ]
         ) 
         desenha 

@@ -204,8 +204,8 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
         (x,y) = posicaoInimigo i
         d = direcaoInimigo i
     in case d of
-        Norte -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
-        Sul -> i {posicaoInimigo = (x, y + (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Norte -> i {posicaoInimigo = (x, y + (v*t))} : atualizaDistanciaPercorridaInimigos t is
+        Sul -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
         Oeste -> i {posicaoInimigo = (x - (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
         Este -> i {posicaoInimigo = (x + (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
     where
@@ -226,7 +226,7 @@ inimigoAtingeBaseIs _ [] = []
 inimigoAtingeBaseIs base (i:is) = 
     let (xI, yI) = posicaoInimigo i
         (xB, yB) = posicaoBase base
-    in if (xI >= xB-32 && xI <= xB+32) && (yI >= yB-32 && yI <= yB+32)
+    in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
         then inimigoAtingeBaseIs base is
         else i : inimigoAtingeBaseIs base is 
 
@@ -281,10 +281,8 @@ lancaInimigo p is = case ondasPortal p of
 geraCaminho :: [Inimigo] -> Mapa -> Base -> [Inimigo]
 geraCaminho [] _ _ = []
 geraCaminho (i:is) m b =
-    let (xI, yI) = posicaoInimigo i
-        (xB, yB) = posicaoBase b
-        posI = ((xI/64) + 7.5,abs ((yI/64) - 7.5))
-        posB = ((xB/64) + 7.5,abs ((yB/64) - 7.5))
+    let posI = posicaoInimigo i
+        posB = posicaoBase b
         (_,_,l) = geraUmCaminho m posI posB [] []
     in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminho is m b else i : geraCaminho is m b
 
@@ -301,6 +299,8 @@ moveInimigo :: Inimigo -> Inimigo
 moveInimigo i =
     let (xInicial, yInicial) = acDirecao i
         (xAtual, yAtual) = posicaoInimigo i
-    in if sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 64
+    in if sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1
         then i
         else i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = posicaoInimigo i, direcaoInimigo = head $ tail $ caminhoInimigo i}
+
+

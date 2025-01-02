@@ -257,7 +257,7 @@ validaPosicoesTorres ts m =
     where
       aux [] _ = True
       aux (pt:pts) m
-        | not $ eTerra pt m = False
+        | not $ eRelva pt m = False
         | otherwise = aux pts m
 
 {-| A função 'alcanceTorresPositivo' verifica se, numa lista de torres, o alcance de todas é um valor positivo.

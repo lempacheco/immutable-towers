@@ -133,7 +133,8 @@ data Inimigo = Inimigo
     -- | Tipo do inimigo.
     tipoInimigo :: TipoInimigo,
     caminhoInimigo :: [Direcao],
-    acDirecao :: Posicao
+    acDirecao :: Posicao,
+    iteracoesDesdeInicioAnimacaoInimigo :: Int
   }
   deriving (Show, Eq)
 

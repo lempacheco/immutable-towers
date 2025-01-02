@@ -118,7 +118,15 @@ main = do
   animacaoTorreResina29 <- loadBMP "resources/textures/towers/animacoesTorreResina/29.bmp"
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
-  guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
+  guerreiro0 <- loadBMP "resources/textures/entities/guerreiro0.bmp"
+  guerreiro1 <- loadBMP "resources/textures/entities/guerreiro1.bmp"
+  guerreiro2 <- loadBMP "resources/textures/entities/guerreiro2.bmp"
+  guerreiro3 <- loadBMP "resources/textures/entities/guerreiro3.bmp"
+  guerreiro4 <- loadBMP "resources/textures/entities/guerreiro4.bmp"
+  guerreiro5 <- loadBMP "resources/textures/entities/guerreiro5.bmp"
+  guerreiro6 <- loadBMP "resources/textures/entities/guerreiro6.bmp"
+  guerreiro7 <- loadBMP "resources/textures/entities/guerreiro7.bmp"
+  guerreiro8 <- loadBMP "resources/textures/entities/guerreiro8.bmp"
   mulherLanca <- loadBMP "resources/textures/entities/MulherLanca.bmp"
   creditos <- loadBMP "resources/textures/ui/novoCreditos.bmp"
   vida <- loadBMP "resources/textures/ui/vida.bmp"
@@ -163,7 +171,15 @@ main = do
             ("torreFogo",torreFogo),     --64x121 px
             ("base",base),          --64x104 px
             ("portal",portal),         
-            ("guerreiroFogo",guerreiroFogo), --27x47 px
+            ("guerreiro0",guerreiro0),
+            ("guerreiro1",guerreiro1),
+            ("guerreiro2",guerreiro2),
+            ("guerreiro3",guerreiro3),
+            ("guerreiro4",guerreiro4),
+            ("guerreiro5",guerreiro5),
+            ("guerreiro6",guerreiro6),
+            ("guerreiro7",guerreiro7),
+            ("guerreiro8",guerreiro8),
             ("mulherLanca",mulherLanca),   --27x50 px
             ("creditos",creditos),       --13x21 px
             ("vida", vida), --18x16 px
@@ -340,14 +356,14 @@ torre3 = Torre {posicaoTorre = (14, 7),
 
 portal1 :: Portal
 portal1 = Portal {posicaoPortal = (0,9),
-                  ondasPortal = [Onda {inimigosOnda = [inimigo1, inimigo2],
+                  ondasPortal = [Onda {inimigosOnda = [inimigo1],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
 
 portal2 :: Portal
 portal2 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = [Onda {inimigosOnda = [inimigo3,inimigo4],
+                  ondasPortal = [Onda {inimigosOnda = [inimigo3],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
@@ -362,7 +378,8 @@ inimigo1 = Inimigo {posicaoInimigo = (0,9),
                     ataqueInimigo = 5, 
                     velocidadeInimigo = 1, 
                     caminhoInimigo = [],
-                    acDirecao = (0,9)}
+                    acDirecao = (0,9),
+                    iteracoesDesdeInicioAnimacaoInimigo = 1}
 
 inimigo2 :: Inimigo
 inimigo2 = Inimigo {posicaoInimigo = (0,9), 
@@ -386,7 +403,8 @@ inimigo3 = Inimigo {posicaoInimigo = (5,0),
                     ataqueInimigo = 5, 
                     velocidadeInimigo = 1, 
                     caminhoInimigo = [],
-                    acDirecao = (5,0)}
+                    acDirecao = (5,0),
+                    iteracoesDesdeInicioAnimacaoInimigo = 1}
 
 inimigo4 :: Inimigo
 inimigo4 = Inimigo {posicaoInimigo = (5,0), 

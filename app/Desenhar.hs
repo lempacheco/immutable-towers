@@ -63,10 +63,11 @@ desenhaMenu it = Pictures
            botaoLevel = fromJust $ lookup "botaoLevel" texturas
 
 desenhaJogo :: ImmutableTowers -> Picture
-desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picBase, picTorre, creditosJog]
+desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picBase, picTorre, creditosJog, picMolduraMapa]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
           mapa = mapaJogo jogo
+          picMolduraMapa = desenhaMolduraMapa texturas
           texturas = texturasIT it
           picBase = desenhaBase base (fromJust $ lookup "base" texturas)
           base = baseJogo jogo
@@ -79,6 +80,9 @@ desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picB
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador base texturas 
+
+desenhaMolduraMapa :: [Textura] -> Picture
+desenhaMolduraMapa ts = translate 0 0 (fromJust $ lookup "molduraMapa" ts)
 
 
 desenhaMapa :: Mapa -> [Textura] -> Picture
@@ -130,7 +134,7 @@ desenhaUmInimigo inimigo texturas =
         textura = case tipoInimigo inimigo of
             MulherLanca   -> fromJust $ lookup "mulherLanca" texturas
             GuerreiroFogo -> fromJust $ lookup "guerreiroFogo" texturas
-    in Pictures [translate x y textura, numeroDaVida, coracaoVida]
+    in Pictures [translate x y textura, numeroDaVida, coracaoVida, Translate x y $ scale 0.1 0.1 $ (text (show $ projeteisInimigo inimigo))]
 
 desenhaTorres :: [Torre] -> [Textura] -> Picture 
 desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 
@@ -166,14 +170,15 @@ desenhaPortais (p:ps) textura =
     in translate x (y  + (128-64)/2) textura : desenhaPortais ps textura
     
 desenhaLoja :: Loja -> [Textura] -> Picture
-desenhaLoja loja ts = Pictures [lojaFundo, nomeStore, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
+desenhaLoja loja ts = Pictures [lojaFundo, nomeStore, bannerLoja, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
     where x = -805
           y = 100
           espacamento = 200
           tamanhoTorre = 0.70
           tamanhoCreditos = 0.2
           iconeLoja = Translate (-750) 300 $ scale 5 2 $ fromJust $ lookup "iconeLoja" ts
-          lojaFundo = Translate (-730) (-60) $ scale 8 20 $ fromJust $ lookup "lojaFundo" ts
+          lojaFundo = Translate (-750) (-60) $ scale 2 2 $ fromJust $ lookup "lojaFundo" ts
+          bannerLoja = Translate (-750) (350) $ scale 0.8 0.8 $ fromJust $ lookup "bannerLoja" ts
           fundoTorre1 =  Translate (-730) (100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre2 = Translate (-730) (-100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre3 = Translate (-730) (-300) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts

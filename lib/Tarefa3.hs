@@ -67,10 +67,22 @@ atualizaInimigos t j =
     in j { inimigosJogo = inimigoAtingeBaseIs b 
                             $ atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
-                            $ atualizaInimigoFogo 
+                            $ atualizaInimigoFogo
+                            $ map atualizaDuracaoProjeteisInimigos 
                             $ map moveInimigo 
                             $ geraCaminho is m b
                            }
+
+atualizaDuracaoProjeteisInimigos :: Inimigo -> Inimigo 
+atualizaDuracaoProjeteisInimigos i = i {projeteisInimigo = projeteisAtualizados} 
+    where projeteis = projeteisInimigo i 
+          projeteisAtualizados = duracaoFogoOuGelo projeteis
+
+duracaoFogoOuGelo :: [Projetil] -> [Projetil] 
+duracaoFogoOuGelo [] = []
+duracaoFogoOuGelo (p:ps) = case duracaoProjetil p of 
+    Finita n -> if n <= 0 then duracaoFogoOuGelo ps else p {duracaoProjetil = Finita (n - 1)} : duracaoFogoOuGelo ps
+    _ -> p : duracaoFogoOuGelo ps
 
 atualizaBase :: Jogo -> Jogo
 atualizaBase j =

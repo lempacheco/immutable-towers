@@ -140,7 +140,8 @@ main = do
   banner1 <- loadBMP "resources/textures/ui/banner1_1.bmp"
   banner2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
   banner3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
-  lojaFundo <- loadBMP "resources/textures/ui/fundoLoja1.bmp"
+  lojaFundo <- loadBMP "resources/textures/ui/fundoLoja.bmp"
+  moldura <- loadBMP "resources/textures/ui/moldura.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
   iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
   iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
@@ -150,6 +151,7 @@ main = do
   o <- loadBMP "resources/textures/letras/o.bmp"
   r <- loadBMP "resources/textures/letras/r.bmp"
   e <- loadBMP "resources/textures/letras/e.bmp"
+  player <- loadBMP "resources/textures/letras/e.bmp"
   play janela 
         fundo 
         fr 
@@ -281,7 +283,9 @@ main = do
             ("t", t), 
             ("o", o),
             ("r", r),
-            ("e", e)
+            ("e", e),
+            ("player", player),
+            ("moldura", moldura)
           ]
         ) 
         desenha 
@@ -310,7 +314,7 @@ base = Base {vidaBase = 50,
 
 torre1 :: Torre
 torre1 = Torre {posicaoTorre = (3, 13), 
-                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}, 
+                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 120}, 
                 danoTorre = 5,
                 alcanceTorre = 5,
                 rajadaTorre = 3,

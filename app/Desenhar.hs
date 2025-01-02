@@ -166,14 +166,15 @@ desenhaPortais (p:ps) textura =
     in translate x (y  + (128-64)/2) textura : desenhaPortais ps textura
     
 desenhaLoja :: Loja -> [Textura] -> Picture
-desenhaLoja loja ts = Pictures [lojaFundo, nomeStore, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
+desenhaLoja loja ts = Pictures [moldura, lojaFundo, nomeStore, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
     where x = -805
           y = 100
           espacamento = 200
           tamanhoTorre = 0.70
           tamanhoCreditos = 0.2
+          moldura = Translate (-730) (-60) $ scale 10 25 $ fromJust $ lookup "moldura" ts
           iconeLoja = Translate (-750) 300 $ scale 5 2 $ fromJust $ lookup "iconeLoja" ts
-          lojaFundo = Translate (-730) (-60) $ scale 8 20 $ fromJust $ lookup "lojaFundo" ts
+          lojaFundo = Translate (-730) (-60) $ scale 13 25 $ fromJust $ lookup "lojaFundo" ts
           fundoTorre1 =  Translate (-730) (100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre2 = Translate (-730) (-100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre3 = Translate (-730) (-300) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts

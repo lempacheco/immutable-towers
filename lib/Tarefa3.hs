@@ -59,12 +59,21 @@ atualizaAnimacaoUmaTorre tempo (t:ts) is
     | otherwise = t : atualizaAnimacaoUmaTorre tempo ts is
         where its = iteracoesDesdeInicioAnimacao t
 
+atualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
+atualizaAnimacaoInimigos [] = []
+atualizaAnimacaoInimigos (i:is)
+    | velocidadeInimigo i == 0 = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : atualizaAnimacaoInimigos is
+    | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : atualizaAnimacaoInimigos is --reseta animaçao correr
+    | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : atualizaAnimacaoInimigos is
+        where its = iteracoesDesdeInicioAnimacaoInimigo i
+
 atualizaInimigos :: Tempo -> Jogo -> Jogo
 atualizaInimigos t j =
     let is = inimigosJogo j
         b = baseJogo j
         m = mapaJogo j
-    in j { inimigosJogo = inimigoAtingeBaseIs b 
+    in j { inimigosJogo = atualizaAnimacaoInimigos
+                            $ inimigoAtingeBaseIs b 
                             $ atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
                             $ atualizaInimigoFogo

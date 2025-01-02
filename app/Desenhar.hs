@@ -131,10 +131,8 @@ desenhaUmInimigo inimigo texturas =
         offsetNumeroVida = (comprimentoNumeroVidaPxs+27+18)/2*0.5 --metade do comprimento da vida, da largura do inimigo e da largura do coração, escalado a 0.5
         numeroDaVida = translate (x-offsetNumeroVida) (y+40) $ scale 0.5 0.5 $ string2FonteNumeros (show $ ceiling $ vidaInimigo inimigo) texturas
         coracaoVida = translate (x+offsetNumeroVida) (y+40-(16/2*0.7)) $ scale 0.7 0.7 $ fromJust $ lookup "vida" texturas
-        textura = case tipoInimigo inimigo of
-            MulherLanca   -> fromJust $ lookup "mulherLanca" texturas
-            GuerreiroFogo -> fromJust $ lookup "guerreiroFogo" texturas
-    in Pictures [translate x y textura, numeroDaVida, coracaoVida, Translate x y $ scale 0.1 0.1 $ (text (show $ projeteisInimigo inimigo))]
+        textura = desenhaAnimacaoInimigo inimigo texturas
+    in Pictures [translate x y textura, numeroDaVida, coracaoVida, Translate x y $ scale 0.1 0.1 $ (text (show $ velocidadeInimigo inimigo))]
 
 desenhaTorres :: [Torre] -> [Textura] -> Picture 
 desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 
@@ -157,11 +155,13 @@ desenhaAnimacaoTorre t ts =
             Gelo -> fromJust $ lookup ("animacaoTorreGelo" ++ show iteracoes) ts
             Resina -> fromJust $ lookup ("animacaoTorreResina" ++ show iteracoes) ts
             Fogo -> fromJust $ lookup ("animacaoTorreFogo" ++ show iteracoes) ts
-    in case tipoProjetil (projetilTorre t) of
-            Gelo -> translate x (y+80) textura
-            Resina -> translate x (y+80) textura
-            Fogo -> translate x (y+80) textura
+    in translate x (y+80) textura
 
+desenhaAnimacaoInimigo :: Inimigo -> [Textura] -> Picture
+desenhaAnimacaoInimigo i ts =
+    let its = iteracoesDesdeInicioAnimacaoInimigo i
+        textura = fromJust $ lookup ("guerreiro" ++ show (ceiling $ int2Float(its) / 4)) ts
+    in  Pictures [textura, text $ show its]
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]
 desenhaPortais [] _ = []
@@ -170,13 +170,13 @@ desenhaPortais (p:ps) textura =
     in translate x (y  + (128-64)/2) textura : desenhaPortais ps textura
     
 desenhaLoja :: Loja -> [Textura] -> Picture
-desenhaLoja loja ts = Pictures [moldura, lojaFundo, nomeStore, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
+desenhaLoja loja ts = Pictures [lojaFundo, bannerLoja, nomeStore, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
     where x = -805
           y = 100
           espacamento = 200
           tamanhoTorre = 0.70
           tamanhoCreditos = 0.2
-          moldura = Translate (-730) (-60) $ scale 10 25 $ fromJust $ lookup "moldura" ts
+          --moldura = Translate (-730) (-60) $ scale 10 25 $ fromJust $ lookup "moldura" ts
           iconeLoja = Translate (-750) 300 $ scale 5 2 $ fromJust $ lookup "iconeLoja" ts
           lojaFundo = Translate (-750) (-60) $ scale 2 2 $ fromJust $ lookup "lojaFundo" ts
           bannerLoja = Translate (-750) (350) $ scale 0.8 0.8 $ fromJust $ lookup "bannerLoja" ts

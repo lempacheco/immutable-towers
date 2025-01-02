@@ -20,6 +20,8 @@ desenha it = case estadoIT it of
      Menu -> desenhaMenu  it 
      Jogando -> desenhaJogo it 
      Comprando -> desenhaComprando it
+     Pausado -> desenhaPausa ts 
+  where ts = texturasIT it
 
 desenhaComprando :: ImmutableTowers -> Picture 
 desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
@@ -174,12 +176,18 @@ desenhaLoja loja ts = Pictures [iconeLoja,store, fundoTorre1, fundoTorre2, fundo
             Fogo -> Pictures [translate x (y-2*espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreFogo" ts), translate (-740) (90-2*espacamento) $ scale tamanhoCreditos tamanhoCreditos $ string2FonteNumeros (show $ cs) ts]
 
 desenhaPerfilJogador :: Base -> [Textura] -> Picture 
-desenhaPerfilJogador b ts = Pictures [creditosJogador, creditos, iconeVida, vidaBaseJg]
-   where creditosJogador = Translate 750 360 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts 
-         creditos = Translate 750 352 $ scale 1 1 $ string2FonteNumeros (show $ creditosBase b) ts
-         iconeVida = Translate 750 250 $ scale 3.5 3.5 $ fromJust $ lookup "iconeVidaJg" ts
-         vidaBaseJg = Translate 740 270 $ scale 1 1 $ string2FonteNumeros (show $ ceiling $ vidaBase b) ts 
+desenhaPerfilJogador b ts = Pictures [creditosJogador, creditos, iconeVida, vidaBaseJg, perfil, iconePausa]
+   where creditosJogador = Translate 750 260 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts 
+         creditos = Translate 750 252 $ scale 1 1 $ string2FonteNumeros (show $ creditosBase b) ts
+         iconeVida = Translate 750 150 $ scale 3.5 3.5 $ fromJust $ lookup "iconeVidaJg" ts
+         vidaBaseJg = Translate 740 170 $ scale 1 1 $ string2FonteNumeros (show $ ceiling $ vidaBase b) ts 
+         perfil = Translate 680 260 $ scale 1 1 $ fromJust $ lookup "perfil" ts 
+         iconePausa = Translate 740 360 $ scale 2 2 $ fromJust $ lookup "iconePausa" ts 
 
 -- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
 -- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
 
+desenhaPausa :: [Textura] -> Picture 
+desenhaPausa ts = Pictures [fundo, iconePausa]
+    where fundo = fromJust $ lookup "fundoPausa" ts
+          iconePausa = Translate 0 0 $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 

@@ -14,6 +14,11 @@ reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it
     | estadoIT it == Jogando = it {estadoIT = Comprando}
     | otherwise = it  
 
+reageEventos (EventKey (Char 'b') Down _ _)  it 
+    | estadoIT it == Jogando = it {estadoIT = Pausado}
+    | estadoIT it == Pausado = it {estadoIT = Jogando}
+    | otherwise = it
+
 reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it
     | estadoIT it == Comprando && y < 15 = it {posicaoTorreComprada = (x, y + 1)}
   where (x, y) = posicaoTorreComprada it
@@ -45,7 +50,7 @@ reageEventos (EventKey (Char 'g') Down _ _) it
                 iteracoesDesdeInicioAnimacao = 1
               }
             custoTorre = 50
-            jogoAtualizado = compraTorre torre custoTorre jogo{-  $ colocaTorreNaPos torre jogo -}
+            jogoAtualizado = compraTorre torre custoTorre jogo
          in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
 
 reageEventos _ it = it 
@@ -56,7 +61,3 @@ compraTorre t custoTorre j
     | otherwise = j 
   where jogoNovo = j {baseJogo = (baseJogo j) {creditosBase = creditosBase (baseJogo j) - custoTorre}, 
                       torresJogo = t:torresJogo j}
-
-{- colocaTorreNaPos :: Torre -> Jogo -> Jogo
-colocaTorreNaPos t j = if validaTorre j then j {torresJogo = t:torresJogo j} 
-                            else j  -}

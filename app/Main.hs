@@ -116,6 +116,7 @@ main = do
   animacaoTorreResina27 <- loadBMP "resources/textures/towers/animacoesTorreResina/27.bmp"
   animacaoTorreResina28 <- loadBMP "resources/textures/towers/animacoesTorreResina/28.bmp"
   animacaoTorreResina29 <- loadBMP "resources/textures/towers/animacoesTorreResina/29.bmp"
+  perfil <- loadBMP "resources/textures/entities/fireWarrior.bmp"
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiroFogo <- loadBMP "resources/textures/entities/GuerreiroFogo.bmp"
@@ -149,7 +150,9 @@ main = do
   fundoTorre <- loadBMP "resources/textures/ui/fundoTorre.bmp"
   molduraMapa <- loadBMP "resources/textures/ui/molduraMapa.bmp"
   store <- loadBMP "resources/textures/letras/Store.bmp"
-  player <- loadBMP "resources/textures/letras/e.bmp"
+  player <- loadBMP "resources/textures/letras/Player.bmp"
+  fundoPausa <- loadBMP "resources/textures/ui/fundoPausa.bmp"
+  iconePausa <- loadBMP "resources/textures/ui/pausaBotao.bmp"
   play janela 
         fundo 
         fr 
@@ -281,7 +284,10 @@ main = do
             ("molduraMapa", molduraMapa),
             ("molduraMapa2", molduraMapa2),
             ("Store", store),
-            ("player", player)
+            ("player", player),
+            ("perfil", perfil),
+            ("fundoPausa", fundoPausa),
+            ("iconePausa", iconePausa)
           ]
         ) 
         desenha 

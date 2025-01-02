@@ -126,7 +126,7 @@ main = do
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
   botaoCredito <- loadBMP "resources/textures/menuFundo/botaoCredits.bmp"
   botaoLevel <- loadBMP "resources/textures/menuFundo/botaoLevel.bmp"
-  fundoJogo <- loadBMP "resources/textures/menuFundo/novoFundoJogo.bmp"
+  fundoJogo <- loadBMP "resources/textures/menuFundo/fundoNovoJogo.bmp"
   numero0 <- loadBMP "resources/textures/numbers/0.bmp"
   numero1 <- loadBMP "resources/textures/numbers/1.bmp"
   numero2 <- loadBMP "resources/textures/numbers/2.bmp"
@@ -143,15 +143,12 @@ main = do
   lojaFundo <- loadBMP "resources/textures/ui/fundoLoja2.bmp"
   bannerLoja <- loadBMP "resources/textures/ui/banner_.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
+  molduraMapa2 <- loadBMP "resources/textures/ui/molduraMapa2.bmp"
   iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
   iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
   fundoTorre <- loadBMP "resources/textures/ui/fundoTorre.bmp"
   molduraMapa <- loadBMP "resources/textures/ui/molduraMapa.bmp"
-  sM <- loadBMP "resources/textures/letras/S.bmp"
-  t <- loadBMP "resources/textures/letras/t.bmp"
-  o <- loadBMP "resources/textures/letras/o.bmp"
-  r <- loadBMP "resources/textures/letras/r.bmp"
-  e <- loadBMP "resources/textures/letras/e.bmp"
+  store <- loadBMP "resources/textures/letras/Store.bmp"
   player <- loadBMP "resources/textures/letras/e.bmp"
   play janela 
         fundo 
@@ -282,11 +279,8 @@ main = do
             ("iconeVidaJg", iconeVidaJg),
             ("fundoTorre", fundoTorre),
             ("molduraMapa", molduraMapa),
-            ("S", sM),
-            ("t", t), 
-            ("o", o),
-            ("r", r),
-            ("e", e),
+            ("molduraMapa2", molduraMapa2),
+            ("Store", store),
             ("player", player)
           ]
         ) 

@@ -35,19 +35,20 @@ desenhaSelecao pos =
 
 desenhaMenu :: ImmutableTowers -> Picture 
 desenhaMenu it = Pictures 
-    [fundo,
+    [fundoTela, fundo,
     translate 0 0 $ botaoPlay, 
     translate (0) (-56) $ botaoCredito, 
     translate  (0) (-112) $ botaoLevel
          ]
      where texturas = texturasIT it 
+           fundoTela = fromJust $ lookup "fundoJogo" texturas 
            fundo = fromJust $ lookup "fundoMenu" texturas 
            botaoPlay = fromJust $ lookup "botaoPlay" texturas
            botaoCredito = fromJust $ lookup "botaoCredito" texturas
            botaoLevel = fromJust $ lookup "botaoLevel" texturas
 
 desenhaJogo :: ImmutableTowers -> Picture
-desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picBase, picTorre, creditosJog, picMolduraMapa]
+desenhaJogo it = Pictures [picMapa, picMolduraMapa, picInimigo,Pictures picPortais, picLoja, picBase, picTorre, creditosJog]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
           mapa = mapaJogo jogo
@@ -66,7 +67,7 @@ desenhaJogo it = Pictures [picMapa,picInimigo,Pictures picPortais, picLoja, picB
           creditosJog = desenhaPerfilJogador base texturas 
 
 desenhaMolduraMapa :: [Textura] -> Picture
-desenhaMolduraMapa ts = translate 0 0 (fromJust $ lookup "molduraMapa" ts)
+desenhaMolduraMapa ts = translate 0 0 $ scale 1.035 1 $ (fromJust $ lookup "molduraMapa2" ts)
 
 
 desenhaMapa :: Mapa -> [Textura] -> Picture
@@ -153,37 +154,31 @@ desenhaPortais (p:ps) textura =
     in translate x (y  + (128-64)/2) textura : desenhaPortais ps textura
     
 desenhaLoja :: Loja -> [Textura] -> Picture
-desenhaLoja loja ts = Pictures [moldura, lojaFundo, nomeStore, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
+desenhaLoja loja ts = Pictures [iconeLoja,store, fundoTorre1, fundoTorre2, fundoTorre3, Pictures $ map desenhaTorre loja]
     where x = -805
           y = 100
           espacamento = 200
           tamanhoTorre = 0.70
-          tamanhoCreditos = 0.2
-          moldura = Translate (-730) (-60) $ scale 10 25 $ fromJust $ lookup "moldura" ts
-          iconeLoja = Translate (-750) 300 $ scale 5 2 $ fromJust $ lookup "iconeLoja" ts
+          tamanhoCreditos = 1 
+          --moldura = Translate (-730) (-60) $ scale 10 25 $ fromJust $ lookup "moldura" ts
           lojaFundo = Translate (-750) (-60) $ scale 2 2 $ fromJust $ lookup "lojaFundo" ts
-          bannerLoja = Translate (-750) (350) $ scale 0.8 0.8 $ fromJust $ lookup "bannerLoja" ts
+          iconeLoja = Translate (-845) (20) $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts
           fundoTorre1 =  Translate (-730) (100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre2 = Translate (-730) (-100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre3 = Translate (-730) (-300) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
-          nomeStore = Pictures [letraS, letrat, letrao, letrar, letrae] 
-          letraS = Translate (-796) 230 $ scale 2.5 2.5 $ fromJust $ lookup "S" ts
-          letrat = Translate (-763) 230 $ scale 2.5 2.5 $ fromJust $ lookup "t" ts 
-          letrao = Translate (-730) 230 $ scale 2.5 2.5 $ fromJust $ lookup "o" ts
-          letrar = Translate (-697) 230 $ scale 2.5 2.5 $ fromJust $ lookup "r" ts
-          letrae = Translate (-664) 230 $ scale 2.5 2.5 $ fromJust $ lookup "e" ts
+          store = Translate (-750) 270 $ scale 1.5 1.5 $ fromJust $ lookup "Store" ts
           desenhaTorre :: (Creditos, Torre) -> Picture
           desenhaTorre (cs,t) = case tipoProjetil $ projetilTorre t of
-            Gelo -> Pictures [translate x y $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreGelo" ts), translate (x+50) (y) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs]
-            Resina -> Pictures [translate x (y-espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreResina" ts), translate (x+50) (y-espacamento) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs]
-            Fogo -> Pictures [translate x (y-2*espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreFogo" ts), translate (x+50) (y-2*espacamento) $ scale tamanhoCreditos tamanhoCreditos $ text $ show cs]
+            Gelo -> Pictures [translate x y $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreGelo" ts), translate (-740) 90 $ scale tamanhoCreditos tamanhoCreditos $ string2FonteNumeros (show $ cs) ts]
+            Resina -> Pictures [translate x (y-espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreResina" ts), translate (-740) (90-espacamento) $ scale tamanhoCreditos tamanhoCreditos $ string2FonteNumeros (show $ cs) ts]
+            Fogo -> Pictures [translate x (y-2*espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreFogo" ts), translate (-740) (90-2*espacamento) $ scale tamanhoCreditos tamanhoCreditos $ string2FonteNumeros (show $ cs) ts]
 
 desenhaPerfilJogador :: Base -> [Textura] -> Picture 
 desenhaPerfilJogador b ts = Pictures [creditosJogador, creditos, iconeVida, vidaBaseJg]
    where creditosJogador = Translate 750 360 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts 
-         creditos = Translate 800 360 $ scale 0.1 0.1 $ text $ show $ creditosBase b 
+         creditos = Translate 750 352 $ scale 1 1 $ string2FonteNumeros (show $ creditosBase b) ts
          iconeVida = Translate 750 250 $ scale 3.5 3.5 $ fromJust $ lookup "iconeVidaJg" ts
-         vidaBaseJg = Translate 750 250 $ scale 0.2 0.2 $ text $ show $ vidaBase b 
+         vidaBaseJg = Translate 740 270 $ scale 1 1 $ string2FonteNumeros (show $ ceiling $ vidaBase b) ts 
 
 -- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
 -- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo

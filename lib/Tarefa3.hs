@@ -15,7 +15,7 @@ import Tarefa1
 import Data.List
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres t $ atualizaPortaisEInimigos $ atualizaBase j
+atualizaJogo t j = atualizaAnimacaoInimigos $ atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -47,24 +47,29 @@ disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = dis
                                       (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo
                                   in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas )
 
-atualizaAnimacaoTorres :: Tempo -> Jogo -> Jogo
-atualizaAnimacaoTorres t j = j {torresJogo = atualizaAnimacaoUmaTorre t (torresJogo j) (inimigosJogo j)}
+atualizaAnimacaoTorres :: Jogo -> Jogo
+atualizaAnimacaoTorres j = j {torresJogo = auxAtualizaAnimacaoTorres (torresJogo j) (inimigosJogo j)}
 
-atualizaAnimacaoUmaTorre :: Tempo -> [Torre] -> [Inimigo] -> [Torre]
-atualizaAnimacaoUmaTorre _ [] _ = []
-atualizaAnimacaoUmaTorre tempo (t:ts) is
-    | its == 29 = t {iteracoesDesdeInicioAnimacao = 1} : atualizaAnimacaoUmaTorre tempo ts is
-    | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : atualizaAnimacaoUmaTorre tempo ts is
-    | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : atualizaAnimacaoUmaTorre tempo ts is
-    | otherwise = t : atualizaAnimacaoUmaTorre tempo ts is
+auxAtualizaAnimacaoTorres :: [Torre] -> [Inimigo] -> [Torre]
+auxAtualizaAnimacaoTorres [] _ = []
+auxAtualizaAnimacaoTorres (t:ts) is
+    | its == 29 = t {iteracoesDesdeInicioAnimacao = 1} : auxAtualizaAnimacaoTorres ts is
+    | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : auxAtualizaAnimacaoTorres ts is
+    | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : auxAtualizaAnimacaoTorres ts is
+    | otherwise = t : auxAtualizaAnimacaoTorres ts is
         where its = iteracoesDesdeInicioAnimacao t
 
-atualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
-atualizaAnimacaoInimigos [] = []
-atualizaAnimacaoInimigos (i:is)
-    | velocidadeInimigo i == 0 = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : atualizaAnimacaoInimigos is
-    | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : atualizaAnimacaoInimigos is --reseta animaçao correr
-    | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : atualizaAnimacaoInimigos is
+atualizaAnimacaoInimigos :: Jogo -> Jogo
+atualizaAnimacaoInimigos j =
+    let is = inimigosJogo j
+    in j {inimigosJogo = auxAtualizaAnimacaoInimigos is}
+
+auxAtualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
+auxAtualizaAnimacaoInimigos [] = []
+auxAtualizaAnimacaoInimigos (i:is)
+    | Gelo `elem` getTiposProjsInimigo i = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : auxAtualizaAnimacaoInimigos is
+    | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : auxAtualizaAnimacaoInimigos is --reseta animaçao correr
+    | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : auxAtualizaAnimacaoInimigos is
         where its = iteracoesDesdeInicioAnimacaoInimigo i
 
 atualizaInimigos :: Tempo -> Jogo -> Jogo
@@ -72,8 +77,7 @@ atualizaInimigos t j =
     let is = inimigosJogo j
         b = baseJogo j
         m = mapaJogo j
-    in j { inimigosJogo = atualizaAnimacaoInimigos
-                            $ inimigoAtingeBaseIs b 
+    in j { inimigosJogo = inimigoAtingeBaseIs b 
                             $ atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
                             $ atualizaInimigoFogo

@@ -376,7 +376,7 @@ inimigo1 = Inimigo {posicaoInimigo = (0,9),
                     butimInimigo = 4, 
                     direcaoInimigo = Este, 
                     ataqueInimigo = 5, 
-                    velocidadeInimigo = 1, 
+                    velocidadeInimigo = 2, 
                     caminhoInimigo = [],
                     acDirecao = (0,9),
                     iteracoesDesdeInicioAnimacaoInimigo = 1}

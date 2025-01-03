@@ -11,7 +11,57 @@ reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it
     | otherwise = it
 
 reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it 
-    | estadoIT it == Jogando = it {estadoIT = Comprando}
+    | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
+    | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
+    | estadoIT it == Comprando =  case produtoLoja it of 
+      (-900, 100) -> 
+        let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
+            jogo = jogoIT it 
+            torre = Torre
+              { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                danoTorre = 10,
+                alcanceTorre = 5*64,
+                rajadaTorre = 2,
+                cicloTorre = 180,
+                tempoTorre = 180,
+                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3},
+                iteracoesDesdeInicioAnimacao = 1
+              }
+            custoTorre = 50
+            jogoAtualizado = compraTorre torre custoTorre jogo
+         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
+      (-900, -100) -> 
+        let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
+            jogo = jogoIT it 
+            torre = Torre
+              { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                danoTorre = 10,
+                alcanceTorre = 5*64,
+                rajadaTorre = 2,
+                cicloTorre = 180,
+                tempoTorre = 180,
+                projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita},
+                iteracoesDesdeInicioAnimacao = 1
+              }
+            custoTorre = 50
+            jogoAtualizado = compraTorre torre custoTorre jogo
+         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
+      (-900, -300) -> 
+        let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
+            jogo = jogoIT it 
+            torre = Torre
+              { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                danoTorre = 10,
+                alcanceTorre = 5*64,
+                rajadaTorre = 2,
+                cicloTorre = 180,
+                tempoTorre = 180,
+                projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 3},
+                iteracoesDesdeInicioAnimacao = 1
+              }
+            custoTorre = 50
+            jogoAtualizado = compraTorre torre custoTorre jogo
+         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
     | otherwise = it  
 
 reageEventos (EventKey (Char 'b') Down _ _)  it 
@@ -20,8 +70,10 @@ reageEventos (EventKey (Char 'b') Down _ _)  it
     | otherwise = it
 
 reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it
+    | estadoIT it == EscolhendoTorre && b > (-300) = it {produtoLoja = (a, b - 200)}
     | estadoIT it == Comprando && y < 15 = it {posicaoTorreComprada = (x, y + 1)}
   where (x, y) = posicaoTorreComprada it
+        (a, b) = produtoLoja it 
 
 reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == Comprando && x < 15 = it {posicaoTorreComprada = (x + 1, y)}
@@ -30,10 +82,12 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
 reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == Comprando && x > 0 = it {posicaoTorreComprada = (x - 1, y)}
   where (x, y) = posicaoTorreComprada it
-
+    
 reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
-    | estadoIT it == Comprando && y > 0 = it {posicaoTorreComprada = (x, y - 1)}
+    | estadoIT it == EscolhendoTorre && b < 100 = it {produtoLoja = (a, b + 200)}
+    | estadoIT it == Comprando && y > 0  = it {posicaoTorreComprada = (x, y - 1)}
   where (x, y) = posicaoTorreComprada it
+        (a, b) = produtoLoja it 
 
 reageEventos (EventKey (Char 'g') Down _ _) it
     | estadoIT it == Comprando =

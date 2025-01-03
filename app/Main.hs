@@ -23,9 +23,9 @@ fr = 60
 main :: IO ()
 main = do
   putStrLn "Hello from Immutable Towers!"
-  terra <- loadBMP "resources/textures/map/Terra.bmp"
-  agua <- loadBMP "resources/textures/map/Agua.bmp"
-  relva <- loadBMP "resources/textures/map/Relva.bmp"
+  terra <- loadBMP "resources/textures/map/Terra2.bmp"
+  agua <- loadBMP "resources/textures/map/Agua2.bmp"
+  relva <- loadBMP "resources/textures/map/Relva2.bmp"
   torreGelo <- loadBMP "resources/textures/towers/TorreGelo.bmp"
   torreResina <- loadBMP "resources/textures/towers/TorreResina.bmp"
   torreFogo <- loadBMP "resources/textures/towers/TorreFogo.bmp"
@@ -135,7 +135,7 @@ main = do
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
   botaoCredito <- loadBMP "resources/textures/menuFundo/botaoCredits.bmp"
   botaoLevel <- loadBMP "resources/textures/menuFundo/botaoLevel.bmp"
-  fundoJogo <- loadBMP "resources/textures/menuFundo/fundoNovoJogo.bmp"
+  fundoJogo <- loadBMP "resources/textures/menuFundo/fundoPedra.bmp"
   numero0 <- loadBMP "resources/textures/numbers/0.bmp"
   numero1 <- loadBMP "resources/textures/numbers/1.bmp"
   numero2 <- loadBMP "resources/textures/numbers/2.bmp"
@@ -152,7 +152,7 @@ main = do
   lojaFundo <- loadBMP "resources/textures/ui/fundoLoja2.bmp"
   bannerLoja <- loadBMP "resources/textures/ui/banner_.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
-  molduraMapa2 <- loadBMP "resources/textures/ui/molduraMapa2.bmp"
+  molduraMapa2 <- loadBMP "resources/textures/ui/molduraArbusto.bmp"
   iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
   iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
   fundoTorre <- loadBMP "resources/textures/ui/fundoTorre.bmp"
@@ -160,7 +160,12 @@ main = do
   store <- loadBMP "resources/textures/letras/Store.bmp"
   player <- loadBMP "resources/textures/letras/Player.bmp"
   fundoPausa <- loadBMP "resources/textures/ui/fundoPausa.bmp"
-  iconePausa <- loadBMP "resources/textures/ui/pausaBotao.bmp"
+  botaoPausa <- loadBMP "resources/textures/ui/pausaBotao.bmp"
+  frasePausa <- loadBMP "resources/textures/ui/frasePausa.bmp"
+  iconeHome <- loadBMP "resources/textures/ui/botaoHome.bmp"
+  iconePausa <- loadBMP "resources/textures/ui/iconePausa.bmp"
+  fundoPerfilJg <- loadBMP "resources/textures/ui/fundoPerfilJg.bmp"
+  seta <- loadBMP "resources/textures/ui/setaLoja.bmp"
   play janela 
         fundo 
         fr 
@@ -303,15 +308,17 @@ main = do
             ("player", player),
             ("perfil", perfil),
             ("fundoPausa", fundoPausa),
-            ("iconePausa", iconePausa)
+            ("botaoPausa", botaoPausa),
+            ("frasePausa", frasePausa),
+            ("iconeHome", iconeHome), 
+            ("iconePausa", iconePausa),
+            ("fundoPerfilJg", fundoPerfilJg),
+            ("seta", seta)
           ]
         ) 
         desenha 
         reageEventos 
         reageTempo
-
-
-
 
 it1 :: [Textura] -> ImmutableTowers
 it1 texturas = 
@@ -323,7 +330,8 @@ it1 texturas =
                                     inimigosJogo = [],
                                     lojaJogo = loja},
                      texturasIT = texturas, 
-                     posicaoTorreComprada = (0,0)}
+                     posicaoTorreComprada = (0,0), 
+                     produtoLoja = (-900, 100)}
 
 base :: Base
 base = Base {vidaBase = 50,

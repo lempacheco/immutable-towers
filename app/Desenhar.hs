@@ -19,7 +19,7 @@ desenha :: ImmutableTowers -> Picture
 desenha it = case estadoIT it of
      Menu -> desenhaMenu  it 
      Jogando -> desenhaJogo it 
-     EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it, Translate 0 0 $ scale 1 1 $ text $ show $ produtoLoja it ] 
+     EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it, Translate 0 0 $ scale 1 1 $ text $ show $ produtoLoja it] 
      Comprando -> desenhaComprando it
      Pausado -> desenhaPausa ts 
   where ts = texturasIT it

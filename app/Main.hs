@@ -325,18 +325,18 @@ main = do
 it1 :: [Textura] -> ImmutableTowers
 it1 texturas = 
     ImmutableTowers {estadoIT = Menu, 
-                     jogoIT = Jogo {baseJogo = base,
+                     jogoIT = Jogo {baseJogo = base1,
                                     torresJogo = [torre1,torre2,torre3],
-                                    portaisJogo = [portal1, portal2],
+                                    portaisJogo = [portal1_1, portal2_1],
                                     mapaJogo = mapa1,
                                     inimigosJogo = [],
-                                    lojaJogo = loja},
+                                    lojaJogo = loja1},
                      texturasIT = texturas, 
                      posicaoTorreComprada = (0,0), 
                      produtoLoja = (-900, 100)}
 
-base :: Base
-base = Base {vidaBase = 50,
+base1 :: Base
+base1 = Base {vidaBase = 50,
              posicaoBase = (15,9),
              creditosBase = 1000}
 
@@ -370,22 +370,22 @@ torre3 = Torre {posicaoTorre = (14, 7),
                 tempoTorre = 180,
                 iteracoesDesdeInicioAnimacao = 1}
 
-portal1 :: Portal
-portal1 = Portal {posicaoPortal = (0,9),
-                  ondasPortal = [Onda {inimigosOnda = [inimigo1],
+portal1_1 :: Portal
+portal1_1 = Portal {posicaoPortal = (0,9),
+                  ondasPortal = [Onda {inimigosOnda = [inimigo1_1],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
 
-portal2 :: Portal
-portal2 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = [Onda {inimigosOnda = [inimigo3],
+portal2_1 :: Portal
+portal2_1 = Portal {posicaoPortal = (5,0), 
+                  ondasPortal = [Onda {inimigosOnda = [inimigo3_1],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
 
-inimigo1 :: Inimigo
-inimigo1 = Inimigo {posicaoInimigo = (0,9), 
+inimigo1_1 :: Inimigo
+inimigo1_1 = Inimigo {posicaoInimigo = (0,9), 
                     tipoInimigo = GuerreiroFogo, 
                     projeteisInimigo = [], 
                     vidaInimigo = 1000, 
@@ -397,8 +397,8 @@ inimigo1 = Inimigo {posicaoInimigo = (0,9),
                     acDirecao = (0,9),
                     iteracoesDesdeInicioAnimacaoInimigo = 1}
 
-inimigo2 :: Inimigo
-inimigo2 = Inimigo {posicaoInimigo = (0,9), 
+inimigo2_1 :: Inimigo
+inimigo2_1 = Inimigo {posicaoInimigo = (0,9), 
                     tipoInimigo = MulherLanca, 
                     projeteisInimigo = [], 
                     vidaInimigo = 6, 
@@ -409,8 +409,8 @@ inimigo2 = Inimigo {posicaoInimigo = (0,9),
                     caminhoInimigo = [],
                     acDirecao = (0,9)}
 
-inimigo3 :: Inimigo
-inimigo3 = Inimigo {posicaoInimigo = (5,0), 
+inimigo3_1 :: Inimigo
+inimigo3_1 = Inimigo {posicaoInimigo = (5,0), 
                     tipoInimigo = GuerreiroFogo, 
                     projeteisInimigo = [], 
                     vidaInimigo = 1000, 
@@ -422,8 +422,8 @@ inimigo3 = Inimigo {posicaoInimigo = (5,0),
                     acDirecao = (5,0),
                     iteracoesDesdeInicioAnimacaoInimigo = 1}
 
-inimigo4 :: Inimigo
-inimigo4 = Inimigo {posicaoInimigo = (5,0), 
+inimigo4_1 :: Inimigo
+inimigo4_1 = Inimigo {posicaoInimigo = (5,0), 
                     tipoInimigo = MulherLanca, 
                     projeteisInimigo = [], 
                     vidaInimigo = 6, 
@@ -458,9 +458,10 @@ mapa1 =
        r = Relva
        a = Agua
        
-loja = [(1000, Torre{projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 10}}),
-        (1000, Torre{projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}}),
-        (1000, Torre{projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}})
+loja1 :: Loja
+loja1 = [(1000, Torre{projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 10}}),
+         (1000, Torre{projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}}),
+         (1000, Torre{projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}})
         ]
 
 -- Nível 2
@@ -494,29 +495,29 @@ base2 = Base {vidaBase = 1000,
              posicaoBase = (15,7),
              creditosBase = 1000}
 
-portal12 :: Portal
-portal12 = Portal {posicaoPortal = (0,1),
-                  ondasPortal = [Onda {inimigosOnda = [inimigo12],
+portal1_2 :: Portal
+portal1_2 = Portal {posicaoPortal = (0,1),
+                  ondasPortal = [Onda {inimigosOnda = [inimigo1_2],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
 
-portal22 :: Portal
-portal22 = Portal {posicaoPortal = (0,12), 
-                  ondasPortal = [Onda {inimigosOnda = [inimigo32],
+portal2_2 :: Portal
+portal2_2 = Portal {posicaoPortal = (0,12), 
+                  ondasPortal = [Onda {inimigosOnda = [inimigo3_2],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
 
-portal32 :: Portal
-portal32 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = [Onda {inimigosOnda = [inimigo32],
+portal3_2 :: Portal
+portal3_2 = Portal {posicaoPortal = (5,0), 
+                  ondasPortal = [Onda {inimigosOnda = [inimigo3_2],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
 
-inimigo12 :: Inimigo
-inimigo12 = Inimigo {posicaoInimigo = (0,1), 
+inimigo1_2 :: Inimigo
+inimigo1_2 = Inimigo {posicaoInimigo = (0,1), 
                     tipoInimigo = GuerreiroFogo, 
                     projeteisInimigo = [], 
                     vidaInimigo = 1000, 
@@ -528,8 +529,8 @@ inimigo12 = Inimigo {posicaoInimigo = (0,1),
                     acDirecao = (0,1),
                     iteracoesDesdeInicioAnimacaoInimigo = 1}
 
-inimigo32 :: Inimigo
-inimigo32 = Inimigo {posicaoInimigo = (5,0), 
+inimigo3_2 :: Inimigo
+inimigo3_2 = Inimigo {posicaoInimigo = (5,0), 
                     tipoInimigo = GuerreiroFogo, 
                     projeteisInimigo = [], 
                     vidaInimigo = 1000, 
@@ -546,10 +547,10 @@ it2 texturas =
     ImmutableTowers {estadoIT = Menu, 
                      jogoIT = Jogo {baseJogo = base2,
                                     torresJogo = [],
-                                    portaisJogo = [portal12, portal22, portal32],
+                                    portaisJogo = [portal1_2, portal2_2, portal3_2],
                                     mapaJogo = mapa2,
                                     inimigosJogo = [],
-                                    lojaJogo = loja},
+                                    lojaJogo = loja1},
                      texturasIT = texturas, 
                      posicaoTorreComprada = (0,0), 
                      produtoLoja = (-900, 100)}

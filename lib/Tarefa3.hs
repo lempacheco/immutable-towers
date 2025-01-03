@@ -13,6 +13,7 @@ import LI12425
 import Tarefa2
 import Tarefa1
 import Data.List
+import Data.Maybe (fromJust)
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j = atualizaAnimacaoInimigos $ atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaPortaisEInimigos $ atualizaBase j
@@ -83,7 +84,7 @@ atualizaInimigos t j =
                             $ atualizaInimigoFogo
                             $ map atualizaDuracaoProjeteisInimigos 
                             $ map moveInimigo 
-                            $ geraCaminho is m b
+                            $ geraCaminhos is m b
                            }
 
 atualizaDuracaoProjeteisInimigos :: Inimigo -> Inimigo 
@@ -303,22 +304,34 @@ lancaInimigo p is = case ondasPortal p of
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
 
-geraCaminho :: [Inimigo] -> Mapa -> Base -> [Inimigo]
-geraCaminho [] _ _ = []
-geraCaminho (i:is) m b =
+geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
+geraCaminhos [] _ _ = []
+geraCaminhos (i:is) m b =
     let posI = posicaoInimigo i
         posB = posicaoBase b
-        (_,_,l) = geraUmCaminho m posI posB [] []
-    in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminho is m b else i : geraCaminho is m b
+        caminhos = geraUmCaminho m posI posB [] []
+        l = fromJust $ lookup True caminhos
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminhos is m b else i : geraCaminhos is m b
 
-geraUmCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
+{- verificaCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
+verificaCaminho m pos@(x,y) posB lpos ld = 
+    let (resultado_bool, resultado_lpos, resultado_ld) = geraUmCaminho m pos posB lpos ld
+    in if resultado_bool == False 
+        then case last resultado_ld of
+            Norte -> geraUmCaminho m (x,y-1) posB resultado_lpos resultado_ld
+            Sul -> geraUmCaminho m (x,y+1) posB resultado_lpos resultado_ld
+            Este -> geraUmCaminho m (x-1,y) posB resultado_lpos resultado_ld
+            Oeste -> geraUmCaminho m (x+1,y) posB resultado_lpos resultado_ld
+        else (True, lpos, ld) -}
+
+geraUmCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> [(Bool, [Direcao])]
 geraUmCaminho m pos@(x,y) posB lpos ld
-  | chegouBase pos posB = (True, lpos, ld)
-  | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte])
-  | verificaDirecaoTerra m pos lpos Sul = geraUmCaminho m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul])
-  | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este])
-  | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste])
-  | otherwise = (False, lpos, ld)
+  | chegouBase pos posB = [(True, ld)]
+  | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y+1)]) ld
+  | verificaDirecaoTerra m pos lpos Sul = geraUmCaminho m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y-1)]) ld
+  | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este]) ++ geraUmCaminho m (x,y) posB (lpos++[(x+1,y)]) ld
+  | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste]) ++ geraUmCaminho m (x,y) posB (lpos++[(x-1,y)]) ld
+  | otherwise = [(False, ld)]
 
 moveInimigo :: Inimigo -> Inimigo
 moveInimigo i =

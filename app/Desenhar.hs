@@ -128,7 +128,7 @@ desenhaUmInimigo inimigo texturas =
         numeroDaVida = translate (x-offsetNumeroVida) (y+40) $ scale 0.5 0.5 $ string2FonteNumeros (show $ ceiling $ vidaInimigo inimigo) texturas
         coracaoVida = translate (x+offsetNumeroVida) (y+40-(16/2*0.7)) $ scale 0.7 0.7 $ fromJust $ lookup "vida" texturas
         textura = desenhaAnimacaoInimigo inimigo texturas
-    in Pictures [translate x y textura, numeroDaVida, coracaoVida, Translate x y $ scale 0.1 0.1 $ (text (show $ velocidadeInimigo inimigo))]
+    in Pictures [translate x y textura, numeroDaVida, coracaoVida]
 
 desenhaTorres :: [Torre] -> [Textura] -> Picture 
 desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 
@@ -157,7 +157,7 @@ desenhaAnimacaoInimigo :: Inimigo -> [Textura] -> Picture
 desenhaAnimacaoInimigo i ts =
     let its = iteracoesDesdeInicioAnimacaoInimigo i
         textura = fromJust $ lookup ("guerreiro" ++ show (ceiling $ int2Float(its) / 4)) ts
-    in  Pictures [textura, text $ show its]
+    in  Pictures [textura]
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]
 desenhaPortais [] _ = []

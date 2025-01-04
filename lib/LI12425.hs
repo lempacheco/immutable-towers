@@ -178,7 +178,7 @@ data Jogo = Jogo
     -- | Loja de torres disponíveis para construir.
     lojaJogo :: Loja
   }
-  deriving (Show)
+  deriving (Eq, Show)
 
 -- | Valor inicial que determina a sequência de números pseudo-aleatórios.
 type Semente = Int

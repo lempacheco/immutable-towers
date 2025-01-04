@@ -197,9 +197,9 @@ teste13 =
   TestLabel "Teste para a função inimigoAtingeBaseIs" $
     test
       [
-        "Teste só com inimigos com posições iguais à da base" ~: [] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo3] [inimigo1, inimigo3],
-        "Teste só com inimigos com posições diferentes da base" ~: [inimigo2, inimigo4] ~=? inimigoAtingeBaseIs base1 [inimigo2, inimigo4] [inimigo2, inimigo4],
-        "Teste com inimigos com posições iguais e diferentes da base" ~: [inimigo2] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo2] [inimigo1, inimigo2]
+        "Teste só com inimigos com posições iguais à da base" ~: [] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo3],
+        "Teste só com inimigos com posições diferentes da base" ~: [inimigo2, inimigo4] ~=? inimigoAtingeBaseIs base1 [inimigo2, inimigo4],
+        "Teste com inimigos com posições iguais e diferentes da base" ~: [inimigo2] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo2]
       ]
 
 teste14 :: Test

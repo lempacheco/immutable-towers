@@ -13,9 +13,10 @@ import LI12425
 import Tarefa2
 import Tarefa1
 import Data.List
+import Data.Maybe (fromJust)
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres t $ atualizaPortaisEInimigos $ atualizaBase j
+atualizaJogo t j = atualizaAnimacaoInimigos $ atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -47,24 +48,29 @@ disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = dis
                                       (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo
                                   in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas )
 
-atualizaAnimacaoTorres :: Tempo -> Jogo -> Jogo
-atualizaAnimacaoTorres t j = j {torresJogo = atualizaAnimacaoUmaTorre t (torresJogo j) (inimigosJogo j)}
+atualizaAnimacaoTorres :: Jogo -> Jogo
+atualizaAnimacaoTorres j = j {torresJogo = auxAtualizaAnimacaoTorres (torresJogo j) (inimigosJogo j)}
 
-atualizaAnimacaoUmaTorre :: Tempo -> [Torre] -> [Inimigo] -> [Torre]
-atualizaAnimacaoUmaTorre _ [] _ = []
-atualizaAnimacaoUmaTorre tempo (t:ts) is
-    | its == 29 = t {iteracoesDesdeInicioAnimacao = 1} : atualizaAnimacaoUmaTorre tempo ts is
-    | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : atualizaAnimacaoUmaTorre tempo ts is
-    | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : atualizaAnimacaoUmaTorre tempo ts is
-    | otherwise = t : atualizaAnimacaoUmaTorre tempo ts is
+auxAtualizaAnimacaoTorres :: [Torre] -> [Inimigo] -> [Torre]
+auxAtualizaAnimacaoTorres [] _ = []
+auxAtualizaAnimacaoTorres (t:ts) is
+    | its == 29 = t {iteracoesDesdeInicioAnimacao = 1} : auxAtualizaAnimacaoTorres ts is
+    | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : auxAtualizaAnimacaoTorres ts is
+    | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : auxAtualizaAnimacaoTorres ts is
+    | otherwise = t : auxAtualizaAnimacaoTorres ts is
         where its = iteracoesDesdeInicioAnimacao t
 
-atualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
-atualizaAnimacaoInimigos [] = []
-atualizaAnimacaoInimigos (i:is)
-    | velocidadeInimigo i == 0 = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : atualizaAnimacaoInimigos is
-    | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : atualizaAnimacaoInimigos is --reseta animaçao correr
-    | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : atualizaAnimacaoInimigos is
+atualizaAnimacaoInimigos :: Jogo -> Jogo
+atualizaAnimacaoInimigos j =
+    let is = inimigosJogo j
+    in j {inimigosJogo = auxAtualizaAnimacaoInimigos is}
+
+auxAtualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
+auxAtualizaAnimacaoInimigos [] = []
+auxAtualizaAnimacaoInimigos (i:is)
+    | Gelo `elem` getTiposProjsInimigo i = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : auxAtualizaAnimacaoInimigos is
+    | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : auxAtualizaAnimacaoInimigos is --reseta animaçao correr
+    | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : auxAtualizaAnimacaoInimigos is
         where its = iteracoesDesdeInicioAnimacaoInimigo i
 
 atualizaInimigos :: Tempo -> Jogo -> Jogo
@@ -72,14 +78,13 @@ atualizaInimigos t j =
     let is = inimigosJogo j
         b = baseJogo j
         m = mapaJogo j
-    in j { inimigosJogo = atualizaAnimacaoInimigos
-                            $ inimigoAtingeBaseIs b 
+    in j { inimigosJogo = inimigoAtingeBaseIs b 
                             $ atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
                             $ atualizaInimigoFogo
                             $ map atualizaDuracaoProjeteisInimigos 
                             $ map moveInimigo 
-                            $ geraCaminho is m b
+                            $ geraCaminhos is m b
                            }
 
 atualizaDuracaoProjeteisInimigos :: Inimigo -> Inimigo 
@@ -299,22 +304,34 @@ lancaInimigo p is = case ondasPortal p of
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
 
-geraCaminho :: [Inimigo] -> Mapa -> Base -> [Inimigo]
-geraCaminho [] _ _ = []
-geraCaminho (i:is) m b =
+geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
+geraCaminhos [] _ _ = []
+geraCaminhos (i:is) m b =
     let posI = posicaoInimigo i
         posB = posicaoBase b
-        (_,_,l) = geraUmCaminho m posI posB [] []
-    in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminho is m b else i : geraCaminho is m b
+        caminhos = geraUmCaminho m posI posB [] []
+        l = fromJust $ lookup True caminhos
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminhos is m b else i : geraCaminhos is m b
 
-geraUmCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
+{- verificaCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
+verificaCaminho m pos@(x,y) posB lpos ld = 
+    let (resultado_bool, resultado_lpos, resultado_ld) = geraUmCaminho m pos posB lpos ld
+    in if resultado_bool == False 
+        then case last resultado_ld of
+            Norte -> geraUmCaminho m (x,y-1) posB resultado_lpos resultado_ld
+            Sul -> geraUmCaminho m (x,y+1) posB resultado_lpos resultado_ld
+            Este -> geraUmCaminho m (x-1,y) posB resultado_lpos resultado_ld
+            Oeste -> geraUmCaminho m (x+1,y) posB resultado_lpos resultado_ld
+        else (True, lpos, ld) -}
+
+geraUmCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> [(Bool, [Direcao])]
 geraUmCaminho m pos@(x,y) posB lpos ld
-  | chegouBase pos posB = (True, lpos, ld)
-  | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte])
-  | verificaDirecaoTerra m pos lpos Sul = geraUmCaminho m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul])
-  | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este])
-  | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste])
-  | otherwise = (False, lpos, ld)
+  | chegouBase pos posB = [(True, ld)]
+  | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y+1)]) ld
+  | verificaDirecaoTerra m pos lpos Sul = geraUmCaminho m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y-1)]) ld
+  | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este]) ++ geraUmCaminho m (x,y) posB (lpos++[(x+1,y)]) ld
+  | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste]) ++ geraUmCaminho m (x,y) posB (lpos++[(x-1,y)]) ld
+  | otherwise = [(False, ld)]
 
 moveInimigo :: Inimigo -> Inimigo
 moveInimigo i =

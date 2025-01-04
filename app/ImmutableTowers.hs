@@ -17,6 +17,7 @@ data EstadoJogo = Menu
                 | EscolhendoTorre
                 | Comprando 
                 | Pausado 
+                | VoltandoMenu
                 | GameOver
                 | YouWon 
                 deriving (Eq, Show)

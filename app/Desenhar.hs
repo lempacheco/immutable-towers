@@ -21,7 +21,7 @@ desenha it = case estadoIT it of
      Jogando -> desenhaJogo it 
      EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it, Translate 0 0 $ scale 1 1 $ text $ show $ produtoLoja it] 
      Comprando -> desenhaComprando it
-     Pausado -> desenhaPausa ts 
+     Pausado -> Pictures [desenhaJogo it, desenhaPausa ts]  
   where ts = texturasIT it
 
 desenhaComprando :: ImmutableTowers -> Picture 
@@ -75,7 +75,7 @@ desenhaJogo it = Pictures [picMapa, picMolduraMapa, picInimigo,Pictures picPorta
           torres = torresJogo jogo
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
-          creditosJog = desenhaPerfilJogador base texturas 
+          creditosJog = desenhaPerfilJogador jogo base texturas 
 
 desenhaMolduraMapa :: [Textura] -> Picture
 desenhaMolduraMapa ts = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa2" ts)
@@ -186,8 +186,8 @@ desenhaLoja loja ts = Pictures [iconeLoja, store, fundoTorre1, fundoTorre2, fund
             Resina -> Pictures [translate x (y-espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreResina" ts), translate (-740) (90-espacamento) $ scale tamanhoCreditos tamanhoCreditos $ string2FonteNumeros (show $ cs) ts]
             Fogo -> Pictures [translate x (y-2*espacamento) $ scale tamanhoTorre tamanhoTorre (fromJust $ lookup "torreFogo" ts), translate (-740) (90-2*espacamento) $ scale tamanhoCreditos tamanhoCreditos $ string2FonteNumeros (show $ cs) ts]
 
-desenhaPerfilJogador :: Base -> [Textura] -> Picture 
-desenhaPerfilJogador b ts = Pictures [creditosJogador, creditos, iconeVida, vidaBaseJg, perfil, iconePausa, iconeHome, iconeJogador]
+desenhaPerfilJogador :: Jogo -> Base -> [Textura] -> Picture 
+desenhaPerfilJogador j b ts = Pictures [creditosJogador, creditos, iconeVida, vidaBaseJg, perfil, iconePausa, iconeHome, iconeJogador, nInimigos]
    where creditosJogador = Translate 750 210 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts 
          creditos = Translate 750 202 $ scale 1 1 $ string2FonteNumeros (show $ creditosBase b) ts
          iconeVida = Translate 750 100 $ scale 3.5 3.5 $ fromJust $ lookup "iconeVidaJg" ts
@@ -195,11 +195,14 @@ desenhaPerfilJogador b ts = Pictures [creditosJogador, creditos, iconeVida, vida
          perfil = Translate 680 210 $ scale 1 1 $ fromJust $ lookup "perfil" ts 
          iconePausa = Pictures [Translate 650 460 $ scale 2 2 $ fromJust $ lookup "botaoPausa" ts, Translate 740 460 $ scale 3 3 $ fromJust $ lookup "iconePausa" ts, Translate 740 460 $ scale 0.6 0.6 $ fromJust $ lookup "frasePausa" ts]
          iconeHome = Pictures [Translate 650 400 $ scale 2.5 2.5 $ fromJust $ lookup "iconeHome" ts]
-         iconeJogador = Pictures [Translate (660) (55) $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts, Translate 760 300 $ scale 1.5 1.5 $ fromJust $ lookup "player" ts]
+         iconeJogador = Pictures [Translate 660 55 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts, Translate 760 300 $ scale 1.5 1.5 $ fromJust $ lookup "player" ts]
+         nInimigos = Pictures [Translate 670 40 $ scale 3.5 3.5 $ fromJust $ lookup "nInimigos" ts , Translate 780 40 $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts, scale 1 1 $ Translate 750 55 $ string2FonteNumeros (show $ length (inimigosJogo j)) ts ]
 -- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
 -- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
 
 desenhaPausa :: [Textura] -> Picture 
-desenhaPausa ts = Pictures [fundo, iconePausa]
-    where fundo = fromJust $ lookup "fundoPausa" ts
+desenhaPausa ts = Pictures [fundo, iconePausa, fraseContinuar, iconeBackMenu]
+    where fundo = translate 0 0 $ color (withAlpha 0.8 black) $ rectangleSolid 1920 1080 
           iconePausa = Translate 0 0 $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
+          fraseContinuar = Translate 0 1 $ scale 0.8 0.8 $ fromJust $ lookup "fraseContinuar" ts
+          iconeBackMenu = Translate 0 (-90) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 

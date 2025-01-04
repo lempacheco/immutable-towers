@@ -9,7 +9,7 @@ import Tempo
 import LI12425
 
 itInicial :: [(String, Picture)] -> ImmutableTowers
-itInicial = it2
+itInicial = it1
 
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
@@ -146,26 +146,22 @@ main = do
   numero7 <- loadBMP "resources/textures/numbers/7.bmp"
   numero8 <- loadBMP "resources/textures/numbers/8.bmp"
   numero9 <- loadBMP "resources/textures/numbers/9.bmp"
-  banner1 <- loadBMP "resources/textures/ui/banner1_1.bmp"
-  banner2 <- loadBMP "resources/textures/ui/banner1_2.bmp"
-  banner3 <- loadBMP "resources/textures/ui/banner1_3.bmp"
   lojaFundo <- loadBMP "resources/textures/ui/fundoLoja2.bmp"
-  bannerLoja <- loadBMP "resources/textures/ui/banner_.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
   molduraMapa2 <- loadBMP "resources/textures/ui/molduraArbusto.bmp"
   iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
   iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
-  fundoTorre <- loadBMP "resources/textures/ui/fundoTorre.bmp"
   molduraMapa <- loadBMP "resources/textures/ui/molduraMapa.bmp"
   store <- loadBMP "resources/textures/letras/Store.bmp"
   player <- loadBMP "resources/textures/letras/Player.bmp"
-  fundoPausa <- loadBMP "resources/textures/ui/fundoPausa.bmp"
   botaoPausa <- loadBMP "resources/textures/ui/pausaBotao.bmp"
   frasePausa <- loadBMP "resources/textures/ui/frasePausa.bmp"
+  fraseContinuar <- loadBMP "resources/textures/ui/fraseContinuar.bmp"
   iconeHome <- loadBMP "resources/textures/ui/botaoHome.bmp"
   iconePausa <- loadBMP "resources/textures/ui/iconePausa.bmp"
   fundoPerfilJg <- loadBMP "resources/textures/ui/fundoPerfilJg.bmp"
   seta <- loadBMP "resources/textures/ui/setaLoja.bmp"
+  nInimigos <- loadBMP "resources/textures/ui/nInimigos.bmp"
   play janela 
         fundo 
         fr 
@@ -293,27 +289,23 @@ main = do
             ("numero7", numero7),
             ("numero8", numero8),
             ("numero9", numero9),
-            ("banner1", banner1), 
-            ("banner2", banner2),
-            ("banner3", banner3),
             ("lojaFundo", lojaFundo),
-            ("bannerLoja", bannerLoja),
             ("iconeLoja", iconeLoja),
             ("creditosJogador", creditosJogador),
             ("iconeVidaJg", iconeVidaJg),
-            ("fundoTorre", fundoTorre),
             ("molduraMapa", molduraMapa),
             ("molduraMapa2", molduraMapa2),
             ("Store", store),
             ("player", player),
             ("perfil", perfil),
-            ("fundoPausa", fundoPausa),
             ("botaoPausa", botaoPausa),
+            ("fraseContinuar", fraseContinuar),
             ("frasePausa", frasePausa),
             ("iconeHome", iconeHome), 
             ("iconePausa", iconePausa),
             ("fundoPerfilJg", fundoPerfilJg),
-            ("seta", seta)
+            ("seta", seta),
+            ("nInimigos", nInimigos)
           ]
         ) 
         desenha 

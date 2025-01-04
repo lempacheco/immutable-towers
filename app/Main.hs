@@ -317,15 +317,19 @@ main = do
 it1 :: [Textura] -> ImmutableTowers
 it1 texturas = 
     ImmutableTowers {estadoIT = Menu, 
-                     jogoIT = Jogo {baseJogo = base1,
-                                    torresJogo = [torre1,torre2,torre3],
-                                    portaisJogo = [portal1_1, portal2_1],
-                                    mapaJogo = mapa1,
-                                    inimigosJogo = [],
-                                    lojaJogo = loja1},
+                     jogoIT = jogo1,
                      texturasIT = texturas, 
                      posicaoTorreComprada = (0,0), 
-                     produtoLoja = (-900, 100)}
+                     produtoLoja = (-900, 100),
+                     jogoItInicial = jogo1}
+
+jogo1 :: Jogo
+jogo1 = Jogo {baseJogo = base1,
+              torresJogo = [torre1,torre2,torre3],
+              portaisJogo = [portal1_1, portal2_1],
+              mapaJogo = mapa1,
+              inimigosJogo = [],
+              lojaJogo = loja1}
 
 base1 :: Base
 base1 = Base {vidaBase = 50,

@@ -71,6 +71,10 @@ reageEventos (EventKey (Char 'b') Down _ _)  it
     | estadoIT it == Pausado = it {estadoIT = Jogando}
     | otherwise = it
 
+reageEventos (EventKey (Char 'm') Down _ _)  it 
+    | estadoIT it == Pausado = it {estadoIT = Menu, jogoIT = jogoItInicial it}
+    | otherwise = it
+
 reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it
     | estadoIT it == EscolhendoTorre && b > (-300) = it {produtoLoja = (a, b - 200)}
     | estadoIT it == Comprando && y < 15 = it {posicaoTorreComprada = (x, y + 1)}

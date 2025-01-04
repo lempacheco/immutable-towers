@@ -8,8 +8,8 @@ import Tarefa1
 reageEventos :: Event -> ImmutableTowers -> ImmutableTowers
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
     | estadoIT it == Menu = it {estadoIT = Jogando} 
-    | estadoIT it == Jogando = it {estadoIT = Menu}
-    | estadoIT it == Pausado = it {estadoIT = Menu}
+    | estadoIT it == Jogando = it {estadoIT = Menu, jogoIT = jogoItInicial it}
+    | estadoIT it == Pausado = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | otherwise = it
 
 reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it 
@@ -69,10 +69,6 @@ reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it
 reageEventos (EventKey (Char 'b') Down _ _)  it 
     | estadoIT it == Jogando = it {estadoIT = Pausado}
     | estadoIT it == Pausado = it {estadoIT = Jogando}
-    | otherwise = it
-
-reageEventos (EventKey (Char 'm') Down _ _)  it 
-    | estadoIT it == Pausado = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | otherwise = it
 
 reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it

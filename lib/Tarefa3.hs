@@ -15,6 +15,7 @@ import Tarefa1
 import Data.List
 import Data.Maybe (fromJust)
 
+
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j = atualizaAnimacaoInimigos $ atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaPortaisEInimigos $ atualizaBase j
 
@@ -24,6 +25,10 @@ atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtua
           torres = torresJogo j
           (inimigosAtualizados, torresAtualizadas) = disparaTodosProjeteis torres inimigos
 
+{-| A função 'atualizaPortaisEInimigos' atualiza o estado dos portais e dos inimigos no jogo. 
+A função atualiza os inimigos com base nos projéteis disparados pelas torres e a cada vez que um inimigo é lançado no jogo. 
+E atualiza os portais, lançando os inimigos.
+-}
 
 atualizaPortaisEInimigos :: Jogo -> Jogo
 atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJogo = portaisAtualizado}
@@ -34,14 +39,18 @@ atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJo
           (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
 
 
--- Processa todos os portais, lançando todos os inimigos
+{-| A função 'lancaTodosPortais' é responsável por processar todos os portais do jogo, lançando os inimigos no jogo. 
+-}
+
 lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
 lancaTodosPortais [] is = ([], is)
 lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is
                                   (restoPortaisAtualizados, inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos
                               in (portalAtualizado:restoPortaisAtualizados, inimigosNovosAtualizados)
 
--- Processa todas as torres, disparando projéteis contra os inimigos
+{-| A função 'disparaTodosProjeteis' é responsável por processar todas as torres do jogo, disparando projéteis contra os inimigos. 
+-}
+
 disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
 disparaTodosProjeteis [] is = (is, [])
 disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = disparaProjeteis t is
@@ -87,16 +96,30 @@ atualizaInimigos t j =
                             $ geraCaminhos is m b
                            }
 
+{-| A função 'atualizaDuracaoProjeteisInimigos' atualiza a duração dos projéteis que estão afetando o inimigo.
+
+Essa função verifica todos os projéteis associados a um inimigo e:
+- Reduz a duração dos projéteis do tipo 'Finita'.
+- Remove projéteis cuja duração chegou a zero. 
+
+-}
+
 atualizaDuracaoProjeteisInimigos :: Inimigo -> Inimigo 
 atualizaDuracaoProjeteisInimigos i = i {projeteisInimigo = projeteisAtualizados} 
     where projeteis = projeteisInimigo i 
           projeteisAtualizados = duracaoFogoOuGelo projeteis
+
+{-| A função 'duracaoFogoOuGelo' processa uma lista de projéteis, atualizando sua duração e removendo projéteis expirados.
+
+-}
 
 duracaoFogoOuGelo :: [Projetil] -> [Projetil] 
 duracaoFogoOuGelo [] = []
 duracaoFogoOuGelo (p:ps) = case duracaoProjetil p of 
     Finita n -> if n <= 0 then duracaoFogoOuGelo ps else p {duracaoProjetil = Finita (n - 1)} : duracaoFogoOuGelo ps
     _ -> p : duracaoFogoOuGelo ps
+
+{-| A função 'atualizaBase' é responsável por atualizar a base do jogo. -}
 
 atualizaBase :: Jogo -> Jogo
 atualizaBase j =
@@ -211,11 +234,17 @@ atualizaInimigoFogo (i:is)
 taxaVelocidadeInimigoFogo :: Float
 taxaVelocidadeInimigoFogo = 5/60 --framerate = 60, logo vai retirar 5 de vida por segundo
 
+{-| A função 'inimigosSemVidaIs' devolve a lista de inimigos sobreviventes, cujo parâmetro 'vidaInimigo' seja maior que 0. 
+-}
+
 inimigosSemVidaIs :: [Inimigo] -> [Inimigo]
 inimigosSemVidaIs [] = []
 inimigosSemVidaIs (i:is)
     | vidaInimigo i <= 0 = inimigosSemVidaIs is
     | otherwise = i : inimigosSemVidaIs is
+
+{-| A função 'inimigosSemVidaB' é responsável por atualizar os créditos da base, sempre que um inimigo morre. 
+-}
 
 inimigosSemVidaB :: [Inimigo] -> Base -> Base
 inimigosSemVidaB [] b = b
@@ -246,6 +275,9 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
                     then velocidadeInimigo (atualizaInimigoResina inimigo)
                     else velocidadeInimigo inimigo 
 
+{-| A função 'inimigoAtingeBaseIs' é responsável por atualizar a lista de inimigos ativos. 
+    Sempre que o inimigo atinja a base, este é retirado do mapa. 
+-}
 
 inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo]
 inimigoAtingeBaseIs _ [] = []
@@ -255,6 +287,9 @@ inimigoAtingeBaseIs base (i:is) =
     in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
         then inimigoAtingeBaseIs base is
         else i : inimigoAtingeBaseIs base is 
+
+{-| A função 'inimigoAtingeBaseB' é responsável por atualizar a vida da base sempre que o inimigo atinja. 
+-}
 
 inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
 inimigoAtingeBaseB [] base = base
@@ -266,6 +301,7 @@ inimigoAtingeBaseB (i:is) base =
 {-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
     devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.
 -}
+
 ondaAtiva :: Onda -> Bool
 ondaAtiva o = entradaOnda o <= 0
 

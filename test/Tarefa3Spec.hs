@@ -120,6 +120,8 @@ teste5 =
                                                                           inimigoA3]
       ]
 
+-- lancaInimigo
+
 teste6 :: Test
 teste6 =  
   TestLabel "Testes para a função lancaInimigo" $
@@ -212,6 +214,8 @@ teste14 =
         "Teste com inimigos com posições iguais e diferentes da base" ~: base1 {vidaBase = 45.0} ~=? inimigoAtingeBaseB [inimigo1, inimigo2] base1
       ]
 
+-- disparaTodosProjeteis
+
 teste15 :: Test 
 teste15 = 
    TestLabel "Testes para a função disparaTodosProjeteis" $
@@ -255,6 +259,8 @@ teste15 =
                                                                                                                   inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 10}]
       ]
 
+-- lancaTodosInimigos
+
 teste16 :: Test 
 teste16 = 
    TestLabel "Testes para a função lancaTodosInimigos" $
@@ -289,6 +295,8 @@ teste16 =
 
       
      ]
+
+-- atualizaPortaisEInimigos
 
 teste17 :: Test 
 teste17 = 

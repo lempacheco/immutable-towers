@@ -15,9 +15,16 @@ Módulo para a realização da Tarefa 1 de LI1 em 2024/25.
 module Tarefa1 where
 import LI12425
 
--- | A função 'validaJogo' verifica se um jogo é válido.
+{-| A função 'validaJogo' verifica se um jogo é válido. 
+
+-}
+
 validaJogo :: Jogo -> Bool
 validaJogo j = validaTorre j && validaBase j && validaPortal j && validaInimigo j 
+
+{-| A função 'validaTorre' verifica se as torres do jogo são válidas. 
+
+-}
 
 validaTorre :: Jogo -> Bool 
 validaTorre j =
@@ -28,7 +35,11 @@ validaTorre j =
       && rajadaTorresPositivo ts
       && cicloTorresNaoNegativo ts
       && naoSobrepostoTorres ts
-      
+
+{-| A função 'validaBase' verifica se a base do jogo é válida. 
+
+-}
+
 validaBase :: Jogo -> Bool
 validaBase j =
   let b = baseJogo j
@@ -39,22 +50,30 @@ validaBase j =
       && creditoNaoNegativoBase b
       && naoSobrepostoBaseTorrePortal b ts ps
 
+{-| A função 'validaPortal' verifica se todos os portais do jogo são válidos. 
+
+-}
+
 validaPortal :: Jogo -> Bool 
 validaPortal jogo = (peloMenosUmPortal portais) && (validaPosicaoPortal portais mapa) &&
                     (existeCaminho mapa portais base) && (naoSobrepostoBasePortal base portais) && 
                     (naoSobrepostoTorrePortal torres portais)
-  where portais@(p:ps) = portaisJogo jogo
+  where portais@(p:_) = portaisJogo jogo
         existeCaminho mapa portais base = (existePeloMenosUmCaminho mapa p base) || (existeCaminho mapa portais base)
-        torres@(t:ts) = torresJogo jogo
+        torres = torresJogo jogo
         base = baseJogo jogo
         mapa = mapaJogo jogo
-        
+
+{-| A função 'validaInimigo' verifica se os inimigos do jogo são válidos. 
+
+-}
+
 validaInimigo :: Jogo -> Bool
 validaInimigo jogo = (inimigosInicio inimigos portais) && (inimigosTerra inimigos mapa) &&
-                     (inimigosTorre inimigos torres) && (velocidadeInimigos inimigos) && (normalizaInimigos inimigos) 
-  where inimigos@(i:is) = inimigosJogo jogo
-        portais@(p:ps) = portaisJogo jogo
-        torres@(t:ts) = torresJogo jogo
+                       (inimigosTorre inimigos torres) && (velocidadeInimigos inimigos) && (normalizaInimigos inimigos) 
+  where inimigos = inimigosJogo jogo
+        portais = portaisJogo jogo
+        torres = torresJogo jogo
         mapa = mapaJogo jogo
 
 {-| A função 'eTerra' verifica se uma determinada posição é terra. 
@@ -99,14 +118,14 @@ procuraTerreno (x, y) mapa =
 
 
 
-{-| A função 'peloMenosUmPortal' verifica se existe pelo menos um portal 
+{-| A função 'peloMenosUmPortal' verifica se existe pelo menos um portal no mapa.
 
 -}
 
 peloMenosUmPortal:: [Portal] -> Bool
 peloMenosUmPortal ps = not (null ps)
 
-{-| A função 'validaPosicaoPortal' verifica se todos os portais existentes no jogo estão posicionados sobre a Terra
+{-| A função 'validaPosicaoPortal' verifica se todos os portais existentes no jogo estão posicionados sobre a Terra.
 
 -}
 
@@ -116,7 +135,7 @@ validaPosicaoPortal (p:ps) mapa =
   eTerra (posicaoPortal p) mapa && validaPosicaoPortal ps mapa
 
 {-| A função 'naoSobrepostoBasePortal' verifica se a base está sobreposta à algum portal. 
- Como para um bom funcionamento do jogo, a base não pode está sobreposta à nenhum portal, a função devolve *True* quando 
+ Como para um bom funcionamento do jogo, a base não pode estar sobreposta à nenhum portal, a função devolve *True* quando 
  não houver nenhum portal na mesma posição da base.
 
 -}
@@ -154,10 +173,7 @@ inimigosInicio (i:is) ps = all (> 0) vi &&
      where pps = map posicaoPortal ps 
            vi = map vidaInimigo (i:is)
 
-{-| A função 'inimigosTerra' verifica se os inimigos encontram-se sempre sobre a terra.
-
-== Nota: 
- Os inimigos só podem andar sobre a terra. Logo, esta função averigua se os inimigos estão sobre a terra. 
+{-| A função 'inimigosTerra' verifica se os inimigos encontram-se sempre sobre a Terra. 
 
 -}
 
@@ -208,13 +224,15 @@ normalizaInimigos is = all normalizainimigo is
     normalizainimigo :: Inimigo -> Bool
     normalizainimigo i = projeteisValidos tProjetil && projetilIgual projetil 
       where projetil = projeteisInimigo i 
-            tProjetil = map tipoProjetil (projetil)  
+            tProjetil = map tipoProjetil projetil  
 
 
 
 {-| A função 'existePeloMenosUmCaminho' verifica se existe pelo menos um caminho um caminho (de terra) ligando um portal à base. 
  De outra forma, não seria possı́vel a base sofrer dano.
+
 -}
+
 existePeloMenosUmCaminho :: Mapa -> Portal -> Base -> Bool
 existePeloMenosUmCaminho mapa p b =
   let posP = posicaoPortal p
@@ -249,7 +267,9 @@ atualizaPos m pos@(x,y) posB lpos
 
 
 {-| A função 'validaPosicoesTorres' verifica se, numa lista de torres, todas estão posicionadas sobre terra.
+
 -}
+
 validaPosicoesTorres :: [Torre] -> Mapa -> Bool
 validaPosicoesTorres ts m =
   let pts = map posicaoTorre ts
@@ -261,27 +281,35 @@ validaPosicoesTorres ts m =
         | otherwise = aux pts m
 
 {-| A função 'alcanceTorresPositivo' verifica se, numa lista de torres, o alcance de todas é um valor positivo.
+
 -}
+
 alcanceTorresPositivo :: [Torre] -> Bool
 alcanceTorresPositivo [] = True
 alcanceTorresPositivo (t:ts) = alcanceTorre t > 0 && alcanceTorresPositivo ts
 
 {-| A função 'rajadaTorresPositivo' verifica se, numa lista de torres, a rajada é um valor positivo.
+
 -}
+
 rajadaTorresPositivo :: [Torre] -> Bool
 rajadaTorresPositivo [] = True
 rajadaTorresPositivo (t:ts) = rajadaTorre t > 0 && rajadaTorresPositivo ts
 
 
 {-| A função 'cicloTorresNaoNegativo' verifica se, numa lista de torres, o ciclo é um valor não negativo.
+
 -}
+
 cicloTorresNaoNegativo :: [Torre] -> Bool
 cicloTorresNaoNegativo [] = True
 cicloTorresNaoNegativo (t:ts) = cicloTorre t >= 0 && cicloTorresNaoNegativo ts
 
 
 {-| A função 'naoSobrepostoTorres' verifica se, numa lista de torres, nenhuma está sobreposta a outra. Devolve False caso haja sobreposição.
+
 -}
+
 naoSobrepostoTorres :: [Torre] -> Bool
 naoSobrepostoTorres [] = True
 naoSobrepostoTorres (t:ts) =
@@ -291,17 +319,23 @@ naoSobrepostoTorres (t:ts) =
       else naoSobrepostoTorres ts
 
 {-| A função 'validaPosicaoBase' verifica se uma base tem uma posição válida.
+
 -}
+
 validaPosicaoBase :: Base -> Mapa -> Bool
 validaPosicaoBase b m = eTerra (posicaoBase b) m
 
 {-| A função 'creditoNaoNegativoBase' verifica se uma base não tem crédito negativo.
+
 -}
+
 creditoNaoNegativoBase :: Base -> Bool
 creditoNaoNegativoBase b = creditosBase b >= 0
 
 {-| A função 'naoSobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve False se houver sobreposição.
+
 -}
+
 naoSobrepostoBaseTorrePortal :: Base -> [Torre] -> [Portal] -> Bool
 naoSobrepostoBaseTorrePortal b ts ps = naoSobrepostoBasePortal b ps && sobrepostoBaseTorres b ts
   where

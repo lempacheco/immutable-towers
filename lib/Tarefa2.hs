@@ -81,6 +81,7 @@ atingeInimigo torre inimigo
             outrasCombs t i = i {projeteisInimigo = projetilTorre t : projeteisInimigo i}
                 
 {-| A função 'ativaInimigo' é responsável por mover o próximo inimigo a ser lanaçado pelo portal para lista de inimigos ativos. 
+
 -}
 
 ativaInimigo :: Portal -> [Inimigo] -> (Portal, [Inimigo])
@@ -95,6 +96,7 @@ ativaInimigo portal inimigosAtivos = case ondasPortal portal of
               in (novoPortal, novoInimigo)
 
 {-| A função 'terminouJogo' é responsável por indicar o fim do jogo, sendo possível duas eventualidaes: ganhar ou perder.
+
 -}
 
 terminouJogo :: Jogo -> Bool
@@ -115,11 +117,13 @@ ganhouJogo j = null (inimigosJogo j)
     2. Todas as ondas no portal estão vazias, ou seja, não possuem inimigos (inimigosOnda é uma lista vazia para todas as ondas).
 
 -}
+
 verificaPortal :: Portal -> Bool
 verificaPortal p = null (ondasPortal p) || all (null . inimigosOnda) (ondasPortal p)
 
 {-| A função 'perdeuJogo' indica se um jogador perdeu o jogo, o jogador perde o jogo na seguinte condição: 
      1. nível de vida da base igual ou inferior a zero.
 -}
+
 perdeuJogo :: Jogo -> Bool
 perdeuJogo j = vidaBase (baseJogo j) <= 0 

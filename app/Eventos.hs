@@ -26,7 +26,7 @@ reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it
                 rajadaTorre = 2,
                 cicloTorre = 180,
                 tempoTorre = 180,
-                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3},
+                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 160},
                 iteracoesDesdeInicioAnimacao = 1
               }
             custoTorre = 50

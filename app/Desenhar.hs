@@ -31,25 +31,24 @@ desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
     selec = posicaoTorreComprada it
 
 desenhaCriandoMapa :: ImmutableTowers -> Picture 
-desenhaCriandoMapa it = Pictures [desenhaSelecao (x,y), desenhaLoja loja ts, desenhaPerfilJogador jogo base ts, desenhaListaTerreno lt ts, picPortais] 
+desenhaCriandoMapa it = 
+    Pictures [desenhaLoja loja ts, 
+              desenhaPerfilJogador jogo base ts, 
+              desenhaListaTerreno lt ts, 
+              Pictures picPortais, 
+              picBase, 
+              desenhaSelecao (x,y)
+             ] 
   where 
     (x,y) = posicaoTorreComprada it
     jogo = jogoIT it 
     loja = lojaJogo jogo
-    base = baseJogo jogo
+    base = baseJogo jogo 
     ts = texturasIT it 
     lt = listaTerreno it
     pps = listaPortais it  
+    picBase = desenhaBase base (fromJust $ lookup "base" ts)
     picPortais = desenhaPortais pps (fromJust $ lookup "portal" ts)
-    desenhaPortais :: [Portal] -> Picture -> Picture
-    desenhaPortais [] _ = Blank
-    desenhaPortais ps textura = Pictures $ map desenhaPortal ps
-       where
-        desenhaPortal :: Portal -> Picture
-        desenhaPortal p = 
-          let (x, y) = conversaoCoordsGloss $ posicaoPortal p
-          in translate x (y + (128 - 64) / 2) textura
-
     
 desenhaListaTerreno :: [(Posicao, Terreno)] -> [Textura] -> Picture
 desenhaListaTerreno lt ts = Pictures $ map (`desenhaUMterreno` ts) lt 
@@ -212,8 +211,8 @@ desenhaLoja loja ts = Pictures [iconeLoja, store, fundoTorre1, fundoTorre2, fund
           --moldura = Translate (-730) (-60) $ scale 10 25 $ fromJust $ lookup "moldura" ts
           --iconeLoja = Translate (-750) 300 $ scale 5 2 $ fromJust $ lookup "iconeLoja" ts
           lojaFundo = Translate (-750) (-60) $ scale 2 2 $ fromJust $ lookup "lojaFundo" ts
-          iconeLoja = Translate (-845) (20) $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts
-          fundoTorre1 =  Translate (-730) (100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
+          iconeLoja = Translate (-845) 20 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts
+          fundoTorre1 =  Translate (-730) 100 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre2 = Translate (-730) (-100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre3 = Translate (-730) (-300) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           store = Translate (-750) 270 $ scale 1.5 1.5 $ fromJust $ lookup "Store" ts

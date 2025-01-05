@@ -66,53 +66,35 @@ reageEventos (EventKey (Char 'p') Down _ _) it
 reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it 
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
-    | estadoIT it == Comprando =  case produtoLoja it of 
-      (-900, 100) -> 
+    | estadoIT it == Comprando =  
         let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
-            jogo = jogoIT it 
-            torre = Torre
-              { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
-                danoTorre = 10,
-                alcanceTorre = 5*64,
-                rajadaTorre = 2,
-                cicloTorre = 180,
-                tempoTorre = 180,
-                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3},
-                iteracoesDesdeInicioAnimacao = 1
-              }
-            custoTorre = 50
-            jogoAtualizado = compraTorre torre custoTorre jogo
-         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
-      (-900, -100) -> 
-        let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
-            jogo = jogoIT it 
-            torre = Torre
-              { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
-                danoTorre = 10,
-                alcanceTorre = 5*64,
-                rajadaTorre = 2,
-                cicloTorre = 180,
-                tempoTorre = 180,
-                projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita},
-                iteracoesDesdeInicioAnimacao = 1
-              }
-            custoTorre = 50
-            jogoAtualizado = compraTorre torre custoTorre jogo
-         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
-      (-900, -300) -> 
-        let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
-            jogo = jogoIT it 
-            torre = Torre
-              { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
-                danoTorre = 10,
-                alcanceTorre = 5*64,
-                rajadaTorre = 2,
-                cicloTorre = 180,
-                tempoTorre = 180,
-                projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 3},
-                iteracoesDesdeInicioAnimacao = 1
-              }
-            custoTorre = 50
+            jogo = jogoIT it
+            (torre, custoTorre) = 
+              case produtoLoja it of
+                (-900, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                                        danoTorre = 15,
+                                        alcanceTorre = 5,
+                                        rajadaTorre = 4,
+                                        cicloTorre = 5*60,
+                                        tempoTorre = 5*60,
+                                        projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita (2*60)},
+                                        iteracoesDesdeInicioAnimacao = 1}, 100)
+                (-900, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                                          danoTorre = 25,
+                                          alcanceTorre = 3,
+                                          rajadaTorre = 3,
+                                          cicloTorre = 4*60,
+                                          tempoTorre = 4*60,
+                                          projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita},
+                                          iteracoesDesdeInicioAnimacao = 1}, 150)
+                _ -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                              danoTorre = 30,
+                              alcanceTorre = 4,
+                              rajadaTorre = 5,
+                              cicloTorre = 4*60,
+                              tempoTorre = 4*60,
+                              projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita (3*60)},
+                              iteracoesDesdeInicioAnimacao = 1}, 200)
             jogoAtualizado = compraTorre torre custoTorre jogo
          in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
     | otherwise = it  

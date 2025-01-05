@@ -191,7 +191,9 @@ desenhaAnimacaoTorre t ts =
 desenhaAnimacaoInimigo :: Inimigo -> [Textura] -> Picture
 desenhaAnimacaoInimigo i ts =
     let its = iteracoesDesdeInicioAnimacaoInimigo i
-        textura = fromJust $ lookup ("guerreiro" ++ show (ceiling $ int2Float(its) / 4)) ts
+        textura = case tipoInimigo i of
+            Guerreiro -> fromJust $ lookup ("guerreiro" ++ show (ceiling $ int2Float(its) / 4)) ts
+            MulherLanca -> fromJust $ lookup ("mulherLanca" ++ show (ceiling $ int2Float(its) / 4)) ts
     in  Pictures [textura]
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]

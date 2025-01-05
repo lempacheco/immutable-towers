@@ -138,7 +138,7 @@ data Inimigo = Inimigo
   }
   deriving (Show, Eq)
 
-data TipoInimigo = GuerreiroFogo | MulherLanca
+data TipoInimigo = Guerreiro | MulherLanca
   deriving (Show, Eq)
 
 -- | Onda de inimigos que saem de um portal.

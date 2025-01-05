@@ -8,4 +8,8 @@ reageTempo :: Tempo -> ImmutableTowers -> ImmutableTowers
 reageTempo t it  
     | estadoIT it == Menu = it
     | estadoIT it == Pausado = it
+    | estadoIT it == CriandoMapa = it 
+    | estadoIT it == EscolhendoOndas = it
+    | estadoIT it == EscolhendoIG = it
+    | estadoIT it == EscolhendoIM = it 
     | otherwise = it {jogoIT = atualizaJogo t $ jogoIT it}

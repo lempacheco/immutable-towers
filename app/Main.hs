@@ -6,10 +6,11 @@ import Eventos
 import Graphics.Gloss
 import ImmutableTowers
 import Tempo
+import Tarefa3
 import LI12425
 
 itInicial :: [(String, Picture)] -> ImmutableTowers
-itInicial = it1
+itInicial = it2
 
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
@@ -128,7 +129,15 @@ main = do
   guerreiro6 <- loadBMP "resources/textures/entities/guerreiro6.bmp"
   guerreiro7 <- loadBMP "resources/textures/entities/guerreiro7.bmp"
   guerreiro8 <- loadBMP "resources/textures/entities/guerreiro8.bmp"
-  mulherLanca <- loadBMP "resources/textures/entities/MulherLanca.bmp"
+  mulherLanca0 <- loadBMP "resources/textures/entities/mulherLanca0.bmp"
+  mulherLanca1 <- loadBMP "resources/textures/entities/mulherLanca1.bmp"
+  mulherLanca2 <- loadBMP "resources/textures/entities/mulherLanca2.bmp"
+  mulherLanca3 <- loadBMP "resources/textures/entities/mulherLanca3.bmp"
+  mulherLanca4 <- loadBMP "resources/textures/entities/mulherLanca4.bmp"
+  mulherLanca5 <- loadBMP "resources/textures/entities/mulherLanca5.bmp"
+  mulherLanca6 <- loadBMP "resources/textures/entities/mulherLanca6.bmp"
+  mulherLanca7 <- loadBMP "resources/textures/entities/mulherLanca7.bmp"
+  mulherLanca8 <- loadBMP "resources/textures/entities/mulherLanca8.bmp"
   creditos <- loadBMP "resources/textures/ui/novoCreditos.bmp"
   vida <- loadBMP "resources/textures/ui/vida.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
@@ -149,6 +158,7 @@ main = do
   lojaFundo <- loadBMP "resources/textures/ui/fundoLoja2.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
   molduraMapa2 <- loadBMP "resources/textures/ui/molduraArbusto.bmp"
+  moldBaixo <- loadBMP "resources/textures/ui/molduraBaixo.bmp"
   iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
   iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
   molduraMapa <- loadBMP "resources/textures/ui/molduraMapa.bmp"
@@ -162,6 +172,9 @@ main = do
   fundoPerfilJg <- loadBMP "resources/textures/ui/fundoPerfilJg.bmp"
   seta <- loadBMP "resources/textures/ui/setaLoja.bmp"
   nInimigos <- loadBMP "resources/textures/ui/nInimigos.bmp"
+  botaoQ <- loadBMP "resources/textures/ui/botaoQ.bmp"
+  setaCima <- loadBMP "resources/textures/ui/setaCima.bmp"
+  setaBaixo <- loadBMP "resources/textures/ui/setaBaixo.bmp"
   play janela 
         fundo 
         fr 
@@ -184,7 +197,15 @@ main = do
             ("guerreiro6",guerreiro6),
             ("guerreiro7",guerreiro7),
             ("guerreiro8",guerreiro8),
-            ("mulherLanca",mulherLanca),   --27x50 px
+            ("mulherLanca0",mulherLanca0),
+            ("mulherLanca1",mulherLanca1),
+            ("mulherLanca2",mulherLanca2),
+            ("mulherLanca3",mulherLanca3),
+            ("mulherLanca4",mulherLanca4),
+            ("mulherLanca5",mulherLanca5),
+            ("mulherLanca6",mulherLanca6),
+            ("mulherLanca7",mulherLanca7),
+            ("mulherLanca8",mulherLanca8),
             ("creditos",creditos),       --13x21 px
             ("vida", vida), --18x16 px
             ("fundoMenu",fundoMenu), 
@@ -305,132 +326,83 @@ main = do
             ("iconePausa", iconePausa),
             ("fundoPerfilJg", fundoPerfilJg),
             ("seta", seta),
-            ("nInimigos", nInimigos)
+            ("nInimigos", nInimigos), 
+            ("botaoQ", botaoQ),
+            ("setaCima", setaCima), 
+            ("setaBaixo", setaBaixo), 
+            ("moldBaixo", moldBaixo)
           ]
         ) 
         desenha 
         reageEventos 
         reageTempo
 
--- Nível 1
+-- Todos os níveis
 
-it1 :: [Textura] -> ImmutableTowers
-it1 texturas = 
+inimigo1Tds :: Inimigo
+inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 40, 
+                        butimInimigo = 100, 
+                        ataqueInimigo = 40, 
+                        velocidadeInimigo = 0.5, 
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1}
+
+inimigo2Tds :: Inimigo
+inimigo2Tds = Inimigo {tipoInimigo = MulherLanca, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 50, 
+                        butimInimigo = 150,  
+                        ataqueInimigo = 20, 
+                        velocidadeInimigo = 1,
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1}
+
+itTds :: [Textura] -> ImmutableTowers
+itTds texturas = 
     ImmutableTowers {estadoIT = Menu, 
-                     jogoIT = jogo1,
                      texturasIT = texturas, 
                      posicaoTorreComprada = (0,0), 
                      produtoLoja = (-900, 100),
                      jogoItInicial = jogo1, 
                      listaTerreno = [], 
-                     listaPortais = []}
+                     listaPortais = [],
+                     escolhendoParametros = (0,0,0)}
+
+loja :: Loja
+loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
+         (150, Torre{projetilTorre = Projetil {tipoProjetil = Resina}}),
+         (200, Torre{projetilTorre = Projetil {tipoProjetil = Fogo}})
+        ]
+
+-- Nível 1
+
+it1 :: [Textura] -> ImmutableTowers
+it1 texturas = 
+  let it = itTds texturas
+  in it {jogoIT = jogo1}
 
 jogo1 :: Jogo
 jogo1 = Jogo {baseJogo = base1,
-              torresJogo = [torre1,torre2,torre3],
+              torresJogo = [],
               portaisJogo = [portal1_1, portal2_1],
               mapaJogo = mapa1,
               inimigosJogo = [],
-              lojaJogo = loja1}
+              lojaJogo = loja
+            }
 
 base1 :: Base
-base1 = Base {vidaBase = 50,
-             posicaoBase = (15,9),
-             creditosBase = 1000}
-
-torre1 :: Torre
-torre1 = Torre {posicaoTorre = (3, 13), 
-                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 120}, 
-                danoTorre = 5,
-                alcanceTorre = 5,
-                rajadaTorre = 3,
-                cicloTorre = 180,
-                tempoTorre = 180,
-                iteracoesDesdeInicioAnimacao = 1}
-
-torre2 :: Torre
-torre2 = Torre {posicaoTorre = (3, 3), 
-                projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}, 
-                danoTorre = 3,
-                alcanceTorre = 5,
-                rajadaTorre = 3,
-                cicloTorre = 180,
-                tempoTorre = 180,
-                iteracoesDesdeInicioAnimacao = 1}
-
-torre3 :: Torre
-torre3 = Torre {posicaoTorre = (14, 7), 
-                projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}, 
-                danoTorre = 1,
-                alcanceTorre = 5,
-                rajadaTorre = 3,
-                cicloTorre = 180,
-                tempoTorre = 180,
-                iteracoesDesdeInicioAnimacao = 1}
+base1 = baseTds {posicaoBase = (15,9)}
 
 portal1_1 :: Portal
 portal1_1 = Portal {posicaoPortal = (0,9),
-                  ondasPortal = [Onda {inimigosOnda = [inimigo1_1],
-                  cicloOnda = 2*60,
-                  tempoOnda = 0,
-                  entradaOnda = 0}]}
+                  ondasPortal = geraOndasPortal 2 1 1 (0,9)
+                  }
 
 portal2_1 :: Portal
 portal2_1 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = [Onda {inimigosOnda = [inimigo3_1],
-                  cicloOnda = 2*60,
-                  tempoOnda = 0,
-                  entradaOnda = 0}]}
-
-inimigo1_1 :: Inimigo
-inimigo1_1 = Inimigo {posicaoInimigo = (0,9), 
-                    tipoInimigo = GuerreiroFogo, 
-                    projeteisInimigo = [], 
-                    vidaInimigo = 1000, 
-                    butimInimigo = 4, 
-                    direcaoInimigo = Este, 
-                    ataqueInimigo = 5, 
-                    velocidadeInimigo = 2, 
-                    caminhoInimigo = [],
-                    acDirecao = (0,9),
-                    iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-inimigo2_1 :: Inimigo
-inimigo2_1 = Inimigo {posicaoInimigo = (0,9), 
-                    tipoInimigo = MulherLanca, 
-                    projeteisInimigo = [], 
-                    vidaInimigo = 6, 
-                    butimInimigo = 4, 
-                    direcaoInimigo = Este, 
-                    ataqueInimigo = 5, 
-                    velocidadeInimigo = 1,
-                    caminhoInimigo = [],
-                    acDirecao = (0,9)}
-
-inimigo3_1 :: Inimigo
-inimigo3_1 = Inimigo {posicaoInimigo = (5,0), 
-                    tipoInimigo = GuerreiroFogo, 
-                    projeteisInimigo = [], 
-                    vidaInimigo = 1000, 
-                    butimInimigo = 4, 
-                    direcaoInimigo = Norte, 
-                    ataqueInimigo = 5, 
-                    velocidadeInimigo = 1, 
-                    caminhoInimigo = [],
-                    acDirecao = (5,0),
-                    iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-inimigo4_1 :: Inimigo
-inimigo4_1 = Inimigo {posicaoInimigo = (5,0), 
-                    tipoInimigo = MulherLanca, 
-                    projeteisInimigo = [], 
-                    vidaInimigo = 6, 
-                    butimInimigo = 4, 
-                    direcaoInimigo = Norte, 
-                    ataqueInimigo = 5, 
-                    velocidadeInimigo = 1,
-                    caminhoInimigo = [],
-                    acDirecao = (5,0)}
+                  ondasPortal = geraOndasPortal 2 1 1 (5,0)}
 
 mapa1 :: Mapa 
 mapa1 = 
@@ -455,14 +427,22 @@ mapa1 =
        t = Terra
        r = Relva
        a = Agua
-       
-loja1 :: Loja
-loja1 = [(1000, Torre{projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 10}}),
-         (1000, Torre{projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}}),
-         (1000, Torre{projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}})
-        ]
 
 -- Nível 2
+
+it2:: [Textura] -> ImmutableTowers
+it2 texturas = 
+    let it = itTds texturas
+    in it {jogoIT = jogo2}
+
+jogo2 :: Jogo
+jogo2 = Jogo {baseJogo = base2,
+              torresJogo = [],
+              portaisJogo = [portal1_2, portal2_2, portal3_2],
+              mapaJogo = mapa2,
+              inimigosJogo = [],
+              lojaJogo = loja
+            }
 
 mapa2 :: Mapa 
 mapa2 = 
@@ -489,66 +469,16 @@ mapa2 =
        a = Agua
 
 base2 :: Base
-base2 = Base {vidaBase = 1000,
-             posicaoBase = (15,7),
-             creditosBase = 1000}
+base2 = baseTds {posicaoBase = (15,7)}
 
 portal1_2 :: Portal
 portal1_2 = Portal {posicaoPortal = (0,1),
-                  ondasPortal = [Onda {inimigosOnda = [inimigo1_2],
-                  cicloOnda = 2*60,
-                  tempoOnda = 0,
-                  entradaOnda = 0}]}
+                  ondasPortal = geraOndasPortal 3 2 1 (0,1)}
 
 portal2_2 :: Portal
 portal2_2 = Portal {posicaoPortal = (0,12), 
-                  ondasPortal = [Onda {inimigosOnda = [inimigo3_2],
-                  cicloOnda = 2*60,
-                  tempoOnda = 0,
-                  entradaOnda = 0}]}
+                  ondasPortal = geraOndasPortal 3 1 2 (0,12)}
 
 portal3_2 :: Portal
 portal3_2 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = [Onda {inimigosOnda = [inimigo3_2],
-                  cicloOnda = 2*60,
-                  tempoOnda = 0,
-                  entradaOnda = 0}]}
-
-inimigo1_2 :: Inimigo
-inimigo1_2 = Inimigo {posicaoInimigo = (0,1), 
-                    tipoInimigo = GuerreiroFogo, 
-                    projeteisInimigo = [], 
-                    vidaInimigo = 1000, 
-                    butimInimigo = 4, 
-                    direcaoInimigo = Este, 
-                    ataqueInimigo = 5, 
-                    velocidadeInimigo = 1, 
-                    caminhoInimigo = [],
-                    acDirecao = (0,1),
-                    iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-inimigo3_2 :: Inimigo
-inimigo3_2 = Inimigo {posicaoInimigo = (5,0), 
-                    tipoInimigo = GuerreiroFogo, 
-                    projeteisInimigo = [], 
-                    vidaInimigo = 1000, 
-                    butimInimigo = 4, 
-                    direcaoInimigo = Norte, 
-                    ataqueInimigo = 5, 
-                    velocidadeInimigo = 1, 
-                    caminhoInimigo = [],
-                    acDirecao = (5,0),
-                    iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-it2:: [Textura] -> ImmutableTowers
-it2 texturas = 
-    ImmutableTowers {estadoIT = Menu, 
-                     jogoIT = Jogo {baseJogo = base2,
-                                    torresJogo = [],
-                                    portaisJogo = [portal1_2, portal2_2, portal3_2],
-                                    mapaJogo = mapa2,
-                                    inimigosJogo = [],
-                                    lojaJogo = loja1},
-                     texturasIT = texturas, 
-                     posicaoTorreComprada = (0,0), 
-                     produtoLoja = (-900, 100)}
+                  ondasPortal = geraOndasPortal 3 1 1 (5,0)}

@@ -23,7 +23,31 @@ desenha it = case estadoIT it of
      Comprando -> desenhaComprando it
      Pausado -> Pictures [desenhaJogo it, desenhaPausa ts]  
      CriandoMapa -> desenhaCriandoMapa it
+     EscolhendoOndas -> desenhaEscolhendoOnda it 
+     EscolhendoIG -> desenhaEscolhendoOnda it 
+     EscolhendoIM -> desenhaEscolhendoOnda it 
   where ts = texturasIT it
+
+
+desenhaEscolhendoOnda :: ImmutableTowers -> Picture 
+desenhaEscolhendoOnda it = Pictures [botao1, botao2, botao3, setaCima1, setaCima2, setaCima3, setaBaixo1, setaBaixo2, setaBaixo3, enO, enIG, enIM, numeros]
+    where 
+        ts = texturasIT it 
+        (nO, nIG, nIM) = escolhendoParametros it
+        enO = translate (-135) 25 $ scale 1.5 1.5 $ string2FonteNumeros (show $ nO) ts
+        enIG = translate (-35) 25 $ scale 1.5 1.5 $ string2FonteNumeros (show $ nIG) ts
+        enIM = translate 58 25 $ scale 1.5 1.5 $ string2FonteNumeros (show $ nIM) ts
+        botao1 = translate (-100) 0 $ scale 5 5 $ fromJust $ lookup "botaoQ" ts
+        botao2 = translate 0 0 $ scale 5 5 $ fromJust $ lookup "botaoQ" ts
+        botao3 = translate 100 0 $ scale 5 5 $ fromJust $ lookup "botaoQ" ts
+        setaCima1 = translate 100 90 $ scale 4 4 $ fromJust $ lookup "setaCima" ts
+        setaCima2 = translate (-5) 90 $ scale 4 4 $ fromJust $ lookup "setaCima" ts
+        setaCima3 = translate (-104) 90 $ scale 4 4 $ fromJust $ lookup "setaCima" ts
+        setaBaixo1 = translate 100 (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
+        setaBaixo2 = translate (-5) (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
+        setaBaixo3 = translate (-105) (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
+        numeros = text $ show $ escolhendoParametros it 
+
 
 desenhaComprando :: ImmutableTowers -> Picture 
 desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
@@ -49,6 +73,7 @@ desenhaCriandoMapa it =
     pps = listaPortais it  
     picBase = desenhaBase base (fromJust $ lookup "base" ts)
     picPortais = desenhaPortais pps (fromJust $ lookup "portal" ts)
+ 
     
 desenhaListaTerreno :: [(Posicao, Terreno)] -> [Textura] -> Picture
 desenhaListaTerreno lt ts = Pictures $ map (`desenhaUMterreno` ts) lt 
@@ -93,11 +118,12 @@ desenhaMenu it = Pictures
            botaoLevel = fromJust $ lookup "botaoLevel" texturas
 
 desenhaJogo :: ImmutableTowers -> Picture
-desenhaJogo it = Pictures [picMapa, picMolduraMapa, picInimigo,Pictures picPortais, picLoja, picBase, picTorre, creditosJog]
+desenhaJogo it = Pictures [picMapa, picMolduraMapa, picInimigo,Pictures picPortais, picLoja, picBase, picTorre, creditosJog, moldBaixo]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
           mapa = mapaJogo jogo
           picMolduraMapa = desenhaMolduraMapa texturas
+          moldBaixo = translate 0 (-520) $ scale 1 1 $ (fromJust $ lookup "moldBaixo" texturas)
           texturas = texturasIT it
           picBase = desenhaBase base (fromJust $ lookup "base" texturas)
           base = baseJogo jogo
@@ -111,8 +137,11 @@ desenhaJogo it = Pictures [picMapa, picMolduraMapa, picInimigo,Pictures picPorta
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador jogo base texturas 
 
+
+
 desenhaMolduraMapa :: [Textura] -> Picture
-desenhaMolduraMapa ts = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa2" ts)
+desenhaMolduraMapa ts = Pictures [moldCima]
+    where moldCima = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa2" ts)
 
 
 desenhaMapa :: Mapa -> [Textura] -> Picture
@@ -160,9 +189,10 @@ desenhaUmInimigo inimigo texturas =
         comprimentoNumeroVidaPxs = int2Float (length (show $ ceiling $ vidaInimigo inimigo) * 13)
         offsetNumeroVida = (comprimentoNumeroVidaPxs+27+18)/2*0.5 --metade do comprimento da vida, da largura do inimigo e da largura do coração, escalado a 0.5
         numeroDaVida = translate (x-offsetNumeroVida) (y+40) $ scale 0.5 0.5 $ string2FonteNumeros (show $ ceiling $ vidaInimigo inimigo) texturas
+        ataqueInimig1 = Translate x y $ scale 1 1 ( text ( show ( ataqueInimigo inimigo)))
         coracaoVida = translate (x+offsetNumeroVida) (y+40-(16/2*0.7)) $ scale 0.7 0.7 $ fromJust $ lookup "vida" texturas
         textura = desenhaAnimacaoInimigo inimigo texturas
-    in Pictures [translate x y textura, numeroDaVida, coracaoVida]
+    in Pictures [translate x y textura, numeroDaVida, coracaoVida, ataqueInimig1]
 
 desenhaTorres :: [Torre] -> [Textura] -> Picture 
 desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 
@@ -190,7 +220,9 @@ desenhaAnimacaoTorre t ts =
 desenhaAnimacaoInimigo :: Inimigo -> [Textura] -> Picture
 desenhaAnimacaoInimigo i ts =
     let its = iteracoesDesdeInicioAnimacaoInimigo i
-        textura = fromJust $ lookup ("guerreiro" ++ show (ceiling $ int2Float(its) / 4)) ts
+        textura = case tipoInimigo i of
+            Guerreiro -> fromJust $ lookup ("guerreiro" ++ show (ceiling $ int2Float(its) / 4)) ts
+            MulherLanca -> fromJust $ lookup ("mulherLanca" ++ show (ceiling $ int2Float(its) / 4)) ts
     in  Pictures [textura]
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]

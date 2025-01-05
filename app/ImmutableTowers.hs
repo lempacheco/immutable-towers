@@ -12,7 +12,8 @@ data ImmutableTowers = ImmutableTowers {
     produtoLoja :: (Float, Float),
     jogoItInicial :: Jogo,
     listaTerreno :: [(Posicao,Terreno)],
-    listaPortais ::  [Portal] 
+    listaPortais ::  [Portal], 
+    escolhendoParametros :: (Int, Int, Int)
 }
 
 data EstadoJogo = Menu 
@@ -20,6 +21,9 @@ data EstadoJogo = Menu
                 | EscolhendoTorre
                 | Comprando 
                 | CriandoMapa
+                | EscolhendoOndas
+                | EscolhendoIG
+                | EscolhendoIM
                 | Pausado 
                 | VoltandoMenu
                 | GameOver

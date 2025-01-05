@@ -213,7 +213,8 @@ torre1 = Torre
     rajadaTorre = 3,
     cicloTorre = 5,
     tempoTorre = 4,
-    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}
+    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5},
+    iteracoesDesdeInicioAnimacao = 1
   }
 
 --torre válida (no mapa1)
@@ -226,7 +227,8 @@ torre2 = Torre
     rajadaTorre = 3,
     cicloTorre = 5,
     tempoTorre = 4,
-    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}
+    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5},
+    iteracoesDesdeInicioAnimacao = 1
   }
 
 --torre posicionada sobre água no mapa1
@@ -239,7 +241,8 @@ torre3 = Torre
     rajadaTorre = 3,
     cicloTorre = -1,
     tempoTorre = 4,
-    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}
+    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5},
+    iteracoesDesdeInicioAnimacao = 1
   }
 
 --torre com o alcance negativo
@@ -252,7 +255,8 @@ torre4 = Torre
     rajadaTorre = 3,
     cicloTorre = 9,
     tempoTorre = 4,
-    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}
+    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5},
+    iteracoesDesdeInicioAnimacao = 1
   }
 
 --torre com a rajada nula
@@ -265,7 +269,8 @@ torre5 = Torre
     rajadaTorre = 0,
     cicloTorre = 1,
     tempoTorre = 9,
-    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}
+    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1},
+    iteracoesDesdeInicioAnimacao = 1
   }
 
 --torre com o ciclo negativo
@@ -278,7 +283,8 @@ torre6 = Torre
     rajadaTorre = 3,
     cicloTorre = -1,
     tempoTorre = 4,
-    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}
+    projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5},
+    iteracoesDesdeInicioAnimacao = 1
   }
 
 --torre que sobrepõe a torre2 
@@ -291,7 +297,8 @@ torre7 = Torre
     rajadaTorre = 7,
     cicloTorre = 1,
     tempoTorre = 9,
-    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}
+    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1},
+    iteracoesDesdeInicioAnimacao = 1
   }
 
 -- portal sobre a terra
@@ -345,7 +352,8 @@ torreA = Torre
     rajadaTorre = 7,
     cicloTorre = 1,
     tempoTorre = 9,
-    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}
+    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}, 
+    iteracoesDesdeInicioAnimacao = 1
  }
 
 torreB :: Torre 
@@ -357,7 +365,8 @@ torreB = Torre
     rajadaTorre = 7,
     cicloTorre = 1,
     tempoTorre = 9,
-    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}
+    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}, 
+    iteracoesDesdeInicioAnimacao = 1
  }
 
 
@@ -371,7 +380,11 @@ inimigoA = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (0.5,0.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1 
  }
 
 -- Este inimigo não tem a posiçao inicial de um portal valido. Ou seja, é inválido
@@ -384,7 +397,11 @@ inimigoB = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (1.5,1.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1 
  }
 
 -- Este inimigo tem a vida positiva. Ou seja, é valido 
@@ -397,7 +414,11 @@ inimigoC = Inimigo
   velocidadeInimigo = -10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (0.5,0.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1 
  }
 
 -- Este inimigo não tem a vida positiva. Ou seja, é inválido
@@ -410,7 +431,11 @@ inimigoD = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [],
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (0.5,0.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1 
  }
 
 -- Este inimigo tem a lista de projéteis ativos vazia. Ou seja, é valido 
@@ -423,7 +448,11 @@ inimigoE = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (5.5,2.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1
  }
 
 -- Este inimigo não tem a lista de projéteis ativos vazia. Ou seja, é inválido
@@ -436,7 +465,11 @@ inimigoF = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [projetilA, projetilB] 
+  projeteisInimigo = [projetilA, projetilB],
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (0.5,0.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1
  }
 
 -- Este inimigo é válido, e está sobre a terra.
@@ -449,7 +482,11 @@ inimigoG = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  tipoInimigo = MulherLanca,
+  projeteisInimigo = [], 
+  caminhoInimigo = [],
+  acDirecao = (1.5,3.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1
  }
 
 -- Esta sobre Relva
@@ -462,7 +499,11 @@ inimigoH = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (2.5,0.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1
  }
 
 -- Esta sobre Agua
@@ -475,7 +516,11 @@ inimigoI = Inimigo
   velocidadeInimigo = 10.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
-  projeteisInimigo = [] 
+  projeteisInimigo = [], 
+  tipoInimigo = MulherLanca, 
+  caminhoInimigo = [],
+  acDirecao = (5.5,0.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1 
  }
 
 projetilA :: Projetil

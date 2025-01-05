@@ -8,6 +8,8 @@ import ImmutableTowers
 import Tempo
 import LI12425
 
+import Tarefa3
+
 itInicial :: [(String, Picture)] -> ImmutableTowers
 itInicial = it2
 
@@ -329,30 +331,6 @@ main = do
         reageTempo
 
 -- Todos os níveis
-baseTds :: Base
-baseTds = Base {vidaBase = 100,
-             creditosBase = 150}
-
-inimigo1Tds :: Inimigo
-inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 40, 
-                        butimInimigo = 100, 
-                        ataqueInimigo = 40, 
-                        velocidadeInimigo = 0.5, 
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-inimigo2Tds :: Inimigo
-inimigo2Tds = Inimigo {tipoInimigo = MulherLanca, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 50, 
-                        butimInimigo = 150,  
-                        ataqueInimigo = 20, 
-                        velocidadeInimigo = 1,
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1}
-
 itTds :: [Textura] -> ImmutableTowers
 itTds texturas = 
     ImmutableTowers {estadoIT = Menu, 
@@ -360,39 +338,6 @@ itTds texturas =
                      posicaoTorreComprada = (0,0), 
                      produtoLoja = (-900, 100),
                      jogoItInicial = jogo1}
-
-geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
-geraOndasPortal 0 _ _ _ = []
-geraOndasPortal qOndas n1 n2 posP = 
-  let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
-  in (last ondas) {tempoOnda = 0} : init ondas
-
-geraOndaPortal :: Int -> Int -> Posicao -> Onda
-geraOndaPortal n1 n2 posP = 
-  let is1 = geraIs1 posP n1
-      is2 = geraIs2 posP n2
-  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
-            cicloOnda = 5*60,
-            tempoOnda = 10*60,
-            entradaOnda = 0
-            }
-
-geraIs1 :: Posicao -> Int -> [Inimigo]
-geraIs1 posP n1
-  | n1 == 0 = []
-  | otherwise = inimigo1Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs1 posP (n1-1)
-
-geraIs2 :: Posicao -> Int -> [Inimigo]
-geraIs2 posP n2
-  | n2 == 0 = []
-  | otherwise = inimigo2Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs2 posP (n2-1)
-
-juntaIs1Is2 :: [Inimigo] -> [Inimigo] -> Int -> [Inimigo]
-juntaIs1Is2 [] is2 _ = is2
-juntaIs1Is2 is1 [] _ = is1
-juntaIs1Is2 is1 is2 ac
-  | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
-  | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
 
 loja :: Loja
 loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
@@ -417,7 +362,9 @@ jogo1 = Jogo {baseJogo = base1,
             }
 
 base1 :: Base
-base1 = baseTds {posicaoBase = (15,9)}
+base1 = Base {vidaBase = 100,
+             creditosBase = 150,
+             posicaoBase = (15,9)}
 
 portal1_1 :: Portal
 portal1_1 = Portal {posicaoPortal = (0,9),
@@ -493,7 +440,9 @@ mapa2 =
        a = Agua
 
 base2 :: Base
-base2 = baseTds {posicaoBase = (15,7)}
+base2 = Base {vidaBase = 100,
+             creditosBase = 150,
+             posicaoBase = (15,7)}
 
 portal1_2 :: Portal
 portal1_2 = Portal {posicaoPortal = (0,1),

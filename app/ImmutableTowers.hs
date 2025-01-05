@@ -21,4 +21,5 @@ data EstadoJogo = Menu
                 | VoltandoMenu
                 | GameOver
                 | YouWon 
+                | NivelPassado
                 deriving (Eq, Show)

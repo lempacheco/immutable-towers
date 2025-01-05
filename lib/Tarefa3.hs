@@ -17,7 +17,7 @@ import Data.Maybe (fromJust)
 
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaAnimacaoInimigos $ atualizaInimigos t $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaPortaisEInimigos $ atualizaBase j
+atualizaJogo t j =  atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -82,19 +82,20 @@ auxAtualizaAnimacaoInimigos (i:is)
     | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : auxAtualizaAnimacaoInimigos is
         where its = iteracoesDesdeInicioAnimacaoInimigo i
 
-atualizaInimigos :: Tempo -> Jogo -> Jogo
-atualizaInimigos t j =
+atualizaInimigosEBase :: Tempo -> Jogo -> Jogo
+atualizaInimigosEBase t j =
     let is = inimigosJogo j
         b = baseJogo j
         m = mapaJogo j
-    in j { inimigosJogo = inimigoAtingeBaseIs b 
-                            $ atualizaDistanciaPercorridaInimigos t 
-                            $ inimigosSemVidaIs
+        (nB, nIs) = inimigoAtingeBase b is
+        (nnB, nnIs) = inimigosSemVida nB nIs
+    in j { inimigosJogo = atualizaDistanciaPercorridaInimigos t
                             $ atualizaInimigoFogo
                             $ map atualizaDuracaoProjeteisInimigos 
                             $ map moveInimigo 
-                            $ geraCaminhos is m b
-                           }
+                            $ geraCaminhos nnIs m nnB,
+                            baseJogo = nnB
+                         }
 
 {-| A função 'atualizaDuracaoProjeteisInimigos' atualiza a duração dos projéteis que estão afetando o inimigo.
 
@@ -121,11 +122,11 @@ duracaoFogoOuGelo (p:ps) = case duracaoProjetil p of
 
 {-| A função 'atualizaBase' é responsável por atualizar a base do jogo. -}
 
-atualizaBase :: Jogo -> Jogo
+{- atualizaBase :: Jogo -> Jogo
 atualizaBase j =
     let b = baseJogo j
         is = inimigosJogo j
-    in j {baseJogo = inimigosSemVidaB is $ inimigoAtingeBaseB is b} 
+    in j {baseJogo = inimigosSemVida is $ inimigoAtingeBaseB is b}  -}
 
 {-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
 -}
@@ -236,21 +237,21 @@ taxaVelocidadeInimigoFogo = 5/60 --framerate = 60, logo vai retirar 5 de vida po
 
 {-| A função 'inimigosSemVidaIs' devolve a lista de inimigos sobreviventes, cujo parâmetro 'vidaInimigo' seja maior que 0. 
 -}
-
+{- 
 inimigosSemVidaIs :: [Inimigo] -> [Inimigo]
 inimigosSemVidaIs [] = []
 inimigosSemVidaIs (i:is)
     | vidaInimigo i <= 0 = inimigosSemVidaIs is
     | otherwise = i : inimigosSemVidaIs is
-
-{-| A função 'inimigosSemVidaB' é responsável por atualizar os créditos da base, sempre que um inimigo morre. 
+ -}
+{-| A função 'inimigosSemVida' é responsável por atualizar os créditos da base, sempre que um inimigo morre. 
 -}
 
-inimigosSemVidaB :: [Inimigo] -> Base -> Base
-inimigosSemVidaB [] b = b
-inimigosSemVidaB (i:is) b
-    | vidaInimigo i <= 0 = inimigosSemVidaB is b{creditosBase =  creditosBase b + butimInimigo i}
-    | otherwise = inimigosSemVidaB is b
+inimigosSemVida :: Base -> [Inimigo] -> (Base, [Inimigo])
+inimigosSemVida b [] = (b, [])
+inimigosSemVida b (i:is)
+    | vidaInimigo i <= 0 = inimigosSemVida b{creditosBase =  creditosBase b + butimInimigo i} is
+    | otherwise = (fst (inimigosSemVida b is), i : snd (inimigosSemVida b is))
 
 atualizaDistanciaPercorridaInimigos :: Tempo -> [Inimigo] -> [Inimigo]
 atualizaDistanciaPercorridaInimigos _ [] = []
@@ -275,30 +276,30 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
                     then velocidadeInimigo (atualizaInimigoResina inimigo)
                     else velocidadeInimigo inimigo 
 
-{-| A função 'inimigoAtingeBaseIs' é responsável por atualizar a lista de inimigos ativos. 
+{-| A função 'inimigoAtingeBase' é responsável por atualizar a lista de inimigos ativos. 
     Sempre que o inimigo atinja a base, este é retirado do mapa. 
 -}
 
-inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo]
-inimigoAtingeBaseIs _ [] = []
-inimigoAtingeBaseIs base (i:is) = 
+inimigoAtingeBase :: Base -> [Inimigo] -> (Base,[Inimigo])
+inimigoAtingeBase base [] = (base,[])
+inimigoAtingeBase base (i:is) = 
     let (xI, yI) = posicaoInimigo i
         (xB, yB) = posicaoBase base
     in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
-        then inimigoAtingeBaseIs base is
-        else i : inimigoAtingeBaseIs base is 
+        then inimigoAtingeBase base {vidaBase = vidaBase base - ataqueInimigo i} is
+        else (fst (inimigoAtingeBase base is), i : snd (inimigoAtingeBase base is))
 
 {-| A função 'inimigoAtingeBaseB' é responsável por atualizar a vida da base sempre que o inimigo atinja. 
 -}
 
-inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
+{- inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
 inimigoAtingeBaseB [] base = base
 inimigoAtingeBaseB (i:is) base =
     let (xI, yI) = posicaoInimigo i
         (xB, yB) = posicaoBase base
     in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
         then inimigoAtingeBaseB is (base {vidaBase = vidaBase base - ataqueInimigo i})
-        else inimigoAtingeBaseB is base
+        else inimigoAtingeBaseB is base -}
 
 {-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
     devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.
@@ -380,3 +381,59 @@ moveInimigo i =
         else i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = posicaoInimigo i, direcaoInimigo = head $ tail $ caminhoInimigo i}
 
 
+{- baseTds :: Base
+baseTds = Base {vidaBase = 100,
+             creditosBase = 150} -}
+
+inimigo1Tds :: Inimigo
+inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 40, 
+                        butimInimigo = 100, 
+                        ataqueInimigo = 40, 
+                        velocidadeInimigo = 0.5, 
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1}
+
+inimigo2Tds :: Inimigo
+inimigo2Tds = Inimigo {tipoInimigo = MulherLanca, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 50, 
+                        butimInimigo = 150,  
+                        ataqueInimigo = 20, 
+                        velocidadeInimigo = 1,
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1}
+
+geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
+geraOndasPortal 0 _ _ _ = []
+geraOndasPortal qOndas n1 n2 posP = 
+  let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
+  in (last ondas) {tempoOnda = 0} : init ondas
+
+geraOndaPortal :: Int -> Int -> Posicao -> Onda
+geraOndaPortal n1 n2 posP = 
+  let is1 = geraIs1 posP n1
+      is2 = geraIs2 posP n2
+  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
+            cicloOnda = 5*60,
+            tempoOnda = 10*60,
+            entradaOnda = 0
+            }
+
+geraIs1 :: Posicao -> Int -> [Inimigo]
+geraIs1 posP n1
+  | n1 == 0 = []
+  | otherwise = inimigo1Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs1 posP (n1-1)
+
+geraIs2 :: Posicao -> Int -> [Inimigo]
+geraIs2 posP n2
+  | n2 == 0 = []
+  | otherwise = inimigo2Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs2 posP (n2-1)
+
+juntaIs1Is2 :: [Inimigo] -> [Inimigo] -> Int -> [Inimigo]
+juntaIs1Is2 [] is2 _ = is2
+juntaIs1Is2 is1 [] _ = is1
+juntaIs1Is2 is1 is2 ac
+  | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
+  | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)

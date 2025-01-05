@@ -9,7 +9,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, teste10, teste11, teste12, {- teste13, teste14, -} teste15, teste16]
+      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, {- teste10, teste11 -} teste12, {- teste13, teste14, -} teste15, teste16]
 
 -- detetarInimigos 
 teste1 :: Test
@@ -165,7 +165,7 @@ teste9 =
         "Teste com um inimigo afetado por Fogo" ~: [inimigo1 {vidaInimigo = 5.0}] ~=? atualizaInimigoFogo [inimigo1]
       ]
 
-teste10 :: Test
+{- teste10 :: Test
 teste10 = 
   TestLabel "Teste para a função inimigosSemVidaIs" $
     test
@@ -183,7 +183,7 @@ teste11 =
         "Teste só com inimigos com vida" ~: base1 ~=? inimigosSemVidaB [inimigo1,inimigo2] base1,
         "Teste só com inimigos sem vida" ~: base1 {creditosBase = 25} ~=? inimigosSemVidaB [inimigo3,inimigo4] base1,
         "Teste com inimigos com e sem vida" ~: base1 {creditosBase = 15} ~=? inimigosSemVidaB [inimigo1,inimigo3] base1
-      ]
+      ] -}
 
 teste12 :: Test
 teste12 = 

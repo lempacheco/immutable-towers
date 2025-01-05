@@ -9,6 +9,8 @@ import Tempo
 import Tarefa3
 import LI12425
 
+import Tarefa3
+
 itInicial :: [(String, Picture)] -> ImmutableTowers
 itInicial = it2
 
@@ -369,6 +371,7 @@ itTds texturas =
                      listaTerreno = [], 
                      listaPortais = [],
                      escolhendoParametros = (0,0,0)}
+                     
 
 loja :: Loja
 loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
@@ -393,7 +396,9 @@ jogo1 = Jogo {baseJogo = base1,
             }
 
 base1 :: Base
-base1 = baseTds {posicaoBase = (15,9)}
+base1 = Base {vidaBase = 100,
+             creditosBase = 150,
+             posicaoBase = (15,9)}
 
 portal1_1 :: Portal
 portal1_1 = Portal {posicaoPortal = (0,9),
@@ -469,7 +474,9 @@ mapa2 =
        a = Agua
 
 base2 :: Base
-base2 = baseTds {posicaoBase = (15,7)}
+base2 = Base {vidaBase = 100,
+             creditosBase = 150,
+             posicaoBase = (15,7)}
 
 portal1_2 :: Portal
 portal1_2 = Portal {posicaoPortal = (0,1),

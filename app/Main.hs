@@ -6,6 +6,7 @@ import Eventos
 import Graphics.Gloss
 import ImmutableTowers
 import Tempo
+import Tarefa3
 import LI12425
 
 itInicial :: [(String, Picture)] -> ImmutableTowers
@@ -157,6 +158,7 @@ main = do
   lojaFundo <- loadBMP "resources/textures/ui/fundoLoja2.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
   molduraMapa2 <- loadBMP "resources/textures/ui/molduraArbusto.bmp"
+  moldBaixo <- loadBMP "resources/textures/ui/molduraBaixo.bmp"
   iconeVidaJg <- loadBMP "resources/textures/ui/iconeVidaJg.bmp"
   iconeLoja <- loadBMP "resources/textures/ui/iconeLoja.bmp"
   molduraMapa <- loadBMP "resources/textures/ui/molduraMapa.bmp"
@@ -170,6 +172,9 @@ main = do
   fundoPerfilJg <- loadBMP "resources/textures/ui/fundoPerfilJg.bmp"
   seta <- loadBMP "resources/textures/ui/setaLoja.bmp"
   nInimigos <- loadBMP "resources/textures/ui/nInimigos.bmp"
+  botaoQ <- loadBMP "resources/textures/ui/botaoQ.bmp"
+  setaCima <- loadBMP "resources/textures/ui/setaCima.bmp"
+  setaBaixo <- loadBMP "resources/textures/ui/setaBaixo.bmp"
   play janela 
         fundo 
         fr 
@@ -321,7 +326,11 @@ main = do
             ("iconePausa", iconePausa),
             ("fundoPerfilJg", fundoPerfilJg),
             ("seta", seta),
-            ("nInimigos", nInimigos)
+            ("nInimigos", nInimigos), 
+            ("botaoQ", botaoQ),
+            ("setaCima", setaCima), 
+            ("setaBaixo", setaBaixo), 
+            ("moldBaixo", moldBaixo)
           ]
         ) 
         desenha 
@@ -329,9 +338,6 @@ main = do
         reageTempo
 
 -- Todos os níveis
-baseTds :: Base
-baseTds = Base {vidaBase = 100,
-             creditosBase = 150}
 
 inimigo1Tds :: Inimigo
 inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
@@ -361,40 +367,8 @@ itTds texturas =
                      produtoLoja = (-900, 100),
                      jogoItInicial = jogo1, 
                      listaTerreno = [], 
-                     listaPortais = []}
-
-geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
-geraOndasPortal 0 _ _ _ = []
-geraOndasPortal qOndas n1 n2 posP = 
-  let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
-  in (last ondas) {tempoOnda = 0} : init ondas
-
-geraOndaPortal :: Int -> Int -> Posicao -> Onda
-geraOndaPortal n1 n2 posP = 
-  let is1 = geraIs1 posP n1
-      is2 = geraIs2 posP n2
-  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
-            cicloOnda = 5*60,
-            tempoOnda = 10*60,
-            entradaOnda = 0
-            }
-
-geraIs1 :: Posicao -> Int -> [Inimigo]
-geraIs1 posP n1
-  | n1 == 0 = []
-  | otherwise = inimigo1Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs1 posP (n1-1)
-
-geraIs2 :: Posicao -> Int -> [Inimigo]
-geraIs2 posP n2
-  | n2 == 0 = []
-  | otherwise = inimigo2Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs2 posP (n2-1)
-
-juntaIs1Is2 :: [Inimigo] -> [Inimigo] -> Int -> [Inimigo]
-juntaIs1Is2 [] is2 _ = is2
-juntaIs1Is2 is1 [] _ = is1
-juntaIs1Is2 is1 is2 ac
-  | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
-  | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
+                     listaPortais = [],
+                     escolhendoParametros = (0,0,0)}
 
 loja :: Loja
 loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),

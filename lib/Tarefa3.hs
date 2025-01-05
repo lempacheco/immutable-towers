@@ -87,8 +87,8 @@ atualizaInimigos t j =
     let is = inimigosJogo j
         b = baseJogo j
         m = mapaJogo j
-    in j { inimigosJogo = inimigoAtingeBaseIs b 
-                            $ atualizaDistanciaPercorridaInimigos t 
+    in inimigoAtingeBase $ j { inimigosJogo = 
+                             atualizaDistanciaPercorridaInimigos t 
                             $ inimigosSemVidaIs
                             $ atualizaInimigoFogo
                             $ map atualizaDuracaoProjeteisInimigos 
@@ -122,10 +122,10 @@ duracaoFogoOuGelo (p:ps) = case duracaoProjetil p of
 {-| A função 'atualizaBase' é responsável por atualizar a base do jogo. -}
 
 atualizaBase :: Jogo -> Jogo
-atualizaBase j =
+atualizaBase j =  
     let b = baseJogo j
         is = inimigosJogo j
-    in j {baseJogo = inimigosSemVidaB is $ inimigoAtingeBaseB is b} 
+    in inimigoAtingeBase $ j {baseJogo = inimigosSemVidaB is b} 
 
 {-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
 -}
@@ -279,7 +279,7 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
     Sempre que o inimigo atinja a base, este é retirado do mapa. 
 -}
 
-inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo]
+{- inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo]
 inimigoAtingeBaseIs _ [] = []
 inimigoAtingeBaseIs base (i:is) = 
     let (xI, yI) = posicaoInimigo i
@@ -287,18 +287,20 @@ inimigoAtingeBaseIs base (i:is) =
     in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
         then inimigoAtingeBaseIs base is
         else i : inimigoAtingeBaseIs base is 
-
+ -}
 {-| A função 'inimigoAtingeBaseB' é responsável por atualizar a vida da base sempre que o inimigo atinja. 
 -}
 
-inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
-inimigoAtingeBaseB [] base = base
-inimigoAtingeBaseB (i:is) base =
-    let (xI, yI) = posicaoInimigo i
-        (xB, yB) = posicaoBase base
-    in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
-        then inimigoAtingeBaseB is (base {vidaBase = vidaBase base - ataqueInimigo i})
-        else inimigoAtingeBaseB is base
+inimigoAtingeBase :: Jogo -> Jogo 
+inimigoAtingeBase j = let base = baseJogo j 
+                          is = inimigosJogo j 
+                          (xI, yI) = posicaoInimigo (head is)
+                          (xB, yB) = posicaoBase base
+                       in if is == [] then j else if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5) 
+                          then j {baseJogo = base {vidaBase = vidaBase base - ataqueInimigo (head is) }, inimigosJogo = tail (is)} 
+                          else j 
+
+
 
 {-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
     devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.
@@ -380,3 +382,59 @@ moveInimigo i =
         else i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = posicaoInimigo i, direcaoInimigo = head $ tail $ caminhoInimigo i}
 
 
+geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
+geraOndasPortal 0 _ _ _ = []
+geraOndasPortal qOndas n1 n2 posP = 
+  let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
+  in (last ondas) {tempoOnda = 0} : init ondas
+
+geraOndaPortal :: Int -> Int -> Posicao -> Onda
+geraOndaPortal n1 n2 posP = 
+  let is1 = geraIs1 posP n1
+      is2 = geraIs2 posP n2
+  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
+            cicloOnda = 5*60,
+            tempoOnda = 10*60,
+            entradaOnda = 0
+            }
+
+geraIs1 :: Posicao -> Int -> [Inimigo]
+geraIs1 posP n1
+  | n1 == 0 = []
+  | otherwise = inimigo1Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs1 posP (n1-1)
+
+geraIs2 :: Posicao -> Int -> [Inimigo]
+geraIs2 posP n2
+  | n2 == 0 = []
+  | otherwise = inimigo2Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs2 posP (n2-1)
+
+juntaIs1Is2 :: [Inimigo] -> [Inimigo] -> Int -> [Inimigo]
+juntaIs1Is2 [] is2 _ = is2
+juntaIs1Is2 is1 [] _ = is1
+juntaIs1Is2 is1 is2 ac
+  | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
+  | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
+
+inimigo1Tds :: Inimigo
+inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 40, 
+                        butimInimigo = 100, 
+                        ataqueInimigo = 40, 
+                        velocidadeInimigo = 0.5, 
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1}
+
+inimigo2Tds :: Inimigo
+inimigo2Tds = Inimigo {tipoInimigo = MulherLanca, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 50, 
+                        butimInimigo = 150,  
+                        ataqueInimigo = 20, 
+                        velocidadeInimigo = 1,
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1}
+
+baseTds :: Base
+baseTds = Base {vidaBase = 100,
+                creditosBase = 150}

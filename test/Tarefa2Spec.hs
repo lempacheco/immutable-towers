@@ -174,7 +174,8 @@ torreA = Torre
     rajadaTorre = 7,
     cicloTorre = 1,
     tempoTorre = 9,
-    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}
+    projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1},
+    iteracoesDesdeInicioAnimacao = 1
  }
 
 -- Torre com fogo
@@ -185,7 +186,8 @@ torreB = Torre {posicaoTorre = (0.5,2.5),
                 rajadaTorre = 3,
                 cicloTorre = 5,
                 tempoTorre = 4,
-                projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5}
+                projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita 5},
+                iteracoesDesdeInicioAnimacao = 1
                }
 
 -- Torre com resina
@@ -196,7 +198,8 @@ torreC = Torre {posicaoTorre = (5.5,5.5),
                 rajadaTorre = 3,
                 cicloTorre = 5,
                 tempoTorre = 4,
-                projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Finita 5}
+                projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Finita 5},
+                iteracoesDesdeInicioAnimacao = 1
                }
 
 -- Onda sem inimigos
@@ -239,7 +242,10 @@ inimigoA = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [projetilC], 
-  tipoInimigo = MulherLanca        
+  tipoInimigo = MulherLanca,
+  caminhoInimigo = [],
+  acDirecao = (5.5,2.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1        
  }
 
 inimigoB :: Inimigo 
@@ -252,7 +258,10 @@ inimigoB = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [projetilB],
-  tipoInimigo = MulherLanca    
+  tipoInimigo = MulherLanca,
+  caminhoInimigo = [],
+  acDirecao = (5.5,2.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1      
  }
 
 inimigoC :: Inimigo
@@ -265,7 +274,10 @@ inimigoC = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [projetilA],
-  tipoInimigo = MulherLanca    
+  tipoInimigo = MulherLanca,
+  caminhoInimigo = [],
+  acDirecao = (5.5,2.5),
+  iteracoesDesdeInicioAnimacaoInimigo = 1      
  }
 
 projetilA :: Projetil

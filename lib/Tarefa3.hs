@@ -294,7 +294,9 @@ inimigoAtingeBaseIs base (i:is) =
 inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
 inimigoAtingeBaseB [] base = base
 inimigoAtingeBaseB (i:is) base =
-    if posicaoInimigo i == posicaoBase base
+    let (xI, yI) = posicaoInimigo i
+        (xB, yB) = posicaoBase base
+    in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
         then inimigoAtingeBaseB is (base {vidaBase = vidaBase base - ataqueInimigo i})
         else inimigoAtingeBaseB is base
 

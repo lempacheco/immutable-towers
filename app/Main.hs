@@ -325,7 +325,9 @@ it1 texturas =
                                     lojaJogo = loja1},
                      texturasIT = texturas, 
                      posicaoTorreComprada = (0,0), 
-                     produtoLoja = (-900, 100)}
+                     produtoLoja = (-900, 100), 
+                     listaTerreno = [], 
+                     listaPortais = []}
 
 base1 :: Base
 base1 = Base {vidaBase = 50,
@@ -472,7 +474,7 @@ mapa2 =
     [r,r,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
     [r,r,t,r,r,r,t,r,r,a,a,r,r,t,r,r],
     [r,r,t,r,r,r,t,t,t,t,t,t,t,t,r,r],
-    [t,t,t,r,r,r,t,t,r,a,a,r,r,r,r,r],
+    [t,t,t,r,r,r,t,r,r,a,a,r,r,r,r,r],
     [r,r,r,r,r,r,t,r,r,a,a,r,r,r,r,r],
     [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r],
     [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r]

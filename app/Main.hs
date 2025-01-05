@@ -140,7 +140,6 @@ main = do
   mulherLanca6 <- loadBMP "resources/textures/entities/mulherLanca6.bmp"
   mulherLanca7 <- loadBMP "resources/textures/entities/mulherLanca7.bmp"
   mulherLanca8 <- loadBMP "resources/textures/entities/mulherLanca8.bmp"
-  creditos <- loadBMP "resources/textures/ui/novoCreditos.bmp"
   vida <- loadBMP "resources/textures/ui/vida.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
@@ -157,7 +156,6 @@ main = do
   numero7 <- loadBMP "resources/textures/numbers/7.bmp"
   numero8 <- loadBMP "resources/textures/numbers/8.bmp"
   numero9 <- loadBMP "resources/textures/numbers/9.bmp"
-  lojaFundo <- loadBMP "resources/textures/ui/fundoLoja2.bmp"
   creditosJogador <- loadBMP "resources/textures/ui/creditosJogador.bmp"
   molduraMapa2 <- loadBMP "resources/textures/ui/molduraArbusto.bmp"
   moldBaixo <- loadBMP "resources/textures/ui/molduraBaixo.bmp"
@@ -171,7 +169,6 @@ main = do
   fraseContinuar <- loadBMP "resources/textures/ui/fraseContinuar.bmp"
   iconeHome <- loadBMP "resources/textures/ui/botaoHome.bmp"
   iconePausa <- loadBMP "resources/textures/ui/iconePausa.bmp"
-  fundoPerfilJg <- loadBMP "resources/textures/ui/fundoPerfilJg.bmp"
   seta <- loadBMP "resources/textures/ui/setaLoja.bmp"
   nInimigos <- loadBMP "resources/textures/ui/nInimigos.bmp"
   botaoQ <- loadBMP "resources/textures/ui/botaoQ.bmp"
@@ -208,7 +205,7 @@ main = do
             ("mulherLanca6",mulherLanca6),
             ("mulherLanca7",mulherLanca7),
             ("mulherLanca8",mulherLanca8),
-            ("creditos",creditos),       --13x21 px
+                  --13x21 px
             ("vida", vida), --18x16 px
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
@@ -312,7 +309,6 @@ main = do
             ("numero7", numero7),
             ("numero8", numero8),
             ("numero9", numero9),
-            ("lojaFundo", lojaFundo),
             ("iconeLoja", iconeLoja),
             ("creditosJogador", creditosJogador),
             ("iconeVidaJg", iconeVidaJg),
@@ -326,7 +322,6 @@ main = do
             ("frasePausa", frasePausa),
             ("iconeHome", iconeHome), 
             ("iconePausa", iconePausa),
-            ("fundoPerfilJg", fundoPerfilJg),
             ("seta", seta),
             ("nInimigos", nInimigos), 
             ("botaoQ", botaoQ),

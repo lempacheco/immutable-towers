@@ -10,13 +10,16 @@ data ImmutableTowers = ImmutableTowers {
     texturasIT :: [Textura], 
     posicaoTorreComprada :: (Float, Float),
     produtoLoja :: (Float, Float),
-    jogoItInicial :: Jogo
+    jogoItInicial :: Jogo,
+    listaTerreno :: [(Posicao,Terreno)],
+    listaPortais ::  [Portal]
 }
 
 data EstadoJogo = Menu 
                 | Jogando 
                 | EscolhendoTorre
                 | Comprando 
+                | CriandoMapa
                 | Pausado 
                 | VoltandoMenu
                 | GameOver

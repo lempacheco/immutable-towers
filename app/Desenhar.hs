@@ -19,15 +19,50 @@ desenha :: ImmutableTowers -> Picture
 desenha it = case estadoIT it of
      Menu -> desenhaMenu  it 
      Jogando -> desenhaJogo it 
-     EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it, Translate 0 0 $ scale 1 1 $ text $ show $ produtoLoja it] 
+     EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it] 
      Comprando -> desenhaComprando it
      Pausado -> Pictures [desenhaJogo it, desenhaPausa ts]  
+     CriandoMapa -> desenhaCriandoMapa it
   where ts = texturasIT it
 
 desenhaComprando :: ImmutableTowers -> Picture 
 desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
   where
     selec = posicaoTorreComprada it
+
+desenhaCriandoMapa :: ImmutableTowers -> Picture 
+desenhaCriandoMapa it = Pictures [desenhaSelecao (x,y), desenhaLoja loja ts, desenhaPerfilJogador jogo base ts, desenhaListaTerreno lt ts, picPortais] 
+  where 
+    (x,y) = posicaoTorreComprada it
+    jogo = jogoIT it 
+    loja = lojaJogo jogo
+    base = baseJogo jogo
+    ts = texturasIT it 
+    lt = listaTerreno it
+    pps = listaPortais it  
+    picPortais = desenhaPortais pps (fromJust $ lookup "portal" ts)
+    desenhaPortais :: [Portal] -> Picture -> Picture
+    desenhaPortais [] _ = Blank
+    desenhaPortais ps textura = Pictures $ map desenhaPortal ps
+       where
+        desenhaPortal :: Portal -> Picture
+        desenhaPortal p = 
+          let (x, y) = conversaoCoordsGloss $ posicaoPortal p
+          in translate x (y + (128 - 64) / 2) textura
+
+    
+desenhaListaTerreno :: [(Posicao, Terreno)] -> [Textura] -> Picture
+desenhaListaTerreno lt ts = Pictures $ map (`desenhaUMterreno` ts) lt 
+
+desenhaUMterreno :: (Posicao, Terreno) -> [Textura] -> Picture 
+desenhaUMterreno ((x,y), terreno) ts = 
+    let (x1,y1) = conversaoCoordsGloss $ (x,y)
+    in Translate x1 y1 $ desenhaTerreno terreno ts
+
+desenhaTerreno :: Terreno -> [Textura] -> Picture
+desenhaTerreno Terra ts = fromJust $ lookup "terra" ts
+desenhaTerreno Relva ts = fromJust $ lookup "relva" ts
+desenhaTerreno Agua ts = fromJust $ lookup "agua" ts 
 
 desenhaEscolhendoTorre :: ImmutableTowers -> Picture 
 desenhaEscolhendoTorre it = Pictures [desenhaJogo it, desenhaSelecaoLoja selec ts]

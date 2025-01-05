@@ -12,7 +12,7 @@ data ImmutableTowers = ImmutableTowers {
     produtoLoja :: (Float, Float),
     jogoItInicial :: Jogo,
     listaTerreno :: [(Posicao,Terreno)],
-    listaPortais ::  [Portal]
+    listaPortais ::  [Portal] 
 }
 
 data EstadoJogo = Menu 

@@ -35,7 +35,7 @@ reageEventos (EventKey (Char 'a') Down _ _) it
   where (x, y) = posicaoTorreComprada it
     
 reageEventos (EventKey (Char 's') Down _ _) it
-    | estadoIT it == CriandoMapa && y < 15  = it {posicaoTorreComprada = (x, y + 1)}
+    | estadoIT it == CriandoMapa && y < 15 = it {posicaoTorreComprada = (x, y + 1)}
   where (x, y) = posicaoTorreComprada it
 
 reageEventos (EventKey (Char 't') Down _ _) it
@@ -56,13 +56,32 @@ reageEventos (EventKey (Char 'p') Down _ _) it
           listaTerrenoNova = listaTerreno it 
           portal = Portal 
                  {posicaoPortal = (xF,yF),
-                  ondasPortal = [Onda {inimigosOnda = [],
+                  ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (xF,yF), 
+                                                                tipoInimigo = GuerreiroFogo, 
+                                                                projeteisInimigo = [], 
+                                                                vidaInimigo = 1000, 
+                                                                butimInimigo = 4,  
+                                                                ataqueInimigo = 5, 
+                                                                velocidadeInimigo = 2, 
+                                                                caminhoInimigo = [],
+                                                                acDirecao = (xF,yF),
+                                                                iteracoesDesdeInicioAnimacaoInimigo = 1}
+                                                      ],
                   cicloOnda = 2*60,
                   tempoOnda = 0,
                   entradaOnda = 0}]}
           novosPortais = adicionarPortais portal listaTerrenoNova (listaPortais it)
       in it {listaPortais = novosPortais}
-  
+
+reageEventos (EventKey (Char 'o') Down _ _) it 
+    | estadoIT it == CriandoMapa = 
+      let (xF,yF) = posicaoTorreComprada it 
+          base = Base {vidaBase = 50,
+                       posicaoBase = (xF,yF),
+                       creditosBase = 1000}
+      in it {jogoIT = (jogoIT it) {baseJogo = base}}
+
+
 reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it 
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
@@ -115,8 +134,11 @@ reageEventos (EventKey (SpecialKey (KeyEnter)) Down _ _) it
             custoTorre = 50
             jogoAtualizado = compraTorre torre custoTorre jogo
          in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
-    | otherwise = it  
-
+    | estadoIT it == CriandoMapa = 
+         it {estadoIT = Jogando, jogoIT = jogoAtual}
+           where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = []}
+                 mapaCriado = transformaMapa (listaTerreno it)
+    
 reageEventos (EventKey (Char 'b') Down _ _)  it 
     | estadoIT it == Jogando = it {estadoIT = Pausado}
     | estadoIT it == Pausado = it {estadoIT = Jogando}
@@ -142,24 +164,6 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
   where (x, y) = posicaoTorreComprada it
         (a, b) = produtoLoja it 
 
-reageEventos (EventKey (Char 'g') Down _ _) it
-    | estadoIT it == Comprando =
-        let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
-            jogo = jogoIT it
-            torre = Torre
-              { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
-                danoTorre = 10,
-                alcanceTorre = 5*64,
-                rajadaTorre = 2,
-                cicloTorre = 180,
-                tempoTorre = 180,
-                projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 3},
-                iteracoesDesdeInicioAnimacao = 1
-              }
-            custoTorre = 50
-            jogoAtualizado = compraTorre torre custoTorre jogo
-         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
-
 reageEventos _ it = it 
 
 compraTorre :: Torre -> Creditos -> Jogo -> Jogo
@@ -174,13 +178,15 @@ atualizaMapa :: (Posicao, Terreno) -> [(Posicao,Terreno)] -> [(Posicao, Terreno)
 atualizaMapa (pos, ter) [] = [(pos,ter)]
 atualizaMapa (pos, ter) lt = if (pos, ter) `elem` lt then lt else (pos,ter) : lt
 
-transformaMapa :: [(Posicao, Terreno)] -> Mapa 
-transformaMapa lp = agrup 15 $ map snd $ sortOn fst lp 
-
-agrup :: Int -> [a] -> [[a]]
-agrup _ [] = []
-agrup n xs = take n xs : agrup n (drop n xs)
-
+transformaMapa :: [(Posicao, Terreno)] -> Mapa
+transformaMapa listaTerreno =
+    [[procuraTerrenoNaLista (x, y) listaTerreno | x <- [0..15]] | y <- [0..15]]
+  where
+    procuraTerrenoNaLista :: Posicao -> [(Posicao, Terreno)] -> Terreno
+    procuraTerrenoNaLista pos lt =
+        case lookup pos lt of
+            Just terreno -> terreno
+            Nothing -> Relva -- se não for defindio
 
 adicionarPortais :: Portal -> [(Posicao, Terreno)] -> [Portal] -> [Portal]
 adicionarPortais p lt ps

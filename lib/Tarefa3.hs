@@ -13,7 +13,7 @@ import LI12425
 import Tarefa2
 import Tarefa1
 import Data.List
-import Data.Maybe (fromJust)
+import Data.Maybe 
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j =  atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
@@ -54,7 +54,7 @@ disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
 disparaTodosProjeteis [] is = (is, [])
 disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = disparaProjeteis t is
                                       (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo
-                                  in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas )
+                                  in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas)
 
 atualizaAnimacaoTorres :: Jogo -> Jogo
 atualizaAnimacaoTorres j = j {torresJogo = auxAtualizaAnimacaoTorres (torresJogo j) (inimigosJogo j)}
@@ -115,7 +115,7 @@ atualizaDuracaoProjeteisInimigos i = i {projeteisInimigo = projeteisAtualizados}
 duracaoFogoOuGelo :: [Projetil] -> [Projetil] 
 duracaoFogoOuGelo [] = []
 duracaoFogoOuGelo (p:ps) = case duracaoProjetil p of 
-    Finita n -> if n <= 0 then duracaoFogoOuGelo ps else p {duracaoProjetil = Finita (n - 1)} : duracaoFogoOuGelo ps
+    Finita n -> if (n-1) <= 0 then duracaoFogoOuGelo ps else p {duracaoProjetil = Finita (n - 1)} : duracaoFogoOuGelo ps
     _ -> p : duracaoFogoOuGelo ps
 
 {-| A função 'atualizaBase' é responsável por atualizar a base do jogo. -}
@@ -157,13 +157,6 @@ disparaProjeteis torre is
 {-| A função 'inimigosOrdenados' ordena uma lista de inimigos com base na distância
   de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
   primeiro na lista resultante.
-  
-  == __ Exemplos de utilização: __
-
-  >>> let torre = Torre {posicaoTorre = (2.0, 3.0)}
-  >>> let inimigos = [Inimigo {posicaoInimigo = (1.0, 1.0)}, Inimigo {posicaoInimigo = (3.0, 3.0)}]
-  >>> inimigosOrdenados torre ini[] -> error "não existe um caminho válido"  migos
-  [Inimigo {posicaoInimigo = (3.0, 3.0)}, Inimigo {posicaoInimigo = (1.0, 1.0)}]
   
 -}
 
@@ -347,14 +340,26 @@ lancaInimigo p is = case ondasPortal p of
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
 
-geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
+{- geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
 geraCaminhos [] _ _ = []
 geraCaminhos (i:is) m b =
     let posI = posicaoInimigo i
         posB = posicaoBase b
         caminhos = geraUmCaminho m posI posB [] []
         l = fromJust $ lookup True caminhos
-    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b else i : geraCaminhos is m b
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b else i : geraCaminhos is m b -}
+
+geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
+geraCaminhos [] _ _ = []
+geraCaminhos (i:is) m b =
+    let posI = posicaoInimigo i
+        posB = posicaoBase b
+        caminhos = geraUmCaminho m posI posB [] []
+        l = fromMaybe [] (lookup True caminhos) -- Valor padrão é uma lista vazia
+    in if null (caminhoInimigo i)
+        then i {caminhoInimigo = l, direcaoInimigo = if null l then Norte else head l} : geraCaminhos is m b
+        else i : geraCaminhos is m b
+
 
 {- verificaCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
 verificaCaminho m pos@(x,y) posB lpos ld = 

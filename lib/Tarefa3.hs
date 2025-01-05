@@ -347,7 +347,7 @@ geraCaminhos (i:is) m b =
         posB = posicaoBase b
         caminhos = geraUmCaminho m posI posB [] []
         l = fromJust $ lookup True caminhos
-    in if caminhoInimigo i == [] then i {caminhoInimigo = l} : geraCaminhos is m b else i : geraCaminhos is m b
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b else i : geraCaminhos is m b
 
 {- verificaCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])
 verificaCaminho m pos@(x,y) posB lpos ld = 

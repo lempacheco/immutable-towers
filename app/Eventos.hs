@@ -141,8 +141,10 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
     | estadoIT it == NivelPassado && xBotaoNivelPassado == -600 = it {botaoNivelPassado = (100, yBotaoNivelPassado)}
+    | estadoIT it == GameOver && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
   where (x, y) = posicaoTorreComprada it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
+        (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
 
 reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == Comprando && x > 0 = it {posicaoTorreComprada = (x - 1, y)}
@@ -150,8 +152,10 @@ reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoOndas}
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
     | estadoIT it == NivelPassado && xBotaoNivelPassado == 100 = it {botaoNivelPassado = (-600, yBotaoNivelPassado)}
+    | estadoIT it == GameOver && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
   where (x, y) = posicaoTorreComprada it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
+        (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
     
 reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
     | estadoIT it == EscolhendoTorre && b < 100 = it {produtoLoja = (a, b + 200)}

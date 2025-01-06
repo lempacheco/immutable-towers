@@ -12,7 +12,7 @@ import Tarefa3
 itInicial :: [Textura] -> ImmutableTowers
 itInicial ts = 
   let it = itTds ts
-  in it {jogoIT = jogo1}
+  in it {jogoIT = jogo2}
 
 itTds :: [Textura] -> ImmutableTowers
 itTds texturas = 
@@ -26,7 +26,8 @@ itTds texturas =
                      escolhendoParametros = (0,0,0),
                      baseCriada = False,
                      modoDeJogo = Nivel1,
-                     botaoNivelPassado = (-600, -250)}
+                     botaoNivelPassado = (-600, -250),
+                     botaoGameOver = (-600, -250)}
 
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
@@ -191,7 +192,8 @@ main = do
   fraseLevelWon <- loadBMP "resources/textures/ui/fraseLevelWon.bmp"
   fraseBackToMenu <- loadBMP "resources/textures/ui/fraseBackToMenu.bmp"
   fraseNextLevel <- loadBMP "resources/textures/ui/fraseNextLevel.bmp"
-  fraseRestartLevel <- loadBMP "resources/textures/ui/fraseRestartLevel.bmp"
+  fraseRestart <- loadBMP "resources/textures/ui/fraseRestart.bmp"
+  fraseGameOver <- loadBMP "resources/textures/ui/fraseGameOver.bmp"
   play janela 
         fundo 
         fr 
@@ -347,7 +349,9 @@ main = do
             ("moldBaixo", moldBaixo),
             ("fraseLevelWon", fraseLevelWon),
             ("fraseBackToMenu", fraseBackToMenu),
-            ("fraseRestartLevel", fraseRestartLevel)
+            ("fraseNextLevel", fraseNextLevel),
+            ("fraseRestart", fraseRestart),
+            ("fraseGameOver", fraseGameOver)
           ]
         ) 
         desenha 

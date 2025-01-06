@@ -27,7 +27,7 @@ desenha it = case estadoIT it of
      EscolhendoIG -> desenhaEscolhendoOnda it 
      EscolhendoIM -> desenhaEscolhendoOnda it
      NivelPassado -> Pictures [desenhaJogo it, desenhaNivelPassado it]
-     {- GameOver -> Pictures [desenhaJogo it, desenhaGameOver it ]-}
+     GameOver -> Pictures [desenhaJogo it, desenhaGameOver it ]
   where ts = texturasIT it
 
 
@@ -81,7 +81,7 @@ desenhaCriandoMapa it =
     fundo = Translate 0 0 $ color (withAlpha 0.5 black) $ rectangleSolid 1024 1024 
  
 desenhaNivelPassado :: ImmutableTowers -> Picture
-desenhaNivelPassado it = Pictures [fundo, fraseLevelWon, fraseBackToMenu, fraseNextLevel, seta]
+desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, fraseLevelWon, fraseBackToMenu, fraseNextLevel, seta]
     where ts = texturasIT it
           fundo = translate 0 0 $ color (withAlpha 0.7 orange) $ rectangleSolid 1920 1080 
           fraseLevelWon = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
@@ -89,16 +89,20 @@ desenhaNivelPassado it = Pictures [fundo, fraseLevelWon, fraseBackToMenu, fraseN
           fraseNextLevel = Translate (350) (-250) $ fromJust $ lookup "fraseNextLevel" ts 
           (x,y) = botaoNivelPassado it
           seta = Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
+          iconeBackToMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
+          iconeNextLevel = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
 
 desenhaGameOver :: ImmutableTowers -> Picture
-desenhaGameOver it = Pictures [fundo, fraseGameOver, fraseBackToMenu, fraseRestartLevel, seta]
+desenhaGameOver it = Pictures [fundo, iconeBackToMenu, iconeRestart, fraseGameOver, fraseBackToMenu, fraseRestart, seta]
     where ts = texturasIT it
           fundo = translate 0 0 $ color (withAlpha 0.8 red) $ rectangleSolid 1920 1080 
-          fraseGameOver = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
+          fraseGameOver = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseGameOver" ts
           fraseBackToMenu =  Translate (-350) (-250) $ fromJust $ lookup "fraseBackToMenu" ts
-          fraseRestartLevel = Translate (350) (-250) $ fromJust $ lookup "fraseRestartLevel" ts 
-          (x,y) = botaoNivelPassado it
+          fraseRestart = Translate (350) (-250) $ fromJust $ lookup "fraseRestart" ts 
+          (x,y) = botaoGameOver it
           seta = Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
+          iconeBackToMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
+          iconeRestart = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
 
     
 desenhaListaTerreno :: [(Posicao, Terreno)] -> [Textura] -> Picture

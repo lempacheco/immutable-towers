@@ -24,6 +24,7 @@ itTds texturas =
                      listaTerreno = [], 
                      listaPortais = [],
                      escolhendoParametros = (0,0,0),
+                     baseCriada = False,
                      modoDeJogo = Nivel1,
                      botaoNivelPassado = (-600, -250)}
 

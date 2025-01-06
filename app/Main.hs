@@ -12,7 +12,7 @@ import Tarefa3
 itInicial :: [Textura] -> ImmutableTowers
 itInicial ts = 
   let it = itTds ts
-  in it {jogoIT = jogo1}
+  in it {jogoIT = jogo2}
 
 itTds :: [Textura] -> ImmutableTowers
 itTds texturas = 

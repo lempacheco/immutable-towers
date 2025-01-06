@@ -15,8 +15,18 @@ import Tarefa1
 import Data.List
 import Data.Maybe 
 
+
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j =  atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
+atualizaJogo t j =
+    atualizaPortaisEInimigos 
+  $ atualizaAnimacaoInimigos 
+  $ atualizaTorres 
+  $ atualizaAnimacaoTorres 
+  $ atualizaInimigosEBase t j
+
+{-| A função 'atualizaTorres' é responsável por atualizar o jogo, relativamente as torres. 
+    == __ Comportamento: __ == 
+        A função atualiza os inimigos, sempre que estes sofrem danos, e atualiza as torres do jogo, -}
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -95,6 +105,7 @@ atualizaInimigosEBase t j =
                             $ geraCaminhos nnIs m nnB,
                             baseJogo = nnB
                          }
+ 
 
 {-| A função 'atualizaDuracaoProjeteisInimigos' atualiza a duração dos projéteis que estão afetando o inimigo.
 
@@ -152,7 +163,7 @@ disparaProjeteis torre [] = ([], torre)
 disparaProjeteis torre is
     | tempoTorre torre > 0 = (is, torre {tempoTorre = tempoTorre torre - 1})
     | null (inimigosNoAlcance torre is) = (is,torre)  -- se não tiver inimigos no alcance vai devolver na mesma inimigos, mas a torre não é alterada. 
-    | otherwise = (inimigosSobreviventesAlcance torre is, novaTorre)
+    | otherwise = (inimigosSobreviventes torre is, novaTorre)
        where novaTorre = torre {tempoTorre = cicloTorre torre}
 
 
@@ -165,14 +176,14 @@ disparaProjeteis torre is
 inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
 inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (inimigos)
 
-{-| A função 'inimigosSobreviventesAlcance' filtra os inimigos que estão no alcance de uma torre, e aplica 
+{-| A função 'inimigosSobreviventes' filtra os inimigos do mapa, que sãoa sobreviventes, e aplica 
     os danos e os efeitos dos projéteis nestes inimigos, tendo em conta o número máximo de inimigos que 
     podem ser atacados de uma só vez.
 
 -}
 
-inimigosSobreviventesAlcance :: Torre -> [Inimigo] -> [Inimigo]
-inimigosSobreviventesAlcance torre inimigos =
+inimigosSobreviventes :: Torre -> [Inimigo] -> [Inimigo]
+inimigosSobreviventes torre inimigos =
         let nI = tirosPossiveis torre inimigos
             inimigosEmOrdem = inimigosOrdenados torre inimigos
             inimigosAtualizados = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
@@ -190,14 +201,6 @@ distinimigo t i = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
 
 {-| A função 'tiroPossiveis' determina o número máximo de tiros que uma torre pode disparar em um ciclo, 
     levando em consideração o número de rajadas da torre, e o número de inimigos no alcance.
-
-== __ Exemplos de utilização: __
-
-  >>> tirosPossiveis (Torre {rajadaTorre = 3}) [inimigo1, inimigo2]
-  2
-
-  >>> tirosPossiveis (Torre {rajadaTorre = 5}) [inimigo1, inimigo2, inimigo3, inimigo4]
-  4
 -}
 
 tirosPossiveis :: Torre -> [Inimigo] -> Int
@@ -242,10 +245,14 @@ inimigosSemVidaIs (i:is)
 -}
 
 inimigosSemVida :: Base -> [Inimigo] -> (Base, [Inimigo])
-inimigosSemVida b [] = (b, [])
+inimigosSemVida b [] = (b, []) 
 inimigosSemVida b (i:is)
-    | vidaInimigo i <= 0 = inimigosSemVida b{creditosBase =  creditosBase b + butimInimigo i} is
-    | otherwise = (fst (inimigosSemVida b is), i : snd (inimigosSemVida b is))
+    | vidaInimigo i <= 0 = 
+        let bAtualizada = b { creditosBase = creditosBase b + butimInimigo i }
+        in inimigosSemVida bAtualizada is
+    | otherwise = 
+        let (bFinal, inimigosRestantes) = inimigosSemVida b is
+        in (bFinal, i : inimigosRestantes)
 
 
 atualizaDistanciaPercorridaInimigos :: Tempo -> [Inimigo] -> [Inimigo]
@@ -272,29 +279,6 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
                     else velocidadeInimigo inimigo 
 
 {-| A função 'inimigoAtingeBase' é responsável por atualizar a lista de inimigos ativos. 
-inimigoAtingeBase :: Base -> [Inimigo] -> (Base,[Inimigo])
-inimigoAtingeBase base [] = (base,[])
-inimigoAtingeBase base (i:is) = 
-    let (xI, yI) = posicaoInimigo i
-        (xB, yB) = posicaoBase base
-    in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
-        then inimigoAtingeBase base {vidaBase = vidaBase base - ataqueInimigo i} is
-        else (fst (inimigoAtingeBase base is), i : snd (inimigoAtingeBase base is))
--}
-{-| A função 'inimigoAtingeBaseIs' é responsável por atualizar a lista de inimigos ativos. 
-    Sempre que o inimigo atinja a base, este é retirado do mapa. 
--}
-
-{- inimigoAtingeBaseIs :: Base -> [Inimigo] -> [Inimigo]
-inimigoAtingeBaseIs _ [] = []
-inimigoAtingeBaseIs base (i:is) = 
-    let (xI, yI) = posicaoInimigo i
-        (xB, yB) = posicaoBase base
-    in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
-        then inimigoAtingeBaseIs base is
-        else i : inimigoAtingeBaseIs base is 
- -}
-{-| A função 'inimigoAtingeBase' é responsável por atualizar a lista de inimigos ativos. 
     Sempre que o inimigo atinja a base, este é retirado do mapa. 
 -}
 
@@ -306,22 +290,6 @@ inimigoAtingeBase base (i:is) =
     in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
         then inimigoAtingeBase base {vidaBase = vidaBase base - ataqueInimigo i} is
         else (fst (inimigoAtingeBase base is), i : snd (inimigoAtingeBase base is))
-
-{-| A função 'inimigoAtingeBaseB' é responsável por atualizar a vida da base sempre que o inimigo atinja. 
--}
-
-{- inimigoAtingeBaseB :: [Inimigo] -> Base -> Base
-inimigoAtingeBaseB [] base = base
-inimigoAtingeBaseB (i:is) base =
-    let (xI, yI) = posicaoInimigo i
-        (xB, yB) = posicaoBase base
-    in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
-        then inimigoAtingeBaseB is (base {vidaBase = vidaBase base - ataqueInimigo i})
-        else inimigoAtingeBaseB is base -}
-
-
-{-| A função 'inimigoAtingeBaseB' é responsável por atualizar a vida da base sempre que o inimigo atinja. 
--}
 
 {-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
     devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.
@@ -405,7 +373,7 @@ moveInimigo i =
 
 baseTds :: Base
 baseTds = Base {vidaBase = 100,
-             creditosBase = 150} 
+             creditosBase = 200} 
 
 inimigo1Tds :: Inimigo
 inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
@@ -527,7 +495,7 @@ jogo2 = Jogo {baseJogo = base2,
               mapaJogo = mapa2,
               inimigosJogo = [],
               lojaJogo = loja
-            }
+            } 
 
 mapa2 :: Mapa 
 mapa2 = 
@@ -567,3 +535,37 @@ portal2_2 = Portal {posicaoPortal = (0,12),
 portal3_2 :: Portal
 portal3_2 = Portal {posicaoPortal = (5,0), 
                   ondasPortal = geraOndasPortal 3 1 1 (5,0)}
+
+mapa3 :: Mapa 
+mapa3 = 
+  [ [a,a,a,r,r,r,t,r,r,t,r,r,r,r,r,r],
+    [a,t,t,t,t,r,t,r,r,t,r,t,t,t,t,r],
+    [r,t,a,a,t,r,t,r,r,t,r,t,r,r,t,r],
+    [r,t,a,a,t,r,t,r,r,t,r,t,r,r,t,r],
+    [r,t,t,t,t,t,t,r,r,t,t,t,t,t,t,r],
+    [r,r,r,r,t,a,a,a,r,r,r,t,r,r,r,r],
+    [r,r,r,r,t,a,a,a,a,r,r,t,r,r,r,r],
+    [r,r,r,r,t,r,a,a,a,a,r,t,r,r,r,r],
+    [r,r,r,r,t,r,r,r,a,a,a,t,r,r,r,r],
+    [r,r,r,r,t,r,r,r,r,a,a,t,r,r,r,r],
+    [r,t,t,t,t,t,t,r,r,t,t,t,t,t,t,r],
+    [r,t,r,r,t,r,t,r,r,t,r,t,a,a,t,r],
+    [r,t,r,r,t,r,t,t,t,t,r,t,a,a,t,r],
+    [r,t,t,t,t,r,r,r,t,r,r,t,t,t,t,a],
+    [r,r,r,r,r,r,r,r,t,r,r,r,r,r,a,a],
+    [r,r,r,r,r,r,r,r,t,r,r,r,r,r,a,a]
+  ]
+  where
+       t = Terra
+       r = Relva
+       a = Agua
+
+jogo3 :: Jogo 
+jogo3 = Jogo {mapaJogo = mapa3, 
+              inimigosJogo = [], 
+              portaisJogo = [], 
+              torresJogo = [], 
+              baseJogo = base3,
+              lojaJogo = loja}
+
+base3 = baseTds {posicaoBase = (8,15)}

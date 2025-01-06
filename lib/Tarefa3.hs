@@ -401,7 +401,7 @@ moveInimigo i =
     in if sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1
         then i
         else i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = posicaoInimigo i, direcaoInimigo = head $ tail $ caminhoInimigo i}
-
+-- Todos os níveis
 
 baseTds :: Base
 baseTds = Base {vidaBase = 100,
@@ -459,4 +459,112 @@ juntaIs1Is2 is1 [] _ = is1
 juntaIs1Is2 is1 is2 ac
   | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
   | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
-  
+                     
+
+loja :: Loja
+loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
+         (150, Torre{projetilTorre = Projetil {tipoProjetil = Resina}}),
+         (200, Torre{projetilTorre = Projetil {tipoProjetil = Fogo}})
+        ]
+
+-- Nível 1
+
+jogo1 :: Jogo
+jogo1 = Jogo {baseJogo = base1,
+              torresJogo = [],
+              portaisJogo = [portal1_1, portal2_1],
+              mapaJogo = mapa1,
+              inimigosJogo = [],
+              lojaJogo = loja
+            }
+
+base1 :: Base
+base1 = baseTds {posicaoBase = (15,9)}
+
+portal1_1 :: Portal
+portal1_1 = Portal {posicaoPortal = (0,9),
+                  ondasPortal = geraOndasPortal 0 0 0 (0,9)
+                  }
+
+portal2_1 :: Portal
+portal2_1 = Portal {posicaoPortal = (5,0), 
+                  ondasPortal = geraOndasPortal 0 0 0 (5,0)}
+
+mapa1 :: Mapa 
+mapa1 = 
+  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
+    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
+    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r],
+    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r]
+  ]
+  where
+       t = Terra
+       r = Relva
+       a = Agua
+
+-- Nível 2
+
+{- it2 :: [Textura] -> ImmutableTowers
+it2 texturas = 
+    let it = itTds texturas
+    in it {jogoIT = jogo2} -}
+
+jogo2 :: Jogo
+jogo2 = Jogo {baseJogo = base2,
+              torresJogo = [],
+              portaisJogo = [portal1_2, portal2_2, portal3_2],
+              mapaJogo = mapa2,
+              inimigosJogo = [],
+              lojaJogo = loja
+            }
+
+mapa2 :: Mapa 
+mapa2 = 
+  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [t,t,t,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,t,r,r,t,t,t,t,t,t,t,t,t,r,r],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,t,r,r],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,t,r,r],
+    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
+    [r,r,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
+    [r,r,t,r,r,r,t,r,r,a,a,r,r,t,r,r],
+    [r,r,t,r,r,r,t,t,t,t,t,t,t,t,r,r],
+    [t,t,t,r,r,r,t,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,t,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r],
+    [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r]
+  ]
+  where
+       t = Terra
+       r = Relva
+       a = Agua
+
+base2 :: Base
+base2 = baseTds {posicaoBase = (15,7)}
+
+portal1_2 :: Portal
+portal1_2 = Portal {posicaoPortal = (0,1),
+                  ondasPortal = geraOndasPortal 3 2 1 (0,1)}
+
+portal2_2 :: Portal
+portal2_2 = Portal {posicaoPortal = (0,12), 
+                  ondasPortal = geraOndasPortal 3 1 2 (0,12)}
+
+portal3_2 :: Portal
+portal3_2 = Portal {posicaoPortal = (5,0), 
+                  ondasPortal = geraOndasPortal 3 1 1 (5,0)}

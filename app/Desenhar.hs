@@ -25,7 +25,9 @@ desenha it = case estadoIT it of
      CriandoMapa -> desenhaCriandoMapa it
      EscolhendoOndas -> desenhaEscolhendoOnda it 
      EscolhendoIG -> desenhaEscolhendoOnda it 
-     EscolhendoIM -> desenhaEscolhendoOnda it 
+     EscolhendoIM -> desenhaEscolhendoOnda it
+     NivelPassado -> Pictures [desenhaJogo it, desenhaNivelPassado it]
+     GameOver -> Pictures [desenhaJogo it, desenhaGameOver it]
   where ts = texturasIT it
 
 
@@ -74,6 +76,18 @@ desenhaCriandoMapa it =
     picBase = desenhaBase base (fromJust $ lookup "base" ts)
     picPortais = desenhaPortais pps (fromJust $ lookup "portal" ts)
  
+desenhaNivelPassado :: ImmutableTowers -> Picture
+desenhaNivelPassado it = Pictures [fundo, iconePausa, fraseLevelWon, iconeBackMenu, fraseBackToMenuNivelPassado, fraseNextLevel, seta]
+    where ts = texturasIT it
+          fundo = translate 0 0 $ color (withAlpha 0.7 orange) $ rectangleSolid 1920 1080 
+          iconePausa = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
+          fraseLevelWon = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
+          iconeBackMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts
+          fraseBackToMenuNivelPassado =  Translate (-350) (-250) $ fromJust $ lookup "fraseBackToMenuNivelPassado" ts
+          fraseNextLevel = Translate (350) (-250) $ fromJust $ lookup "fraseNextLevel" ts 
+          (x,y) = botaoNivelPassado it
+          seta = Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
+
     
 desenhaListaTerreno :: [(Posicao, Terreno)] -> [Textura] -> Picture
 desenhaListaTerreno lt ts = Pictures $ map (`desenhaUMterreno` ts) lt 
@@ -238,9 +252,6 @@ desenhaLoja loja ts = Pictures [iconeLoja, store, fundoTorre1, fundoTorre2, fund
           espacamento = 200
           tamanhoTorre = 0.70
           tamanhoCreditos = 1
-          --moldura = Translate (-730) (-60) $ scale 10 25 $ fromJust $ lookup "moldura" ts
-          --iconeLoja = Translate (-750) 300 $ scale 5 2 $ fromJust $ lookup "iconeLoja" ts
-          lojaFundo = Translate (-750) (-60) $ scale 2 2 $ fromJust $ lookup "lojaFundo" ts
           iconeLoja = Translate (-845) 20 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts
           fundoTorre1 =  Translate (-730) 100 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre2 = Translate (-730) (-100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
@@ -267,8 +278,8 @@ desenhaPerfilJogador j b ts = Pictures [creditosJogador, creditos, iconeVida, vi
 -- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
 
 desenhaPausa :: [Textura] -> Picture 
-desenhaPausa ts = Pictures [fundo, iconePausa, fraseContinuar, iconeBackMenu]
+desenhaPausa ts = Pictures [fundo, iconePausa, fraseLevelWon, iconeBackMenu]
     where fundo = translate 0 0 $ color (withAlpha 0.8 black) $ rectangleSolid 1920 1080 
           iconePausa = Translate 0 0 $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
-          fraseContinuar = Translate 0 1 $ scale 0.8 0.8 $ fromJust $ lookup "fraseContinuar" ts
+          fraseLevelWon = Translate 0 1 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
           iconeBackMenu = Translate 0 (-90) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 

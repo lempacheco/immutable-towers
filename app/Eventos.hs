@@ -109,6 +109,14 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
                   ondasPortal = geraOndasPortal nO n1 n2 (xF,yF)}
           novosPortais = adicionarPortais portal listaTerrenoNova (listaPortais it)
       in it {listaPortais = novosPortais, estadoIT = CriandoMapa, escolhendoParametros = (0,0,0)}
+    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 100 = 
+        case modoDeJogo it of
+          Nivel1 -> it {modoDeJogo = Nivel2, estadoIT = Jogando, jogoIT = jogo2}
+          Nivel2 -> it {modoDeJogo = Nivel3, estadoIT = Jogando}
+          Nivel3 -> it {modoDeJogo = Nivel4, estadoIT = Jogando}
+          _ -> it {modoDeJogo = Nivel5, estadoIT = Jogando}
+    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -600 = it {estadoIT = Menu}
+
   
 reageEventos (EventKey (Char 'v') Down _ _) it 
     | estadoIT it == CriandoMapa =
@@ -140,14 +148,18 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == CriandoMapa && x < 15 = it {posicaoTorreComprada = (x + 1, y)}
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
+    | estadoIT it == NivelPassado && xBotaoNivelPassado == -600 = it {botaoNivelPassado = (100, yBotaoNivelPassado)}
   where (x, y) = posicaoTorreComprada it
+        (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
 
 reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == Comprando && x > 0 = it {posicaoTorreComprada = (x - 1, y)}
     | estadoIT it == CriandoMapa && x > 0 = it {posicaoTorreComprada = (x - 1, y)}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoOndas}
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
+    | estadoIT it == NivelPassado && xBotaoNivelPassado == 100 = it {botaoNivelPassado = (-600, yBotaoNivelPassado)}
   where (x, y) = posicaoTorreComprada it
+        (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
     
 reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
     | estadoIT it == EscolhendoTorre && b < 100 = it {produtoLoja = (a, b + 200)}

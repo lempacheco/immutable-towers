@@ -1,4 +1,5 @@
 module ImmutableTowers where
+
 import LI12425
 import Graphics.Gloss
 
@@ -13,7 +14,9 @@ data ImmutableTowers = ImmutableTowers {
     jogoItInicial :: Jogo,
     listaTerreno :: [(Posicao,Terreno)],
     listaPortais ::  [Portal], 
-    escolhendoParametros :: (Int, Int, Int)
+    escolhendoParametros :: (Int, Int, Int),
+    modoDeJogo :: ModoJogo,
+    botaoNivelPassado :: Posicao
 }
 
 data EstadoJogo = Menu 
@@ -30,3 +33,5 @@ data EstadoJogo = Menu
                 | YouWon 
                 | NivelPassado
                 deriving (Eq, Show)
+
+data ModoJogo = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 | MapaCriadoJogador deriving (Eq, Show)

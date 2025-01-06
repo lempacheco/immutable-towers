@@ -13,5 +13,13 @@ reageTempo t it
     | estadoIT it == EscolhendoIG = it
     | estadoIT it == EscolhendoIM = it 
     | estadoIT it == NivelPassado = it
-    | (vidaBase $ baseJogo $ jogoIT it) <= 0 = it {estadoIT = NivelPassado}
-    | otherwise = it {jogoIT = atualizaJogo t $ jogoIT it}
+    | length iTotal == 0 && modoDeJogo it /= Nivel5 && modoDeJogo it /= MapaCriadoJogador = it {estadoIT = NivelPassado}
+    | vidaBase b <= 0 = it {estadoIT = GameOver}
+    | otherwise = it {jogoIT = atualizaJogo t $ j}
+    where j = jogoIT it
+          ps = portaisJogo $ j
+          os = concat (map ondasPortal ps)
+          is = concat (map inimigosOnda os)
+          iAtivos = inimigosJogo $ j
+          iTotal = is ++ iAtivos
+          b = baseJogo j

@@ -6,13 +6,27 @@ import Eventos
 import Graphics.Gloss
 import ImmutableTowers
 import Tempo
-import Tarefa3
 import LI12425
 
 import Tarefa3
 
-itInicial :: [(String, Picture)] -> ImmutableTowers
-itInicial = it2
+itInicial :: [Textura] -> ImmutableTowers
+itInicial ts = 
+  let it = itTds ts
+  in it {jogoIT = jogo1}
+
+itTds :: [Textura] -> ImmutableTowers
+itTds texturas = 
+    ImmutableTowers {estadoIT = Menu, 
+                     texturasIT = texturas, 
+                     posicaoTorreComprada = (0,0), 
+                     produtoLoja = (-900, 100),
+                     jogoItInicial = jogo1, 
+                     listaTerreno = [], 
+                     listaPortais = [],
+                     escolhendoParametros = (0,0,0),
+                     modoDeJogo = Nivel1,
+                     botaoNivelPassado = (-600, -250)}
 
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
@@ -140,7 +154,6 @@ main = do
   mulherLanca6 <- loadBMP "resources/textures/entities/mulherLanca6.bmp"
   mulherLanca7 <- loadBMP "resources/textures/entities/mulherLanca7.bmp"
   mulherLanca8 <- loadBMP "resources/textures/entities/mulherLanca8.bmp"
-  creditos <- loadBMP "resources/textures/ui/novoCreditos.bmp"
   vida <- loadBMP "resources/textures/ui/vida.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
@@ -175,6 +188,9 @@ main = do
   botaoQ <- loadBMP "resources/textures/ui/botaoQ.bmp"
   setaCima <- loadBMP "resources/textures/ui/setaCima.bmp"
   setaBaixo <- loadBMP "resources/textures/ui/setaBaixo.bmp"
+  fraseLevelWon <- loadBMP "resources/textures/ui/fraseLevelWon.bmp"
+  fraseBackToMenuNivelPassado <- loadBMP "resources/textures/ui/fraseBackToMenuNivelPassado.bmp"
+  fraseNextLevel <- loadBMP "resources/textures/ui/fraseNextLevel.bmp"
   play janela 
         fundo 
         fr 
@@ -206,7 +222,6 @@ main = do
             ("mulherLanca6",mulherLanca6),
             ("mulherLanca7",mulherLanca7),
             ("mulherLanca8",mulherLanca8),
-            ("creditos",creditos),       --13x21 px
             ("vida", vida), --18x16 px
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
@@ -328,156 +343,12 @@ main = do
             ("botaoQ", botaoQ),
             ("setaCima", setaCima), 
             ("setaBaixo", setaBaixo), 
-            ("moldBaixo", moldBaixo)
+            ("moldBaixo", moldBaixo),
+            ("fraseLevelWon", fraseLevelWon),
+            ("fraseBackToMenuNivelPassado", fraseBackToMenuNivelPassado),
+            ("fraseNextLevel", fraseNextLevel)
           ]
         ) 
         desenha 
         reageEventos 
         reageTempo
-
--- Todos os níveis
-
-inimigo1Tds :: Inimigo
-inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 40, 
-                        butimInimigo = 100, 
-                        ataqueInimigo = 40, 
-                        velocidadeInimigo = 0.5, 
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-inimigo2Tds :: Inimigo
-inimigo2Tds = Inimigo {tipoInimigo = MulherLanca, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 50, 
-                        butimInimigo = 150,  
-                        ataqueInimigo = 20, 
-                        velocidadeInimigo = 1,
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-itTds :: [Textura] -> ImmutableTowers
-itTds texturas = 
-    ImmutableTowers {estadoIT = Menu, 
-                     texturasIT = texturas, 
-                     posicaoTorreComprada = (0,0), 
-                     produtoLoja = (-900, 100),
-                     jogoItInicial = jogo1, 
-                     listaTerreno = [], 
-                     listaPortais = [],
-                     escolhendoParametros = (0,0,0)}
-                     
-
-loja :: Loja
-loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
-         (150, Torre{projetilTorre = Projetil {tipoProjetil = Resina}}),
-         (200, Torre{projetilTorre = Projetil {tipoProjetil = Fogo}})
-        ]
-
--- Nível 1
-
-it1 :: [Textura] -> ImmutableTowers
-it1 texturas = 
-  let it = itTds texturas
-  in it {jogoIT = jogo1}
-
-jogo1 :: Jogo
-jogo1 = Jogo {baseJogo = base1,
-              torresJogo = [],
-              portaisJogo = [portal1_1, portal2_1],
-              mapaJogo = mapa1,
-              inimigosJogo = [],
-              lojaJogo = loja
-            }
-
-base1 :: Base
-base1 = baseTds {posicaoBase = (15,9)}
-
-portal1_1 :: Portal
-portal1_1 = Portal {posicaoPortal = (0,9),
-                  ondasPortal = geraOndasPortal 2 1 1 (0,9)
-                  }
-
-portal2_1 :: Portal
-portal2_1 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = geraOndasPortal 2 1 1 (5,0)}
-
-mapa1 :: Mapa 
-mapa1 = 
-  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
-    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
-    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
-    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r],
-    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t],
-    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r]
-  ]
-  where
-       t = Terra
-       r = Relva
-       a = Agua
-
--- Nível 2
-
-it2:: [Textura] -> ImmutableTowers
-it2 texturas = 
-    let it = itTds texturas
-    in it {jogoIT = jogo2}
-
-jogo2 :: Jogo
-jogo2 = Jogo {baseJogo = base2,
-              torresJogo = [],
-              portaisJogo = [portal1_2, portal2_2, portal3_2],
-              mapaJogo = mapa2,
-              inimigosJogo = [],
-              lojaJogo = loja
-            }
-
-mapa2 :: Mapa 
-mapa2 = 
-  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [t,t,t,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [r,r,t,r,r,t,t,t,t,t,t,t,t,t,r,r],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,t,r,r],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,t,r,r],
-    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
-    [r,r,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
-    [r,r,t,r,r,r,t,r,r,a,a,r,r,t,r,r],
-    [r,r,t,r,r,r,t,t,t,t,t,t,t,t,r,r],
-    [t,t,t,r,r,r,t,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,t,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r],
-    [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r]
-  ]
-  where
-       t = Terra
-       r = Relva
-       a = Agua
-
-base2 :: Base
-base2 = baseTds {posicaoBase = (15,7)}
-
-portal1_2 :: Portal
-portal1_2 = Portal {posicaoPortal = (0,1),
-                  ondasPortal = geraOndasPortal 3 2 1 (0,1)}
-
-portal2_2 :: Portal
-portal2_2 = Portal {posicaoPortal = (0,12), 
-                  ondasPortal = geraOndasPortal 3 1 2 (0,12)}
-
-portal3_2 :: Portal
-portal3_2 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = geraOndasPortal 3 1 1 (5,0)}

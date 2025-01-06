@@ -27,7 +27,7 @@ desenha it = case estadoIT it of
      EscolhendoIG -> desenhaEscolhendoOnda it 
      EscolhendoIM -> desenhaEscolhendoOnda it
      NivelPassado -> Pictures [desenhaJogo it, desenhaNivelPassado it]
-     GameOver -> Pictures [desenhaJogo it, desenhaGameOver it]
+     {- GameOver -> Pictures [desenhaJogo it, desenhaGameOver it ]-}
   where ts = texturasIT it
 
 

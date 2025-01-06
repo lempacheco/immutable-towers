@@ -105,7 +105,7 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 100 = 
         case modoDeJogo it of
           Nivel1 -> it {modoDeJogo = Nivel2, estadoIT = Jogando, jogoIT = jogo2}
-          Nivel2 -> it {modoDeJogo = Nivel3, estadoIT = Jogando}
+          Nivel2 -> it {modoDeJogo = Nivel3, estadoIT = Jogando, jogoIT = jogo3}
           Nivel3 -> it {modoDeJogo = Nivel4, estadoIT = Jogando}
           _ -> it {modoDeJogo = Nivel5, estadoIT = Jogando}
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -600 = it {estadoIT = Menu}

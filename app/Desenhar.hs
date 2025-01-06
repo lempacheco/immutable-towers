@@ -84,7 +84,9 @@ desenhaNivelPassado :: ImmutableTowers -> Picture
 desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, fraseLevelWon, fraseBackToMenu, fraseNextLevel, seta]
     where ts = texturasIT it
           fundo = translate 0 0 $ color (withAlpha 0.7 orange) $ rectangleSolid 1920 1080 
+          iconePausa = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
           fraseLevelWon = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
+          iconeBackMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts
           fraseBackToMenu =  Translate (-350) (-250) $ fromJust $ lookup "fraseBackToMenu" ts
           fraseNextLevel = Translate (350) (-250) $ fromJust $ lookup "fraseNextLevel" ts 
           (x,y) = botaoNivelPassado it

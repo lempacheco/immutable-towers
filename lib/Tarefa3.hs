@@ -16,7 +16,7 @@ import Data.List
 import Data.Maybe 
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j = atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
+atualizaJogo t j =  atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}
@@ -401,7 +401,7 @@ moveInimigo i =
     in if sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1
         then i
         else i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = posicaoInimigo i, direcaoInimigo = head $ tail $ caminhoInimigo i}
--- Todos os níveis
+
 
 baseTds :: Base
 baseTds = Base {vidaBase = 100,
@@ -459,8 +459,7 @@ juntaIs1Is2 is1 [] _ = is1
 juntaIs1Is2 is1 is2 ac
   | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
   | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
-                     
-
+  
 loja :: Loja
 loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
          (150, Torre{projetilTorre = Projetil {tipoProjetil = Resina}}),

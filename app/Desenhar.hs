@@ -58,7 +58,8 @@ desenhaComprando it = Pictures [desenhaJogo it, desenhaSelecao selec]
 
 desenhaCriandoMapa :: ImmutableTowers -> Picture 
 desenhaCriandoMapa it = 
-    Pictures [desenhaLoja loja ts, 
+    Pictures [fundo,
+              desenhaLoja loja ts, 
               desenhaPerfilJogador jogo base ts, 
               desenhaListaTerreno lt ts, 
               Pictures picPortais, 
@@ -69,12 +70,15 @@ desenhaCriandoMapa it =
     (x,y) = posicaoTorreComprada it
     jogo = jogoIT it 
     loja = lojaJogo jogo
-    base = baseJogo jogo 
     ts = texturasIT it 
+    base = baseJogo jogo
     lt = listaTerreno it
     pps = listaPortais it  
-    picBase = desenhaBase base (fromJust $ lookup "base" ts)
+    picBase = if baseCriada it
+              then desenhaBase (baseJogo jogo) (fromJust $ lookup "base" ts)
+              else Blank
     picPortais = desenhaPortais pps (fromJust $ lookup "portal" ts)
+    fundo = Translate 0 0 $ color (withAlpha 0.5 black) $ rectangleSolid 1024 1024 
  
 desenhaNivelPassado :: ImmutableTowers -> Picture
 desenhaNivelPassado it = Pictures [fundo, iconePausa, fraseLevelWon, iconeBackMenu, fraseBackToMenuNivelPassado, fraseNextLevel, seta]
@@ -132,7 +136,16 @@ desenhaMenu it = Pictures
            botaoLevel = fromJust $ lookup "botaoLevel" texturas
 
 desenhaJogo :: ImmutableTowers -> Picture
-desenhaJogo it = Pictures [picMapa, picMolduraMapa, picInimigo,Pictures picPortais, picLoja, picBase, picTorre, creditosJog, moldBaixo]
+desenhaJogo it = Pictures [picMapa, 
+                           picMolduraMapa, 
+                           picInimigo,
+                           Pictures picPortais, 
+                           picLoja, 
+                           picBase, 
+                           picTorre, 
+                           creditosJog, 
+                           moldBaixo
+                          ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
           mapa = mapaJogo jogo
@@ -182,9 +195,6 @@ desenhaBase :: Base -> Picture -> Picture
 desenhaBase base textura =
     let (x,y) = conversaoCoordsGloss $ posicaoBase base
     in translate x (y  + (104-64)/2) textura  --desenho no mapa tendo em conta a altura da textura 
-
-{- desenhaInimigos :: [Inimigo] -> Picture -> Picture
-desenhaInimigos inimigos textura = pictures [translate (x * 64) (y * 64) textura | Inimigo {posicaoInimigo = (x, y)} <- inimigos] -}
 
 string2FonteNumeros :: String -> [Textura] -> Picture
 string2FonteNumeros s ts = Pictures $ auxString2FonteNumeros s ts 0

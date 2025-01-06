@@ -7,7 +7,6 @@ import Graphics.Gloss
 import ImmutableTowers
 import Tempo
 import LI12425
-
 import Tarefa3
 
 itInicial :: [Textura] -> ImmutableTowers

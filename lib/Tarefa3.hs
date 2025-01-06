@@ -13,8 +13,7 @@ import LI12425
 import Tarefa2
 import Tarefa1
 import Data.List
-import Data.Maybe (fromJust)
-
+import Data.Maybe 
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j =  atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
@@ -55,7 +54,7 @@ disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
 disparaTodosProjeteis [] is = (is, [])
 disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = disparaProjeteis t is
                                       (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo
-                                  in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas )
+                                  in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas)
 
 atualizaAnimacaoTorres :: Jogo -> Jogo
 atualizaAnimacaoTorres j = j {torresJogo = auxAtualizaAnimacaoTorres (torresJogo j) (inimigosJogo j)}
@@ -117,19 +116,20 @@ atualizaDuracaoProjeteisInimigos i = i {projeteisInimigo = projeteisAtualizados}
 duracaoFogoOuGelo :: [Projetil] -> [Projetil] 
 duracaoFogoOuGelo [] = []
 duracaoFogoOuGelo (p:ps) = case duracaoProjetil p of 
-    Finita n -> if n <= 0 then duracaoFogoOuGelo ps else p {duracaoProjetil = Finita (n - 1)} : duracaoFogoOuGelo ps
+    Finita n -> if (n-1) <= 0 then duracaoFogoOuGelo ps else p {duracaoProjetil = Finita (n - 1)} : duracaoFogoOuGelo ps
     _ -> p : duracaoFogoOuGelo ps
 
 {-| A função 'atualizaBase' é responsável por atualizar a base do jogo. -}
-
-{- atualizaBase :: Jogo -> Jogo
-atualizaBase j =
+{- 
+atualizaBase :: Jogo -> Jogo
+atualizaBase j =  
     let b = baseJogo j
         is = inimigosJogo j
-    in j {baseJogo = inimigosSemVida is $ inimigoAtingeBaseB is b}  -}
-
+    in inimigoAtingeBase $ j {baseJogo = inimigosSemVidaB is b} 
+ -}
 {-| A função 'detetarInimigo' deteta os inimigos que estão no alcance de uma determinada torre. 
 -}
+
 detetarInimigo :: Torre -> [Inimigo] -> [Inimigo]
 detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
 
@@ -159,13 +159,6 @@ disparaProjeteis torre is
 {-| A função 'inimigosOrdenados' ordena uma lista de inimigos com base na distância
   de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
   primeiro na lista resultante.
-  
-  == __ Exemplos de utilização: __
-
-  >>> let torre = Torre {posicaoTorre = (2.0, 3.0)}
-  >>> let inimigos = [Inimigo {posicaoInimigo = (1.0, 1.0)}, Inimigo {posicaoInimigo = (3.0, 3.0)}]
-  >>> inimigosOrdenados torre ini[] -> error "não existe um caminho válido"  migos
-  [Inimigo {posicaoInimigo = (3.0, 3.0)}, Inimigo {posicaoInimigo = (1.0, 1.0)}]
   
 -}
 
@@ -244,6 +237,7 @@ inimigosSemVidaIs (i:is)
     | vidaInimigo i <= 0 = inimigosSemVidaIs is
     | otherwise = i : inimigosSemVidaIs is
  -}
+ 
 {-| A função 'inimigosSemVida' é responsável por atualizar os créditos da base, sempre que um inimigo morre. 
 -}
 
@@ -252,6 +246,7 @@ inimigosSemVida b [] = (b, [])
 inimigosSemVida b (i:is)
     | vidaInimigo i <= 0 = inimigosSemVida b{creditosBase =  creditosBase b + butimInimigo i} is
     | otherwise = (fst (inimigosSemVida b is), i : snd (inimigosSemVida b is))
+
 
 atualizaDistanciaPercorridaInimigos :: Tempo -> [Inimigo] -> [Inimigo]
 atualizaDistanciaPercorridaInimigos _ [] = []
@@ -277,6 +272,16 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
                     else velocidadeInimigo inimigo 
 
 {-| A função 'inimigoAtingeBase' é responsável por atualizar a lista de inimigos ativos. 
+inimigoAtingeBase :: Base -> [Inimigo] -> (Base,[Inimigo])
+inimigoAtingeBase base [] = (base,[])
+inimigoAtingeBase base (i:is) = 
+    let (xI, yI) = posicaoInimigo i
+        (xB, yB) = posicaoBase base
+    in if (xI >= xB-0.5 && xI <= xB+0.5) && (yI >= yB-0.5 && yI <= yB+0.5)
+        then inimigoAtingeBase base {vidaBase = vidaBase base - ataqueInimigo i} is
+        else (fst (inimigoAtingeBase base is), i : snd (inimigoAtingeBase base is))
+-}
+{-| A função 'inimigoAtingeBaseIs' é responsável por atualizar a lista de inimigos ativos. 
     Sempre que o inimigo atinja a base, este é retirado do mapa. 
 -}
 
@@ -314,6 +319,9 @@ inimigoAtingeBaseB (i:is) base =
         then inimigoAtingeBaseB is (base {vidaBase = vidaBase base - ataqueInimigo i})
         else inimigoAtingeBaseB is base -}
 
+
+{-| A função 'inimigoAtingeBaseB' é responsável por atualizar a vida da base sempre que o inimigo atinja. 
+-}
 
 {-| A função 'ondaAtiva' verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
     devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.

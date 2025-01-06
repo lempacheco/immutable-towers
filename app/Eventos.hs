@@ -1,5 +1,4 @@
 module Eventos where
-
 import Graphics.Gloss.Interface.Pure.Game
 import ImmutableTowers
 import LI12425
@@ -94,10 +93,11 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
 reageEventos (EventKey (Char 'v') Down _ _) it 
     | estadoIT it == CriandoMapa =
        it {estadoIT = Jogando, jogoIT = jogoAtual, escolhendoParametros = parametrosAtualizados }
-            where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = [], baseJogo = baseTds {posicaoBase = (xF,yF)} }
+            where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = [] }
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it
                   (xF,yF) = posicaoTorreComprada it 
+
 reageEventos (EventKey (Char 'b') Down _ _)  it 
     | estadoIT it == Jogando = it {estadoIT = Pausado}
     | estadoIT it == Pausado = it {estadoIT = Jogando}

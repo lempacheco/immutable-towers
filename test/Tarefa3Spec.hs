@@ -9,7 +9,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, {- teste10, teste11 -} teste12, {- teste13, teste14, -} teste15, teste16]
+      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, {- teste10, teste11 -} teste12,{-  teste13, teste14 -} teste15, teste16, teste17, teste18, teste19]
 
 -- detetarInimigos 
 teste1 :: Test
@@ -193,8 +193,8 @@ teste12 =
         "Teste com inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo1],
         "Teste com inimigo com velocidade não nula" ~: [inimigo2 {posicaoInimigo = (10.5,0.5)}] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo2]
       ]
-
-{- teste13 :: Test
+{- 
+teste13 :: Test
 teste13 = 
   TestLabel "Teste para a função inimigoAtingeBaseIs" $
     test
@@ -315,6 +315,24 @@ teste17 =
                               ~=? atualizaPortaisEInimigos jogoInicial {inimigosJogo = [inimigoC3, inimigoD3], portaisJogo = [portalA3 {ondasPortal = [ondaA'3,ondaB3]}]}
      ]
 
+teste18 :: Test 
+teste18 = 
+   TestLabel "Testes para a função duracaoFogoOuGelo" $
+    test
+     [
+      "Recebe uma lista de projéteis vazia" ~: [] ~=? duracaoFogoOuGelo [], 
+      "Recebe uma lista de projéteis apenas de resina" ~: [projetil3] ~=? duracaoFogoOuGelo [projetil3],
+      "Recebe uma lista com projéteis" ~: [projetil1 {duracaoProjetil = Finita 4.0}, projetil3] ~=? duracaoFogoOuGelo [projetil1, projetil2, projetil3]
+     ]
+
+teste19 :: Test 
+teste19 = 
+  TestLabel "Testes para a função atualizaDuracaoProjeteisInimigos" $
+   test
+    [
+     "Recebe um inimigo sem projeteis" ~: inimigoA3 ~=? atualizaDuracaoProjeteisInimigos inimigoA3, 
+     "Recebe inimigo com projéteis" ~: inimigo1 {projeteisInimigo = [projetil1 {duracaoProjetil = Finita 4.0}, projetil3]} ~=? atualizaDuracaoProjeteisInimigos inimigo1
+    ] 
 
 mapa1 :: Mapa
 mapa1 =

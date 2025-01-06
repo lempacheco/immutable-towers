@@ -140,6 +140,7 @@ main = do
   mulherLanca6 <- loadBMP "resources/textures/entities/mulherLanca6.bmp"
   mulherLanca7 <- loadBMP "resources/textures/entities/mulherLanca7.bmp"
   mulherLanca8 <- loadBMP "resources/textures/entities/mulherLanca8.bmp"
+  creditos <- loadBMP "resources/textures/ui/novoCreditos.bmp"
   vida <- loadBMP "resources/textures/ui/vida.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
@@ -205,7 +206,7 @@ main = do
             ("mulherLanca6",mulherLanca6),
             ("mulherLanca7",mulherLanca7),
             ("mulherLanca8",mulherLanca8),
-                  --13x21 px
+            ("creditos",creditos),       --13x21 px
             ("vida", vida), --18x16 px
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
@@ -391,9 +392,7 @@ jogo1 = Jogo {baseJogo = base1,
             }
 
 base1 :: Base
-base1 = Base {vidaBase = 100,
-             creditosBase = 150,
-             posicaoBase = (15,9)}
+base1 = baseTds {posicaoBase = (15,9)}
 
 portal1_1 :: Portal
 portal1_1 = Portal {posicaoPortal = (0,9),
@@ -469,9 +468,7 @@ mapa2 =
        a = Agua
 
 base2 :: Base
-base2 = Base {vidaBase = 100,
-             creditosBase = 150,
-             posicaoBase = (15,7)}
+base2 = baseTds {posicaoBase = (15,7)}
 
 portal1_2 :: Portal
 portal1_2 = Portal {posicaoPortal = (0,1),

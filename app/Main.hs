@@ -188,8 +188,9 @@ main = do
   setaCima <- loadBMP "resources/textures/ui/setaCima.bmp"
   setaBaixo <- loadBMP "resources/textures/ui/setaBaixo.bmp"
   fraseLevelWon <- loadBMP "resources/textures/ui/fraseLevelWon.bmp"
-  fraseBackToMenuNivelPassado <- loadBMP "resources/textures/ui/fraseBackToMenuNivelPassado.bmp"
+  fraseBackToMenu <- loadBMP "resources/textures/ui/fraseBackToMenu.bmp"
   fraseNextLevel <- loadBMP "resources/textures/ui/fraseNextLevel.bmp"
+  fraseRestartLevel <- loadBMP "resources/textures/ui/fraseRestartLevel.bmp"
   play janela 
         fundo 
         fr 
@@ -344,8 +345,8 @@ main = do
             ("setaBaixo", setaBaixo), 
             ("moldBaixo", moldBaixo),
             ("fraseLevelWon", fraseLevelWon),
-            ("fraseBackToMenuNivelPassado", fraseBackToMenuNivelPassado),
-            ("fraseNextLevel", fraseNextLevel)
+            ("fraseBackToMenu", fraseBackToMenu),
+            ("fraseRestartLevel", fraseRestartLevel)
           ]
         ) 
         desenha 

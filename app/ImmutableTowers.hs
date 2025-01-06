@@ -17,7 +17,8 @@ data ImmutableTowers = ImmutableTowers {
     escolhendoParametros :: (Int, Int, Int),
     modoDeJogo :: ModoJogo,
     botaoNivelPassado :: Posicao,
-    baseCriada :: Bool
+    baseCriada :: Bool,
+    botaoGameOver :: Posicao
 }
 
 data EstadoJogo = Menu 

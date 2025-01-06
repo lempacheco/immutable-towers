@@ -17,7 +17,7 @@ import Data.Maybe (fromJust)
 
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
-atualizaJogo t j =  atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
+atualizaJogo t j = atualizaPortaisEInimigos $ atualizaAnimacaoInimigos $ atualizaTorres $ atualizaAnimacaoTorres $ atualizaInimigosEBase t j
 
 atualizaTorres :: Jogo -> Jogo 
 atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtualizadas}

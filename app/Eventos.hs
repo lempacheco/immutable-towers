@@ -57,7 +57,7 @@ reageEventos (EventKey (Char 'p') Down _ _) it
           portal = Portal 
                  {posicaoPortal = (xF,yF),
                   ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (xF,yF), 
-                                                                tipoInimigo = GuerreiroFogo, 
+                                                                tipoInimigo = Guerreiro, 
                                                                 projeteisInimigo = [], 
                                                                 vidaInimigo = 1000, 
                                                                 butimInimigo = 4,  

@@ -36,6 +36,26 @@ reageEventos (EventKey (Char 'y') Down _ _) it
 reageEventos (EventKey (Char 'p') Down _ _) it 
     | estadoIT it == CriandoMapa = 
        it {estadoIT = EscolhendoOndas, escolhendoParametros = (0,0,0)}
+      {- let (xF,yF) = posicaoTorreComprada it 
+          listaTerrenoNova = listaTerreno it 
+          portal = Portal 
+                 {posicaoPortal = (xF,yF),
+                  ondasPortal = [Onda {inimigosOnda = [Inimigo {posicaoInimigo = (xF,yF), 
+                                                                tipoInimigo = Guerreiro, 
+                                                                projeteisInimigo = [], 
+                                                                vidaInimigo = 1000, 
+                                                                butimInimigo = 4,  
+                                                                ataqueInimigo = 5, 
+                                                                velocidadeInimigo = 2, 
+                                                                caminhoInimigo = [],
+                                                                acDirecao = (xF,yF),
+                                                                iteracoesDesdeInicioAnimacaoInimigo = 1}
+                                                      ],
+                  cicloOnda = 2*60,
+                  tempoOnda = 0,
+                  entradaOnda = 0}]}
+          novosPortais = adicionarPortais portal listaTerrenoNova (listaPortais it)
+      in it {listaPortais = novosPortais} -}
 
 reageEventos (EventKey (Char 'o') Down _ _) it 
     | estadoIT it == CriandoMapa = 

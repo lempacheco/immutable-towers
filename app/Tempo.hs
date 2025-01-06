@@ -12,4 +12,6 @@ reageTempo t it
     | estadoIT it == EscolhendoOndas = it
     | estadoIT it == EscolhendoIG = it
     | estadoIT it == EscolhendoIM = it 
+    | estadoIT it == NivelPassado = it
+    | (vidaBase $ baseJogo $ jogoIT it) <= 0 = it {estadoIT = NivelPassado}
     | otherwise = it {jogoIT = atualizaJogo t $ jogoIT it}

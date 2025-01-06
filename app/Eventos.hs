@@ -6,6 +6,7 @@ import Tarefa1
 import Tarefa3
 import Data.List (sortOn)
 
+
 reageEventos :: Event -> ImmutableTowers -> ImmutableTowers
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
     | estadoIT it == Menu = it {estadoIT = Jogando} 
@@ -37,11 +38,23 @@ reageEventos (EventKey (Char 'p') Down _ _) it
     | estadoIT it == CriandoMapa = 
        it {estadoIT = EscolhendoOndas, escolhendoParametros = (0,0,0)}
 
-reageEventos (EventKey (Char 'o') Down _ _) it 
+reageEventos (EventKey (SpecialKey KeyDelete) Down _ _ ) it
     | estadoIT it == CriandoMapa = 
-      let (xF,yF) = posicaoTorreComprada it 
-      in it {jogoIT = (jogoIT it) {baseJogo = baseTds {posicaoBase = (xF,yF)}}}
+      let (xF, yF) = posicaoTorreComprada it
+          j = jogoIT it 
+          base = baseJogo j  
+          apagaBase = if baseCriada it == True && posicaoBase base == (xF, yF) then False else baseCriada it 
+      in it {listaPortais = deletePortal (listaPortais it) (xF,yF), baseCriada = apagaBase}
+    | otherwise = it
 
+reageEventos (EventKey (Char 'o') Down _ _) it 
+    | estadoIT it == CriandoMapa && not (baseCriada it) = 
+      let (xF,yF) = posicaoTorreComprada it 
+          base = Base {vidaBase = 100,
+                       posicaoBase = (xF, yF),
+                       creditosBase = 1000}
+      in it {jogoIT = j {baseJogo = base}, baseCriada = True}
+     where j = jogoIT it 
 
 reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it 
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
@@ -93,10 +106,9 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
 reageEventos (EventKey (Char 'v') Down _ _) it 
     | estadoIT it == CriandoMapa =
        it {estadoIT = Jogando, jogoIT = jogoAtual, escolhendoParametros = parametrosAtualizados }
-            where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = [] }
+            where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = []}
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it
-                  (xF,yF) = posicaoTorreComprada it 
 
 reageEventos (EventKey (Char 'b') Down _ _)  it 
     | estadoIT it == Jogando = it {estadoIT = Pausado}
@@ -152,7 +164,7 @@ compraTorre t custoTorre j
 -- adiciona terreno na lista 
 atualizaMapa :: (Posicao, Terreno) -> [(Posicao,Terreno)] -> [(Posicao, Terreno)]
 atualizaMapa (pos, ter) [] = [(pos,ter)]
-atualizaMapa (pos, ter) lt = if (pos, ter) `elem` lt then lt else (pos,ter) : lt
+atualizaMapa (pos, ter) lt = (pos, ter): filter (\(p,_) -> p /= pos) lt 
 
 transformaMapa :: [(Posicao, Terreno)] -> Mapa
 transformaMapa listaTerreno =
@@ -168,5 +180,13 @@ adicionarPortais :: Portal -> [(Posicao, Terreno)] -> [Portal] -> [Portal]
 adicionarPortais p lt ps
     | lookup pp lt == Just Terra = p : ps
     | otherwise = ps
+  where
+    pp = posicaoPortal p
+
+deletePortal :: [Portal] -> Posicao -> [Portal] 
+deletePortal [] _ = []
+deletePortal (p:portais) pos   
+    | pp == pos = portais 
+    | otherwise = p:deletePortal portais pos
   where
     pp = posicaoPortal p

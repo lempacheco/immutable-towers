@@ -140,7 +140,6 @@ main = do
   mulherLanca6 <- loadBMP "resources/textures/entities/mulherLanca6.bmp"
   mulherLanca7 <- loadBMP "resources/textures/entities/mulherLanca7.bmp"
   mulherLanca8 <- loadBMP "resources/textures/entities/mulherLanca8.bmp"
-  creditos <- loadBMP "resources/textures/ui/novoCreditos.bmp"
   vida <- loadBMP "resources/textures/ui/vida.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
@@ -206,7 +205,6 @@ main = do
             ("mulherLanca6",mulherLanca6),
             ("mulherLanca7",mulherLanca7),
             ("mulherLanca8",mulherLanca8),
-            ("creditos",creditos),       --13x21 px
             ("vida", vida), --18x16 px
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
@@ -366,7 +364,8 @@ itTds texturas =
                      jogoItInicial = jogo1, 
                      listaTerreno = [], 
                      listaPortais = [],
-                     escolhendoParametros = (0,0,0)}
+                     escolhendoParametros = (0,0,0), 
+                     baseCriada = False}
                      
 
 loja :: Loja

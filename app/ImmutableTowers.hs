@@ -13,6 +13,7 @@ data ImmutableTowers = ImmutableTowers {
     jogoItInicial :: Jogo,
     listaTerreno :: [(Posicao,Terreno)],
     listaPortais ::  [Portal], 
+    baseCriada :: Bool,
     escolhendoParametros :: (Int, Int, Int)
 }
 

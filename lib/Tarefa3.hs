@@ -340,25 +340,14 @@ lancaInimigo p is = case ondasPortal p of
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
 
-{- geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
-geraCaminhos [] _ _ = []
-geraCaminhos (i:is) m b =
-    let posI = posicaoInimigo i
-        posB = posicaoBase b
-        caminhos = geraUmCaminho m posI posB [] []
-        l = fromJust $ lookup True caminhos
-    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b else i : geraCaminhos is m b -}
-
 geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
 geraCaminhos [] _ _ = []
 geraCaminhos (i:is) m b =
     let posI = posicaoInimigo i
         posB = posicaoBase b
         caminhos = geraUmCaminho m posI posB [] []
-        l = fromMaybe [] (lookup True caminhos) -- Valor padrão é uma lista vazia
-    in if null (caminhoInimigo i)
-        then i {caminhoInimigo = l, direcaoInimigo = if null l then Norte else head l} : geraCaminhos is m b
-        else i : geraCaminhos is m b
+        l = fromJust $ lookup True caminhos
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b else i : geraCaminhos is m b 
 
 
 {- verificaCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> (Bool, [Posicao], [Direcao])

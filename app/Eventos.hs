@@ -120,7 +120,7 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
   
 reageEventos (EventKey (Char 'v') Down _ _) it 
     | estadoIT it == CriandoMapa =
-       it {estadoIT = Jogando, jogoIT = jogoAtual, escolhendoParametros = parametrosAtualizados }
+       it {estadoIT = Jogando, jogoIT = jogoAtual, escolhendoParametros = parametrosAtualizados, modoDeJogo = MapaCriadoJogador }
             where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = [] }
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it

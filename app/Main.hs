@@ -12,20 +12,22 @@ import Tarefa3
 itInicial :: [Textura] -> ImmutableTowers
 itInicial ts = 
   let it = itTds ts
-  in it {jogoIT = jogo3}
+  in it {jogoIT = jogo1}
 
 itTds :: [Textura] -> ImmutableTowers
 itTds texturas = 
     ImmutableTowers {estadoIT = Menu, 
                      texturasIT = texturas, 
-                     posicaoTorreComprada = (0,0), 
+                     posicaoSelecionadaMapa = (0,0), 
                      produtoLoja = (-900, 100),
                      jogoItInicial = jogo1, 
                      listaTerreno = [], 
                      listaPortais = [],
                      escolhendoParametros = (0,0,0),
                      baseCriada = False,
-                     modoDeJogo = Nivel1,
+                     modoJogo = Infinito,
+                     nivelJogoFinito = Nivel1,
+                     nivelJogoInfinito = 1, 
                      botaoNivelPassado = (-600, -250),
                      botaoGameOver = (-600, -250)}
 

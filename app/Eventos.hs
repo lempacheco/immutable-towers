@@ -9,7 +9,7 @@ import Data.List (sortOn)
 
 reageEventos :: Event -> ImmutableTowers -> ImmutableTowers
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
-    | estadoIT it == Menu = it {estadoIT = Jogando} 
+    | estadoIT it == Menu = it {estadoIT = Jogando, modoJogo = Finito} 
     | estadoIT it == Jogando = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | estadoIT it == Pausado = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | otherwise = it
@@ -17,20 +17,20 @@ reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it
 reageEventos (EventKey (Char 'r') Down _ _) it
     | estadoIT it == Menu = it {estadoIT = CriandoMapa}
     | estadoIT it == CriandoMapa = 
-      let (xF,yF) = posicaoTorreComprada it
+      let (xF,yF) = posicaoSelecionadaMapa it
           listaTerrenoNova = atualizaMapa ((xF,yF), Relva) (listaTerreno it)  
       in it {listaTerreno = listaTerrenoNova}
     | otherwise = it 
 
 reageEventos (EventKey (Char 't') Down _ _) it
     | estadoIT it == CriandoMapa = 
-      let (xF,yF) = posicaoTorreComprada it
+      let (xF,yF) = posicaoSelecionadaMapa it
           listaTerrenoNova = atualizaMapa ((xF,yF), Terra) (listaTerreno it)  
       in it {listaTerreno = listaTerrenoNova}
 
-reageEventos (EventKey (Char 'y') Down _ _) it
+reageEventos (EventKey (Char 'a') Down _ _) it
     | estadoIT it == CriandoMapa = 
-      let (xF,yF) = posicaoTorreComprada it
+      let (xF,yF) = posicaoSelecionadaMapa it
           listaTerrenoNova = atualizaMapa ((xF,yF), Agua) (listaTerreno it)  
       in it {listaTerreno = listaTerrenoNova}
 
@@ -40,7 +40,7 @@ reageEventos (EventKey (Char 'p') Down _ _) it
 
 reageEventos (EventKey (SpecialKey KeyDelete) Down _ _ ) it
     | estadoIT it == CriandoMapa = 
-      let (xF, yF) = posicaoTorreComprada it
+      let (xF, yF) = posicaoSelecionadaMapa it
           j = jogoIT it 
           base = baseJogo j  
           apagaBase = if baseCriada it == True && posicaoBase base == (xF, yF) then False else baseCriada it 
@@ -49,7 +49,7 @@ reageEventos (EventKey (SpecialKey KeyDelete) Down _ _ ) it
 
 reageEventos (EventKey (Char 'o') Down _ _) it 
     | estadoIT it == CriandoMapa && not (baseCriada it) = 
-      let (xF,yF) = posicaoTorreComprada it 
+      let (xF,yF) = posicaoSelecionadaMapa it 
           base = Base {vidaBase = 100,
                        posicaoBase = (xF, yF),
                        creditosBase = 1000}
@@ -60,7 +60,7 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
     | estadoIT it == Comprando =  
-        let (xF,yF) = posicaoTorreComprada it -- posição da seleção vermelha
+        let (xF,yF) = posicaoSelecionadaMapa it -- posição da seleção vermelha
             jogo = jogoIT it
             (torre, custoTorre) = 
               case produtoLoja it of
@@ -94,27 +94,29 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
          in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
 
     | estadoIT it == EscolhendoOndas || estadoIT it == EscolhendoIG || estadoIT it == EscolhendoIM = 
-      let (xF,yF) = posicaoTorreComprada it 
+      let (xF,yF) = posicaoSelecionadaMapa it 
           listaTerrenoNova = listaTerreno it 
           (nO, n1, n2) = escolhendoParametros it 
           portal = Portal 
                  {posicaoPortal = (xF,yF),
                   ondasPortal = geraOndasPortal nO n1 n2 (xF,yF)}
           novosPortais = adicionarPortais portal listaTerrenoNova (listaPortais it)
-      in it {listaPortais = novosPortais, estadoIT = CriandoMapa, escolhendoParametros = (0,0,0)}
-    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 100 = 
-        case modoDeJogo it of
-          Nivel1 -> it {modoDeJogo = Nivel2, estadoIT = Jogando, jogoIT = jogo2}
-          Nivel2 -> it {modoDeJogo = Nivel3, estadoIT = Jogando, jogoIT = jogo3}
-          Nivel3 -> it {modoDeJogo = Nivel4, estadoIT = Jogando}
-          _ -> it {modoDeJogo = Nivel5, estadoIT = Jogando}
-    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -600 = it {estadoIT = Menu}
+      in it {listaPortais = novosPortais, 
+             estadoIT = CriandoMapa, 
+             escolhendoParametros = (0,0,0)}
 
-  
+    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 100 = progredirNivel it
+    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -600 = it {estadoIT = Menu}
+    | estadoIT it == GameOver && fst (botaoNivelPassado it) == 100 = progredirNivel it 
+    | estadoIT it == GameOver && fst (botaoNivelPassado it) == -600 = it {estadoIT = Menu}
+
+reageEventos (EventKey (Char 'i') Down _ _) it 
+    | estadoIT it == Menu = it {estadoIT = Jogando, modoJogo = Infinito}
+    
 reageEventos (EventKey (Char 'v') Down _ _) it 
     | estadoIT it == CriandoMapa =
-       it {estadoIT = Jogando, jogoIT = jogoAtual, escolhendoParametros = parametrosAtualizados, modoDeJogo = MapaCriadoJogador }
-            where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = [] }
+       it {estadoIT = Jogando, jogoIT = jogoAtual, escolhendoParametros = parametrosAtualizados, nivelJogoFinito = MapaCriadoJogador}
+            where jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = []}
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it
 
@@ -125,46 +127,46 @@ reageEventos (EventKey (Char 'b') Down _ _)  it
 
 reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it
     | estadoIT it == EscolhendoTorre && b > (-300) = it {produtoLoja = (a, b - 200)}
-    | estadoIT it == Comprando && y < 15 = it {posicaoTorreComprada = (x, y + 1)}
-    | estadoIT it == CriandoMapa && y < 15 = it {posicaoTorreComprada = (x, y + 1)}
+    | estadoIT it == Comprando && y < 15 = it {posicaoSelecionadaMapa = (x, y + 1)}
+    | estadoIT it == CriandoMapa && y < 15 = it {posicaoSelecionadaMapa = (x, y + 1)}
     | estadoIT it == EscolhendoOndas && nO > 0 = it {escolhendoParametros = (nO - 1, n1, n2)} 
     | estadoIT it == EscolhendoIG && n1 > 0 = it {escolhendoParametros = (nO, n1 - 1, n2)}
     | estadoIT it == EscolhendoIM && n2 > 0 = it {escolhendoParametros = (nO, n1, n2 - 1)}
     | otherwise = it 
-  where (x, y) = posicaoTorreComprada it
+  where (x, y) = posicaoSelecionadaMapa it
         (a, b) = produtoLoja it 
         (nO, n1, n2) = escolhendoParametros it 
 
 reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
-    | estadoIT it == Comprando && x < 15 = it {posicaoTorreComprada = (x + 1, y)}
-    | estadoIT it == CriandoMapa && x < 15 = it {posicaoTorreComprada = (x + 1, y)}
+    | estadoIT it == Comprando && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
+    | estadoIT it == CriandoMapa && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
     | estadoIT it == NivelPassado && xBotaoNivelPassado == -600 = it {botaoNivelPassado = (100, yBotaoNivelPassado)}
     | estadoIT it == GameOver && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
-  where (x, y) = posicaoTorreComprada it
+  where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
 
 reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
-    | estadoIT it == Comprando && x > 0 = it {posicaoTorreComprada = (x - 1, y)}
-    | estadoIT it == CriandoMapa && x > 0 = it {posicaoTorreComprada = (x - 1, y)}
+    | estadoIT it == Comprando && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
+    | estadoIT it == CriandoMapa && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoOndas}
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
     | estadoIT it == NivelPassado && xBotaoNivelPassado == 100 = it {botaoNivelPassado = (-600, yBotaoNivelPassado)}
     | estadoIT it == GameOver && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
-  where (x, y) = posicaoTorreComprada it
+  where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
     
 reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
     | estadoIT it == EscolhendoTorre && b < 100 = it {produtoLoja = (a, b + 200)}
-    | estadoIT it == Comprando && y > 0  = it {posicaoTorreComprada = (x, y - 1)}
-    | estadoIT it == CriandoMapa && y > 0 = it {posicaoTorreComprada = (x, y - 1)}
+    | estadoIT it == Comprando && y > 0  = it {posicaoSelecionadaMapa = (x, y - 1)}
+    | estadoIT it == CriandoMapa && y > 0 = it {posicaoSelecionadaMapa = (x, y - 1)}
     | estadoIT it == EscolhendoOndas = it {escolhendoParametros = (nO + 1, n1, n2)} 
     | estadoIT it == EscolhendoIG = it {escolhendoParametros = (nO, n1 + 1, n2)}
     | estadoIT it == EscolhendoIM = it {escolhendoParametros = (nO, n1, n2 + 1)}
-  where (x, y) = posicaoTorreComprada it
+  where (x, y) = posicaoSelecionadaMapa it
         (a, b) = produtoLoja it 
         (nO, n1, n2) = escolhendoParametros it 
 

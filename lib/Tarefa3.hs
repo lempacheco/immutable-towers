@@ -16,6 +16,7 @@ import Data.List
 import Data.Maybe 
 
 
+
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j =
     atualizaPortaisEInimigos 
@@ -23,7 +24,7 @@ atualizaJogo t j =
   $ atualizaTorres 
   $ atualizaAnimacaoTorres 
   $ atualizaInimigosEBase t j
-
+  
 {-| A função 'atualizaTorres' é responsável por atualizar o jogo, relativamente as torres. 
     == __ Comportamento: __ == 
         A função atualiza os inimigos, sempre que estes sofrem danos, e atualiza as torres do jogo, -}
@@ -450,7 +451,7 @@ base1 = baseTds {posicaoBase = (15,9)}
 
 portal1_1 :: Portal
 portal1_1 = Portal {posicaoPortal = (0,9),
-                  ondasPortal = geraOndasPortal 0 0 0 (0,9)
+                  ondasPortal = geraOndasPortal 1 1 0 (0,9)
                   }
 
 portal2_1 :: Portal
@@ -526,15 +527,15 @@ base2 = baseTds {posicaoBase = (15,7)}
 
 portal1_2 :: Portal
 portal1_2 = Portal {posicaoPortal = (0,1),
-                  ondasPortal = geraOndasPortal 3 2 1 (0,1)}
+                  ondasPortal = geraOndasPortal 1 1 1 (0,1)}
 
 portal2_2 :: Portal
 portal2_2 = Portal {posicaoPortal = (0,12), 
-                  ondasPortal = geraOndasPortal 3 1 2 (0,12)}
+                  ondasPortal = geraOndasPortal 0 1 2 (0,12)}
 
 portal3_2 :: Portal
 portal3_2 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = geraOndasPortal 3 1 1 (5,0)}
+                  ondasPortal = geraOndasPortal 0 1 1 (5,0)}
 
 mapa3 :: Mapa 
 mapa3 = 
@@ -578,6 +579,80 @@ portal2_3 :: Portal
 portal2_3 = Portal {posicaoPortal = (9,0), 
                   ondasPortal = geraOndasPortal 0 0 0 (9,0)}
 
-portal3_3 :: Portal
-portal3_3 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = geraOndasPortal 3 1 1 (5,0)}
+mapa4 :: Mapa 
+mapa4 = 
+  [
+    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,t,t,t,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,t,a,t,r,r,r,r,r],
+    [r,r,r,r,t,t,t,a,t,a,t,r,r,r,r,r],
+    [r,r,r,r,t,a,t,a,t,a,t,r,r,r,r,r],
+    [t,t,t,r,t,a,t,a,t,a,t,r,t,t,t,r],
+    [t,a,t,r,t,a,t,a,t,a,t,r,t,a,t,r],
+    [t,a,t,r,t,a,t,a,t,a,t,r,t,a,t,t],
+    [r,a,t,r,t,a,t,a,t,a,t,r,t,a,r,r],
+    [r,a,t,t,t,a,t,a,t,a,t,t,t,a,r,r],
+    [r,r,r,r,r,a,t,a,t,a,r,r,r,r,r,r],
+    [r,r,r,r,r,a,t,a,t,a,r,r,r,r,r,r],
+    [r,r,r,r,r,r,t,t,t,r,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r]
+  ]
+  where
+       t = Terra
+       r = Relva
+       a = Agua
+
+jogo4 :: Jogo 
+jogo4 = Jogo {mapaJogo = mapa4, 
+              inimigosJogo = [], 
+              portaisJogo = [portal1_4], 
+              torresJogo = [], 
+              baseJogo = base4,
+              lojaJogo = loja}
+
+base4 = baseTds {posicaoBase = (15,8)}
+
+portal1_4 :: Portal
+portal1_4 = Portal {posicaoPortal = (0,8),
+                  ondasPortal = geraOndasPortal 1 1 1 (0,8)}
+
+mapa5 :: Mapa 
+mapa5 = 
+  [
+    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+    [r,a,a,a,a,a,a,a,a,a,a,a,a,a,a,r],
+    [r,r,r,r,r,r,r,r,t,t,t,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,t,a,t,r,r,r,r,r],
+    [r,r,r,r,t,t,t,a,t,a,t,r,r,r,r,r],
+    [r,r,r,r,t,a,t,a,t,a,t,r,r,r,r,r],
+    [t,t,t,r,t,a,t,a,t,a,t,r,t,t,t,r],
+    [t,a,t,r,t,a,t,a,t,a,t,r,t,a,t,r],
+    [t,a,t,r,t,a,t,a,t,a,t,r,t,a,t,t],
+    [r,a,t,r,t,a,t,a,t,a,t,r,t,a,r,r],
+    [r,a,t,t,t,a,t,a,t,a,t,t,t,a,r,r],
+    [r,r,r,r,r,a,t,a,t,a,r,r,r,r,r,r],
+    [r,r,r,r,r,a,t,a,t,a,r,r,r,r,r,r],
+    [r,r,r,r,r,r,t,t,t,r,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r]
+  ]
+  where
+       t = Terra
+       r = Relva
+       a = Agua
+
+jogo5 :: Jogo 
+jogo5 = Jogo {mapaJogo = mapa5, 
+              inimigosJogo = [], 
+              portaisJogo = [portal1_4], 
+              torresJogo = [], 
+              baseJogo = base4,
+              lojaJogo = loja}
+
+base5 = baseTds {posicaoBase = (15,8)}
+
+portal1_5 :: Portal
+portal1_5 = Portal {posicaoPortal = (0,8),
+                  ondasPortal = geraOndasPortal 1 1 1 (0,8)}

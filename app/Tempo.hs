@@ -3,6 +3,7 @@ module Tempo where
 import ImmutableTowers
 import LI12425
 import Tarefa3
+import Tarefa2 
 
 reageTempo :: Tempo -> ImmutableTowers -> ImmutableTowers
 reageTempo t it  
@@ -13,13 +14,15 @@ reageTempo t it
     | estadoIT it == EscolhendoIG = it
     | estadoIT it == EscolhendoIM = it 
     | estadoIT it == NivelPassado = it
-    | length iTotal == 0 && modoDeJogo it /= Nivel5 && modoDeJogo it /= MapaCriadoJogador = it {estadoIT = NivelPassado}
-    | vidaBase b <= 0 = it {estadoIT = GameOver}
+    | ganhouJogo j && nivelJogoFinito it /= MapaCriadoJogador = it {estadoIT = NivelPassado}
+    | perdeuJogo j = it {estadoIT = GameOver}
     | otherwise = it {jogoIT = atualizaJogo t $ j}
     where j = jogoIT it
-          ps = portaisJogo $ j
+
+
+{-           ps = portaisJogo j
           os = concat (map ondasPortal ps)
           is = concat (map inimigosOnda os)
-          iAtivos = inimigosJogo $ j
+          iAtivos = inimigosJogo j
           iTotal = is ++ iAtivos
-          b = baseJogo j
+ -}

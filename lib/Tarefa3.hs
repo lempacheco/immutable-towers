@@ -621,22 +621,22 @@ portal1_4 = Portal {posicaoPortal = (0,8),
 mapa5 :: Mapa 
 mapa5 = 
   [
-    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
-    [r,a,a,a,a,a,a,a,a,a,a,a,a,a,a,r],
-    [r,r,r,r,r,r,r,r,t,t,t,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,t,a,t,r,r,r,r,r],
-    [r,r,r,r,t,t,t,a,t,a,t,r,r,r,r,r],
-    [r,r,r,r,t,a,t,a,t,a,t,r,r,r,r,r],
-    [t,t,t,r,t,a,t,a,t,a,t,r,t,t,t,r],
-    [t,a,t,r,t,a,t,a,t,a,t,r,t,a,t,r],
-    [t,a,t,r,t,a,t,a,t,a,t,r,t,a,t,t],
-    [r,a,t,r,t,a,t,a,t,a,t,r,t,a,r,r],
-    [r,a,t,t,t,a,t,a,t,a,t,t,t,a,r,r],
-    [r,r,r,r,r,a,t,a,t,a,r,r,r,r,r,r],
-    [r,r,r,r,r,a,t,a,t,a,r,r,r,r,r,r],
-    [r,r,r,r,r,r,t,t,t,r,r,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r]
+    [t,t,a,a,a,a,a,a,a,a,a,a,a,a,t,t],
+    [a,t,a,a,a,a,a,a,a,a,a,a,a,a,t,a],
+    [a,t,a,a,a,a,a,a,a,a,a,a,a,a,t,a],
+    [a,t,a,a,a,a,a,a,a,a,a,a,a,a,t,a],
+    [a,t,t,t,t,t,r,r,t,t,t,t,t,t,t,a],
+    [a,a,a,a,a,t,a,a,t,a,a,a,a,a,a,a],
+    [a,a,r,r,a,t,a,a,t,a,r,r,a,a,a,a],
+    [a,a,r,r,a,t,a,a,t,a,r,r,a,a,a,a],
+    [a,a,a,a,a,t,a,a,t,a,a,a,a,a,a,a],
+    [a,t,t,t,t,t,a,a,t,t,t,t,t,t,t,t],
+    [a,t,a,a,a,a,a,a,a,a,a,a,a,a,a,t],
+    [a,t,a,r,r,a,a,a,a,a,a,a,r,r,a,t],
+    [a,t,a,r,r,a,a,a,a,a,a,a,r,r,a,t],
+    [a,t,a,a,a,a,a,a,a,a,a,a,a,a,a,t],
+    [a,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
+    [a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a]
   ]
   where
        t = Terra

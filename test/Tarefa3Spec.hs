@@ -9,7 +9,29 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, teste2, teste3, teste4, teste5, teste6, teste7, teste8, teste9, {- teste10, teste11 -} teste12,{-  teste13, teste14 -} teste15, teste16, teste17, teste18, teste19, teste20, teste21, teste22]
+      [ teste1, 
+        teste2, 
+        teste3, 
+        teste4, 
+        teste5, 
+        teste6, 
+        teste7, 
+        teste8, 
+        teste9, 
+        {- teste10, teste11 -} 
+        teste12,
+        {-  teste13, teste14 -} 
+        teste15, 
+        teste16, 
+        teste17, 
+        teste18, 
+        teste19,
+        teste20, 
+        teste21, 
+        teste22, 
+        teste23,
+        teste24
+      ]
 
 -- detetarInimigos 
 teste1 :: Test
@@ -353,6 +375,75 @@ teste22 =
                                                   ~=? atualizaTorres jogoInicial {torresJogo = [torreA3, torreB3], inimigosJogo = [inimigoE3, inimigoA3, inimigoF3]}
     ]
 
+teste23 :: Test 
+teste23 = 
+  TestLabel "Testes para a função atualizaInimigosEBase" $
+   test 
+    [
+      "Recebe um jogo no estado inicial" ~: jogoInicial ~=? atualizaInimigosEBase 1 jogoInicial, 
+      "Recebe um jogo com inimigos no mapa, que não morrem, e nem chegam a base" ~: jogoInicial {portaisJogo = [portalB3], 
+                                                                                                 baseJogo = baseB, 
+                                                                                                 inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), 
+                                                                                                                           direcaoInimigo = Este, 
+                                                                                                                           caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}, 
+                                                                                                                 inimigoB3 {posicaoInimigo = (1.5,1.5), 
+                                                                                                                            direcaoInimigo = Norte, 
+                                                                                                                            caminhoInimigo = [Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}]} 
+                                                                                 ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
+                                                                                                                          inimigosJogo = [inimigoA3, inimigoB3],
+                                                                                                                          baseJogo = baseB}, 
+      "Recebe um jogo, e o inimigo atinge a base" ~: jogoInicial {portaisJogo = [portalB3], 
+                                                                  baseJogo = baseB, 
+                                                                  inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), 
+                                                                                             direcaoInimigo = Este, 
+                                                                                             caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]} 
+                                                                                 ]}
+                                                  ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
+                                                                                             inimigosJogo = [inimigoA3, 
+                                                                                                             inimigoB3 {posicaoInimigo = (5.5, 3.5), caminhoInimigo = []}],
+                                                                                             baseJogo = baseB},
+      "Recebe um jogo, e o inimigo morre" ~: jogoInicial {portaisJogo = [portalB3], 
+                                                          torresJogo = [torreB3 {tempoTorre = 0}],
+                                                          baseJogo = baseB {creditosBase = 15}, 
+                                                          inimigosJogo = []}
+                                          ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
+                                                                                     torresJogo = [torreB3 {tempoTorre = 0}],
+                                                                                     inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5,3.5), vidaInimigo = 0}],
+                                                                                     baseJogo = baseB}
+    ]
+
+teste24 :: Test 
+teste24 = 
+  TestLabel "Testes para a função atualizaJogo" $
+   test 
+    [
+      "Recebe um jogo no estado inicial" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
+                                                         inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), caminhoInimigo = []}], 
+                                                         baseJogo = baseB}
+                                        ~=? atualizaJogo 0.1 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {entradaOnda = 0, inimigosOnda = [inimigoA3 {posicaoInimigo = (1.5,0.5)}]}, ondaB3]}],
+                                                                          inimigosJogo = [], 
+                                                                          baseJogo = baseB}, 
+     "Recebe o jogo acima" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 2.5), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1.5,0.5)}], 
+                                           baseJogo = baseB}
+                          ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
+                                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), caminhoInimigo = []}], 
+                                                            baseJogo = baseB},
+      "Recebe o jogo acima" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 4.5), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1.5,2.5)}], 
+                                           baseJogo = baseB}
+                            ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 2.5), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1.5,0.5)}], 
+                                           baseJogo = baseB},
+      "Recebe o jogo acima" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 0.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (3.5, 4.5), caminhoInimigo = [Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo =4, acDirecao = (1.5,4.5)}], 
+                                           baseJogo = baseB}
+                            ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 4.5), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1.5,2.5)}], 
+                                           baseJogo = baseB}
+    ]                       
+
+
 mapaA :: Mapa
 mapaA =
  [ [t, t, r, a, a, a],
@@ -366,12 +457,18 @@ mapaA =
        t = Terra
        r = Relva
        a = Agua
-
+baseB :: Base 
+baseB = Base 
+  { 
+    vidaBase = 50.0,
+    posicaoBase = (5.5, 2.5),
+    creditosBase = 10
+  }
 
 jogoInicial :: Jogo 
 jogoInicial = Jogo 
  {
-  baseJogo = base1 ,
+  baseJogo = baseA ,
   portaisJogo = [portalA3],
   torresJogo = [],
   mapaJogo = mapaA, 
@@ -509,7 +606,7 @@ inimigoB3 = Inimigo
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
   ataqueInimigo = 5.0, 
-  velocidadeInimigo = 0.0,
+  velocidadeInimigo = 10.0,
   butimInimigo = 5, 
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca,

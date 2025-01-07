@@ -20,6 +20,7 @@ itTds texturas =
                      texturasIT = texturas, 
                      posicaoSelecionadaMapa = (0,0), 
                      produtoLoja = (-900, 100),
+                     botaoMenu = (-160, 0),
                      jogoItInicial = jogo1, 
                      listaTerreno = [], 
                      listaPortais = [],
@@ -28,7 +29,7 @@ itTds texturas =
                      modoJogo = Infinito,
                      nivelJogoFinito = Nivel1,
                      nivelJogoInfinito = 1, 
-                     botaoNivelPassado = (-600, -250),
+                     botaoNivelPassado = (-500, -250),
                      botaoGameOver = (-600, -250)}
 
 janela :: Display
@@ -196,6 +197,13 @@ main = do
   fraseNextLevel <- loadBMP "resources/textures/ui/fraseNextLevel.bmp"
   fraseRestart <- loadBMP "resources/textures/ui/fraseRestart.bmp"
   fraseGameOver <- loadBMP "resources/textures/ui/fraseGameOver.bmp"
+  it <- loadBMP "resources/textures/ui/IT.bmp"
+  fm <- loadBMP "resources/textures/ui/finitemode.bmp"
+  im <- loadBMP "resources/textures/ui/infinitemode.bmp"
+  cm <- loadBMP "resources/textures/ui/creatmap.bmp"
+  tt <- loadBMP "resources/textures/ui/tutorial.bmp"
+  fraseYouWon <- loadBMP "resources/textures/ui/youWon.bmp"
+  frasePaused <- loadBMP "resources/textures/ui/paused.bmp"
   play janela 
         fundo 
         fr 
@@ -353,7 +361,14 @@ main = do
             ("fraseBackToMenu", fraseBackToMenu),
             ("fraseNextLevel", fraseNextLevel),
             ("fraseRestart", fraseRestart),
-            ("fraseGameOver", fraseGameOver)
+            ("fraseGameOver", fraseGameOver),
+            ("it", it), 
+            ("im", im), 
+            ("fm", fm),
+            ("cm", cm),
+            ("tt", tt),
+            ("fraseYouWon", fraseYouWon),
+            ("frasePaused", frasePaused)
           ]
         ) 
         desenha 

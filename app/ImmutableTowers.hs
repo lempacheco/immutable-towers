@@ -13,6 +13,7 @@ data ImmutableTowers = ImmutableTowers {
     texturasIT :: [Textura], 
     posicaoSelecionadaMapa :: (Float, Float),
     produtoLoja :: (Float, Float),
+    botaoMenu :: (Float, Float),
     jogoItInicial :: Jogo,
     listaTerreno :: [(Posicao,Terreno)],
     listaPortais ::  [Portal], 
@@ -38,20 +39,30 @@ data EstadoJogo = Menu
                 | GameOver
                 | YouWon 
                 | NivelPassado
+                | Tutorial
                 deriving (Eq, Show)
 
 data NivelJogoFinito = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 | MapaCriadoJogador deriving (Eq, Show)
 
-data ModoJogo = Finito | Infinito deriving (Eq, Show)
+data ModoJogo = Finito | Infinito | MapaCriado deriving (Eq, Show)
 
 
 progredirNivel :: ImmutableTowers -> ImmutableTowers
 progredirNivel it 
     | estadoIT it == NivelPassado = 
         case modoJogo it of 
-            Finito -> progredirNivelFinito it 
+            Finito   -> progredirNivelFinito it 
             Infinito -> progredirNivelInfinito it 
+            _        -> it 
     | otherwise = it 
+
+reiniciarNivel :: ImmutableTowers -> ImmutableTowers
+reiniciarNivel it 
+    | estadoIT it == NivelPassado = 
+        case modoJogo it of 
+            Finito   -> reiniciarNivelFinito it
+            Infinito -> it
+            _        -> it
 
 progredirNivelInfinito :: ImmutableTowers -> ImmutableTowers
 progredirNivelInfinito it =  it {jogoIT = j {portaisJogo = pps, 
@@ -65,6 +76,7 @@ progredirNivelInfinito it =  it {jogoIT = j {portaisJogo = pps,
          novaBase = (baseJogo j) {creditosBase = creditosBase (baseJogo j) + 100,
                                   vidaBase = vidaBase (baseJogo j) + 500}
          j = jogoIT it 
+
 
 geraOndasInf :: Int -> [Portal] -> [Portal]
 geraOndasInf _ [] = []
@@ -81,13 +93,13 @@ aumentarDificuldadeOnda n o = o {inimigosOnda = map (aumentarDificuldadeInimigo 
 
 aumentarDificuldadeInimigo :: Int -> Inimigo -> Inimigo 
 aumentarDificuldadeInimigo n i = i {vidaInimigo = vidaInimigo i * fromIntegral n, 
-                                    velocidadeInimigo = velocidadeInimigo i + fromIntegral n,
-                                    ataqueInimigo = ataqueInimigo i + fromIntegral n}
+                                    velocidadeInimigo = velocidadeInimigo i + fromIntegral n/2,
+                                    ataqueInimigo = ataqueInimigo i + fromIntegral n/2}
 
 
 progredirNivelFinito :: ImmutableTowers -> ImmutableTowers
 progredirNivelFinito it = if estadoIT it == NivelPassado then avancaNivelFinito it 
-                          else if estadoIT it == GameOver then reiniciarNivel it 
+                          else if estadoIT it == GameOver then reiniciarNivelFinito it 
                           else it  
 
 avancaNivelFinito :: ImmutableTowers -> ImmutableTowers 
@@ -99,8 +111,8 @@ avancaNivelFinito it
         Nivel4 -> it {nivelJogoFinito = Nivel5, estadoIT = Jogando, jogoIT = jogo5}
         Nivel5 -> it {nivelJogoFinito = Nivel1, estadoIT = Jogando, jogoIT = jogo1}
 
-reiniciarNivel :: ImmutableTowers -> ImmutableTowers 
-reiniciarNivel it  
+reiniciarNivelFinito :: ImmutableTowers -> ImmutableTowers 
+reiniciarNivelFinito it  
     | estadoIT it == GameOver  = case nivelJogoFinito it of 
         Nivel1 -> it {nivelJogoFinito = Nivel1, estadoIT = Jogando, jogoIT = jogo1}
         Nivel2 -> it {nivelJogoFinito = Nivel2, estadoIT = Jogando, jogoIT = jogo2}

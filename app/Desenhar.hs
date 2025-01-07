@@ -28,6 +28,7 @@ desenha it = case estadoIT it of
      EscolhendoIM -> desenhaEscolhendoOnda it
      NivelPassado -> Pictures [desenhaJogo it, desenhaNivelPassado it]
      GameOver -> Pictures [desenhaJogo it, desenhaGameOver it ]
+     YouWon -> Pictures [desenhaJogo it, desenhaYouWon it]
   where ts = texturasIT it
 
 string2FonteNumeros :: String -> [Textura] -> Picture
@@ -39,18 +40,19 @@ auxString2FonteNumeros (h:t) ts ac = (translate (ac*espacamento) 0 $ fromJust $ 
     where espacamento = 13
  
 desenhaNivelPassado :: ImmutableTowers -> Picture
-desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, fraseLevelWon, fraseBackToMenu, fraseNextLevel, seta]
+desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, iconeRestart, fraseLevelWon, fraseBackToMenu, fraseNextLevel, fraseRestart, seta, bb ]
     where ts = texturasIT it
           fundo = translate 0 0 $ color (withAlpha 0.7 orange) $ rectangleSolid 1920 1080 
-          iconePausa = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
           fraseLevelWon = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
-          iconeBackMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts
-          fraseBackToMenu =  Translate (-350) (-250) $ fromJust $ lookup "fraseBackToMenu" ts
-          fraseNextLevel = Translate (350) (-250) $ fromJust $ lookup "fraseNextLevel" ts 
+          fraseBackToMenu =  Translate (-350) (-250) $ scale 0.7 0.7 $ fromJust $ lookup "fraseBackToMenu" ts
+          fraseNextLevel = Translate (0) (-250) $ scale 0.8 0.8 $ fromJust $ lookup "fraseNextLevel" ts 
+          fraseRestart = Translate (350) (-250) $ scale 0.8 0.8 $ fromJust $ lookup "fraseRestart" ts
           (x,y) = botaoNivelPassado it
           seta = Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
-          iconeBackToMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
-          iconeNextLevel = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
+          iconeBackToMenu = Translate (-350) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
+          iconeNextLevel = Translate (0) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
+          iconeRestart = Translate (350) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts
+          bb = translate 0 0 $ scale 1 1 $ text $ show $ botaoNivelPassado it 
 
 desenhaGameOver :: ImmutableTowers -> Picture
 desenhaGameOver it = Pictures [fundo, iconeBackToMenu, iconeRestart, fraseGameOver, fraseBackToMenu, fraseRestart, seta]
@@ -63,6 +65,26 @@ desenhaGameOver it = Pictures [fundo, iconeBackToMenu, iconeRestart, fraseGameOv
           seta = Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
           iconeBackToMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
           iconeRestart = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
+
+desenhaYouWon :: ImmutableTowers -> Picture
+desenhaYouWon it = Pictures [fundo, 
+                             iconeBackToMenu, 
+                             iconeRestart, 
+                             fraseYouWon, 
+                             fraseBackToMenu, 
+                             fraseRestart, 
+                             seta
+                            ]
+    where ts = texturasIT it 
+          fundo = translate 0 0 $ color (withAlpha 0.8 orange) $ rectangleSolid 1920 1080 
+          fraseYouWon = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseYouWon" ts
+          fraseBackToMenu =  Translate (-350) (-250) $ fromJust $ lookup "fraseBackToMenu" ts
+          fraseRestart = Translate (350) (-250) $ fromJust $ lookup "fraseRestart" ts
+          (x,y) = botaoGameOver it
+          seta = Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
+          iconeBackToMenu = Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts
+          iconeRestart = Translate (350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts 
+
 
 desenhaEscolhendoOnda :: ImmutableTowers -> Picture 
 desenhaEscolhendoOnda it = Pictures [fundo, 
@@ -139,6 +161,11 @@ desenhaComprando it = Pictures [desenhaJogo it,
   where
     selec = posicaoSelecionadaMapa it
 
+desenhaEscolhendoMenu :: ImmutableTowers -> Picture 
+desenhaEscolhendoMenu it = Pictures [desenhaSelecaoLoja selec ts, translate 0 0 $ scale 1 1 $ text $ show $ botaoMenu it]
+  where selec = botaoMenu it 
+        ts = texturasIT it
+
 desenhaEscolhendoTorre :: ImmutableTowers -> Picture 
 desenhaEscolhendoTorre it = Pictures [desenhaJogo it, desenhaSelecaoLoja selec ts]
   where selec = produtoLoja it 
@@ -156,17 +183,28 @@ desenhaSelecao pos =
 
 desenhaMenu :: ImmutableTowers -> Picture 
 desenhaMenu it = Pictures 
-    [fundoTela, fundo,
-    translate 0 0 $ botaoPlay, 
-    translate (0) (-56) $ botaoCredito, 
-    translate  (0) (-112) $ botaoLevel
+    [fundoTela,
+    translate 0 250 $ scale 1 1 $ itTitulo, 
+    translate 0 0 $ scale 5 5 $ botaoMenu, 
+    translate 0 0 $ scale 1.2 1.2 $ fm, 
+    translate (0) (-100) $ scale 5 5 $ botaoMenu,
+    translate 0 (-100) $ scale 1.1 1.1 $ im, 
+    translate  (0) (-200) $ scale 5 5 $ botaoMenu,
+    translate 0 (-200) $ scale 1.2 1.2 $ cm, 
+    translate 0 (-300) $ scale 5 5 $ botaoMenu,
+    translate 0 (-300) $ scale 1.2 1.2 $ tt,
+    desenhaEscolhendoMenu it  
          ]
      where texturas = texturasIT it 
            fundoTela = fromJust $ lookup "fundoJogo" texturas 
-           fundo = fromJust $ lookup "fundoMenu" texturas 
-           botaoPlay = fromJust $ lookup "botaoPlay" texturas
-           botaoCredito = fromJust $ lookup "botaoCredito" texturas
-           botaoLevel = fromJust $ lookup "botaoLevel" texturas
+           botaoMenu = fromJust $ lookup "iconeLoja" texturas
+           itTitulo = fromJust $ lookup "it" texturas 
+           fm = fromJust $ lookup "fm" texturas 
+           im = fromJust $ lookup "im" texturas 
+           cm = fromJust $ lookup "cm" texturas 
+           tt = fromJust $ lookup "tt" texturas
+    
+
 
 desenhaJogo :: ImmutableTowers -> Picture
 desenhaJogo it = Pictures [picMapa, 
@@ -177,7 +215,8 @@ desenhaJogo it = Pictures [picMapa,
                            picBase, 
                            picTorre, 
                            creditosJog, 
-                           moldBaixo
+                           moldBaixo, 
+                           translate (-700) 0 $ scale 0.1 0.1 $ text $ show $ ondas
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
@@ -196,7 +235,7 @@ desenhaJogo it = Pictures [picMapa,
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador jogo base texturas 
-
+          ondas = ondasPortal $ head (portaisJogo jogo)
 
 
 desenhaMolduraMapa :: [Textura] -> Picture
@@ -297,7 +336,7 @@ desenhaLoja loja ts = Pictures [iconeLoja,
           espacamento = 200
           tamanhoTorre = 0.70
           tamanhoCreditos = 1
-          iconeLoja = Translate (-845) 20 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts
+          iconeLoja = Translate (-750) 270 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts
           fundoTorre1 =  Translate (-730) 100 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre2 = Translate (-730) (-100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre3 = Translate (-730) (-300) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
@@ -335,7 +374,7 @@ desenhaPerfilJogador j b ts = Pictures [creditosJogador,
                                 Translate 740 460 $ scale 0.6 0.6 $ fromJust $ lookup "frasePausa" ts
                                ]
          iconeHome = Pictures [Translate 650 400 $ scale 2.5 2.5 $ fromJust $ lookup "iconeHome" ts]
-         iconeJogador = Pictures [Translate 660 55 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts, 
+         iconeJogador = Pictures [Translate 760 300 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts, 
                                   Translate 760 300 $ scale 1.5 1.5 $ fromJust $ lookup "player" ts
                                  ]
          nInimigos = Pictures [Translate 670 40 $ scale 3.5 3.5 $ fromJust $ lookup "nInimigos" ts , 
@@ -348,10 +387,10 @@ desenhaPerfilJogador j b ts = Pictures [creditosJogador,
 desenhaPausa :: [Textura] -> Picture 
 desenhaPausa ts = Pictures [fundo, 
                             iconePausa, 
-                            fraseLevelWon, 
+                            frasePaused, 
                             iconeBackMenu
                             ]
     where fundo = translate 0 0 $ color (withAlpha 0.8 black) $ rectangleSolid 1920 1080 
           iconePausa = Translate 0 0 $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
-          fraseLevelWon = Translate 0 1 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
+          frasePaused = Translate 0 1 $ scale 0.8 0.8 $ fromJust $ lookup "frasePaused" ts
           iconeBackMenu = Translate 0 (-90) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 

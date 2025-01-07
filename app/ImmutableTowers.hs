@@ -113,9 +113,10 @@ avancaNivelFinito it
 
 reiniciarNivelFinito :: ImmutableTowers -> ImmutableTowers 
 reiniciarNivelFinito it  
-    | estadoIT it == GameOver  = case nivelJogoFinito it of 
-        Nivel1 -> it {nivelJogoFinito = Nivel1, estadoIT = Jogando, jogoIT = jogo1}
-        Nivel2 -> it {nivelJogoFinito = Nivel2, estadoIT = Jogando, jogoIT = jogo2}
-        Nivel3 -> it {nivelJogoFinito = Nivel3, estadoIT = Jogando, jogoIT = jogo3}
-        Nivel4 -> it {nivelJogoFinito = Nivel4, estadoIT = Jogando, jogoIT = jogo4}
-        Nivel5 -> it {nivelJogoFinito = Nivel5, estadoIT = Jogando, jogoIT = jogo5}
+    | estadoIT it == GameOver || estadoIT it == NivelPassado || estadoIT it == YouWon =
+         case nivelJogoFinito it of 
+            Nivel1 -> it {nivelJogoFinito = Nivel1, estadoIT = Jogando, jogoIT = jogo1}
+            Nivel2 -> it {nivelJogoFinito = Nivel2, estadoIT = Jogando, jogoIT = jogo2}
+            Nivel3 -> it {nivelJogoFinito = Nivel3, estadoIT = Jogando, jogoIT = jogo3}
+            Nivel4 -> it {nivelJogoFinito = Nivel4, estadoIT = Jogando, jogoIT = jogo4}
+            Nivel5 -> it {nivelJogoFinito = Nivel5, estadoIT = Jogando, jogoIT = jogo5}

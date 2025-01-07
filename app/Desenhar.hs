@@ -215,8 +215,7 @@ desenhaJogo it = Pictures [picMapa,
                            picBase, 
                            picTorre, 
                            creditosJog, 
-                           moldBaixo, 
-                           translate (-700) 0 $ scale 0.1 0.1 $ text $ show $ ondas
+                           moldBaixo
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
@@ -235,7 +234,7 @@ desenhaJogo it = Pictures [picMapa,
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador jogo base texturas 
-          ondas = ondasPortal $ head (portaisJogo jogo)
+
 
 
 desenhaMolduraMapa :: [Textura] -> Picture

@@ -367,9 +367,15 @@ moveInimigo :: Inimigo -> Inimigo
 moveInimigo i =
     let (xInicial, yInicial) = acDirecao i
         (xAtual, yAtual) = posicaoInimigo i
-    in if sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1
-        then i
-        else i {caminhoInimigo = tail $ caminhoInimigo i, acDirecao = posicaoInimigo i, direcaoInimigo = head $ tail $ caminhoInimigo i}
+        caminho = caminhoInimigo i
+    in case caminho of 
+        [] -> i 
+        (d:[]) 
+          | sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1 -> i
+          | otherwise -> i {caminhoInimigo = [d], acDirecao = posicaoInimigo i, direcaoInimigo = d}
+        (d:rt) 
+          | sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1 -> i
+          | otherwise -> i {caminhoInimigo = rt, acDirecao = posicaoInimigo i, direcaoInimigo = head rt}
 
 
 baseTds :: Base

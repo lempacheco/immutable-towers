@@ -20,10 +20,3 @@ reageTempo t it
     | otherwise = it {jogoIT = atualizaJogo t $ j}
     where j = jogoIT it
 
-
-{-           ps = portaisJogo j
-          os = concat (map ondasPortal ps)
-          is = concat (map inimigosOnda os)
-          iAtivos = inimigosJogo j
-          iTotal = is ++ iAtivos
- -}

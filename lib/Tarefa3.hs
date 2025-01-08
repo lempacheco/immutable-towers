@@ -189,7 +189,7 @@ inimigosSobreviventes torre inimigos =
             inimigosEmOrdem = inimigosOrdenados torre inimigos
             inimigosAtualizados = map (atingeInimigo torre) (take nI inimigosEmOrdem) -- apenas inimigos que tiveram danos
             inimigosSemDano = drop nI inimigosEmOrdem
-        in (filter (\i -> vidaInimigo i > 0) inimigosAtualizados) ++ inimigosSemDano
+        in  inimigosAtualizados ++ inimigosSemDano
 
 {-| A função 'distinimigo' é responsável por calcular a distância entre uma torre e um inimigo.
 
@@ -385,7 +385,7 @@ baseTds = Base {vidaBase = 100,
 inimigo1Tds :: Inimigo
 inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
                         projeteisInimigo = [], 
-                        vidaInimigo = 40, 
+                        vidaInimigo = 150, 
                         butimInimigo = 100, 
                         ataqueInimigo = 40, 
                         velocidadeInimigo = 0.5, 
@@ -652,13 +652,13 @@ mapa5 =
 jogo5 :: Jogo 
 jogo5 = Jogo {mapaJogo = mapa5, 
               inimigosJogo = [], 
-              portaisJogo = [portal1_4], 
+              portaisJogo = [portal1_5], 
               torresJogo = [], 
-              baseJogo = base4,
+              baseJogo = base5,
               lojaJogo = loja}
 
-base5 = baseTds {posicaoBase = (15,8)}
+base5 = baseTds {posicaoBase = (0,15)}
 
 portal1_5 :: Portal
-portal1_5 = Portal {posicaoPortal = (0,8),
-                  ondasPortal = geraOndasPortal 1 1 1 (0,8)}
+portal1_5 = Portal {posicaoPortal = (0,0),
+                  ondasPortal = geraOndasPortal 1 1 1 (0,0)}

@@ -162,7 +162,7 @@ desenhaComprando it = Pictures [desenhaJogo it,
     selec = posicaoSelecionadaMapa it
 
 desenhaEscolhendoMenu :: ImmutableTowers -> Picture 
-desenhaEscolhendoMenu it = Pictures [desenhaSelecaoLoja selec ts, translate 0 0 $ scale 1 1 $ text $ show $ botaoMenu it]
+desenhaEscolhendoMenu it = Pictures [desenhaSelecaoLoja selec ts]
   where selec = botaoMenu it 
         ts = texturasIT it
 
@@ -215,7 +215,8 @@ desenhaJogo it = Pictures [picMapa,
                            picBase, 
                            picTorre, 
                            creditosJog, 
-                           moldBaixo
+                           moldBaixo,
+                           nivel
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
@@ -234,6 +235,7 @@ desenhaJogo it = Pictures [picMapa,
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador jogo base texturas 
+          nivel = translate 0 0 $ scale 0.5 0.5 $ text $ show $ nivelJogoInfinito it
 
 
 
@@ -366,7 +368,7 @@ desenhaPerfilJogador j b ts = Pictures [creditosJogador,
    where creditosJogador = Translate 750 210 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts 
          creditos = Translate 750 202 $ scale 1 1 $ string2FonteNumeros (show $ creditosBase b) ts
          iconeVida = Translate 750 100 $ scale 3.5 3.5 $ fromJust $ lookup "iconeVidaJg" ts
-         vidaBaseJg = Translate 740 120 $ scale 1 1 $ string2FonteNumeros (show $ ceiling $ vidaBase b) ts 
+         vidaBaseJg = Translate 740 120 $ scale 1 1 $ string2FonteNumeros (show $ abs $ ceiling $ vidaBase b) ts 
          perfil = Translate 680 210 $ scale 1 1 $ fromJust $ lookup "perfil" ts 
          iconePausa = Pictures [Translate 650 460 $ scale 2 2 $ fromJust $ lookup "botaoPausa" ts, 
                                 Translate 740 460 $ scale 3 3 $ fromJust $ lookup "iconePausa" ts, 

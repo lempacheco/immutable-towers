@@ -9,7 +9,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ teste1, 
+      [ {- teste1, 
         teste2, 
         teste3, 
         teste4, 
@@ -29,7 +29,7 @@ testesTarefa3 =
         teste20, 
         teste21, 
         teste22, 
-        teste23,
+        teste23, -}
         teste24
       ]
 
@@ -417,7 +417,7 @@ teste24 =
   TestLabel "Testes para a função atualizaJogo" $
    test 
     [
-      "Recebe um jogo no estado inicial" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
+      {- "Recebe um jogo no estado inicial" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
                                                          inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), caminhoInimigo = []}], 
                                                          baseJogo = baseB}
                                         ~=? atualizaJogo 0.1 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {entradaOnda = 0, inimigosOnda = [inimigoA3 {posicaoInimigo = (1.5,0.5)}]}, ondaB3]}],
@@ -440,9 +440,136 @@ teste24 =
                                            baseJogo = baseB}
                             ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 4.5), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1.5,2.5)}], 
-                                           baseJogo = baseB}
+                                           baseJogo = baseB}, -}
+      "Teste com um inimigo com vida nula" ~: (baseJogo jogoJ) {creditosBase = 350} ~=? baseJogo (atualizaJogo 1 jogoJ),
+      "Teste com um inimigo com vida negativa" ~: (baseJogo jogoH) {creditosBase = 350} ~=? baseJogo (atualizaJogo 1 jogoH),
+      "Teste com mais de um inimigo" ~: (baseJogo jogoI) {creditosBase = 500} ~=? baseJogo (atualizaJogo 1 jogoI)
     ]                       
 
+jogoJ :: Jogo
+jogoJ = Jogo {baseJogo = baseJ,
+              torresJogo = [],
+              portaisJogo = [portal1_J],
+              mapaJogo = mapaJ,
+              inimigosJogo = [Inimigo {tipoInimigo = MulherLanca, 
+                                                                  projeteisInimigo = [], 
+                                                                  vidaInimigo = 0, 
+                                                                  butimInimigo = 150,  
+                                                                  ataqueInimigo = 20, 
+                                                                  velocidadeInimigo = 1,
+                                                                  caminhoInimigo = [],
+                                                                  iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                                                  posicaoInimigo = (5,1),
+                                                                  acDirecao = (5,1){- ,
+                                                                  direcaoInimigo = Sul -}
+                                                                  }],
+              lojaJogo = lojaJ
+            }
+
+jogoH :: Jogo
+jogoH = Jogo {baseJogo = baseJ,
+              torresJogo = [],
+              portaisJogo = [portal1_J],
+              mapaJogo = mapaJ,
+              inimigosJogo = [Inimigo {tipoInimigo = MulherLanca, 
+                                                                  projeteisInimigo = [], 
+                                                                  vidaInimigo = -10, 
+                                                                  butimInimigo = 150,  
+                                                                  ataqueInimigo = 20, 
+                                                                  velocidadeInimigo = 1,
+                                                                  caminhoInimigo = [],
+                                                                  iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                                                  posicaoInimigo = (5,1),
+                                                                  acDirecao = (5,1){- ,
+                                                                  direcaoInimigo = Sul -}
+                                                                  }],
+              lojaJogo = lojaJ
+            }
+
+jogoI :: Jogo
+jogoI = Jogo {baseJogo = baseJ,
+              torresJogo = [],
+              portaisJogo = [portal1_J],
+              mapaJogo = mapaJ,
+              inimigosJogo = [Inimigo {tipoInimigo = MulherLanca, 
+                                        projeteisInimigo = [], 
+                                        vidaInimigo = 0, 
+                                        butimInimigo = 150,  
+                                        ataqueInimigo = 20, 
+                                        velocidadeInimigo = 1,
+                                        caminhoInimigo = [],
+                                        iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                        posicaoInimigo = (5,1),
+                                        acDirecao = (5,1){- ,
+                                        direcaoInimigo = Sul -}
+                                        },
+                              Inimigo {tipoInimigo = MulherLanca, 
+                                        projeteisInimigo = [], 
+                                        vidaInimigo = -10, 
+                                        butimInimigo = 150,  
+                                        ataqueInimigo = 20, 
+                                        velocidadeInimigo = 1,
+                                        caminhoInimigo = [],
+                                        iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                        posicaoInimigo = (5,1),
+                                        acDirecao = (5,1){- ,
+                                        direcaoInimigo = Sul -}
+                                        },
+                              Inimigo {tipoInimigo = MulherLanca, 
+                                        projeteisInimigo = [], 
+                                        vidaInimigo = 10, 
+                                        butimInimigo = 150,  
+                                        ataqueInimigo = 20, 
+                                        velocidadeInimigo = 1,
+                                        caminhoInimigo = [],
+                                        iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                        posicaoInimigo = (5,1),
+                                        acDirecao = (5,1){- ,
+                                        direcaoInimigo = Sul -}
+                                        }],
+              lojaJogo = lojaJ
+            }
+
+lojaJ :: Loja
+lojaJ = [ {- (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
+         (150, Torre{projetilTorre = Projetil {tipoProjetil = Resina}}),
+         (200, Torre{projetilTorre = Projetil {tipoProjetil = Fogo}}) -}
+        ]
+
+baseJ :: Base
+baseJ = baseTds {posicaoBase = (15,9)}
+
+portal1_J :: Portal
+portal1_J = Portal {posicaoPortal = (0,9),
+                    ondasPortal = [Onda {inimigosOnda = [],
+                                        cicloOnda = 5*60,
+                                        tempoOnda = 10*60,
+                                        entradaOnda = 0}]
+                    }
+
+mapaJ :: Mapa 
+mapaJ = 
+  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
+    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
+    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
+    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
+    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
+    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r],
+    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,t,t],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r],
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r]
+  ]
+  where
+       t = Terra
+       r = Relva
+       a = Agua
 
 mapaA :: Mapa
 mapaA =

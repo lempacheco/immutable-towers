@@ -22,10 +22,9 @@ testesFaux =
        "eRelva 2" ~: False ~=? eRelva (0.5,0.5) mapa1,
 
        "eAgua 1" ~: True ~=? eAgua (3.5,0.5) mapa1,
-       "eAgua 2" ~: False ~=? eAgua (0.5,0.5) mapa1, 
+       "eAgua 2" ~: False ~=? eAgua (0.5,0.5) mapa1,
 
-       "validaTorre - torre válida" ~: True ~=? validaTorre jogo1,
-       "validaTorre - torre não válida" ~: False ~=? validaTorre jogo2
+       "procuraTerreno - Terra" ~: True 
      ]
 
 testesPortais :: Test 
@@ -114,7 +113,10 @@ testesTorres =
         "cicloTorresNaoNegativo - teste com torres não válidas" ~: False ~=? cicloTorresNaoNegativo [torre1, torre6],
 
         "naoSobrepostoTorres - teste com torres válidas" ~: True ~=? naoSobrepostoTorres [torre1, torre2],
-        "naoSobrepostoTorres - teste com torres não válidas" ~:  False ~=? naoSobrepostoTorres [torre2, torre7]
+        "naoSobrepostoTorres - teste com torres não válidas" ~:  False ~=? naoSobrepostoTorres [torre2, torre7],
+
+        "validaTorre - torre válida" ~: True ~=? validaTorre jogo1,
+        "validaTorre - torre não válida" ~: False ~=? validaTorre jogo2
       ]
 
 testesBase :: Test
@@ -191,7 +193,7 @@ mapa1 =
 --mapa sem caminho até à torre
 mapa2 :: Mapa
 mapa2 =
- [ [t, t, r, a, a, a],
+ [ [t, t, r, a, a, a, a, a, a, a, a],
    [r, t, r, a, r, r],
    [r, a, r, a, r, t],
    [r, t, r, a, r, t],

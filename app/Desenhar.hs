@@ -36,9 +36,14 @@ string2FonteNumeros s ts = Pictures $ auxString2FonteNumeros s ts 0
 
 auxString2FonteNumeros :: String -> [Textura] -> Float -> [Picture]
 auxString2FonteNumeros [] _ _ = []
-auxString2FonteNumeros (h:t) ts ac = (translate (ac*espacamento) 0 $ fromJust $ lookup ("numero" ++ [h]) ts) : auxString2FonteNumeros t ts (ac+1)
+auxString2FonteNumeros (h:t) ts ac = 
+    let resultado = lookup ("numero" ++ [h]) ts
+    in
+        case resultado of
+            Nothing -> [translate (ac*espacamento) 0 $ fromJust $ lookup "numero0" ts]
+            _ -> (translate (ac*espacamento) 0 $ fromJust resultado) : auxString2FonteNumeros t ts (ac+1)
     where espacamento = 13
- 
+                  
 desenhaNivelPassado :: ImmutableTowers -> Picture
 desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, iconeRestart, fraseLevelWon, fraseBackToMenu, fraseNextLevel, fraseRestart, seta, bb ]
     where ts = texturasIT it

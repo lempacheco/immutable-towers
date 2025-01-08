@@ -105,7 +105,7 @@ progredirNivelFinito it = if estadoIT it == NivelPassado then avancaNivelFinito 
 
 avancaNivelFinito :: ImmutableTowers -> ImmutableTowers 
 avancaNivelFinito it  
-    | estadoIT it == NivelPassado  = case nivelJogoFinito it of 
+    | estadoIT it == NivelPassado  || estadoIT it == YouWon = case nivelJogoFinito it of 
         Nivel1 -> it {nivelJogoFinito = Nivel2, estadoIT = Jogando, jogoIT = jogo2}
         Nivel2 -> it {nivelJogoFinito = Nivel3, estadoIT = Jogando, jogoIT = jogo3}
         Nivel3 -> it {nivelJogoFinito = Nivel4, estadoIT = Jogando, jogoIT = jogo4}

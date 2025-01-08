@@ -167,7 +167,7 @@ desenhaComprando it = Pictures [desenhaJogo it,
     selec = posicaoSelecionadaMapa it
 
 desenhaEscolhendoMenu :: ImmutableTowers -> Picture 
-desenhaEscolhendoMenu it = Pictures [desenhaSelecaoLoja selec ts, translate 0 0 $ scale 1 1 $ text $ show $ botaoMenu it]
+desenhaEscolhendoMenu it = Pictures [desenhaSelecaoLoja selec ts]
   where selec = botaoMenu it 
         ts = texturasIT it
 
@@ -220,7 +220,8 @@ desenhaJogo it = Pictures [picMapa,
                            picBase, 
                            picTorre, 
                            creditosJog, 
-                           moldBaixo
+                           moldBaixo,
+                           nivel
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
@@ -239,6 +240,7 @@ desenhaJogo it = Pictures [picMapa,
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador jogo base texturas 
+          nivel = translate 0 0 $ scale 0.5 0.5 $ text $ show $ nivelJogoInfinito it
 
 
 

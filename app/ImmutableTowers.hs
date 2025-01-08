@@ -42,7 +42,7 @@ data EstadoJogo = Menu
                 | Tutorial
                 deriving (Eq, Show)
 
-data NivelJogoFinito = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 | MapaCriadoJogador deriving (Eq, Show)
+data NivelJogoFinito = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 deriving (Eq, Show)
 
 data ModoJogo = Finito | Infinito | MapaCriado deriving (Eq, Show)
 
@@ -58,11 +58,12 @@ progredirNivel it
 
 reiniciarNivel :: ImmutableTowers -> ImmutableTowers
 reiniciarNivel it 
-    | estadoIT it == NivelPassado = 
+    | estadoIT it == NivelPassado || estadoIT it == GameOver || estadoIT it == YouWon = 
         case modoJogo it of 
             Finito   -> reiniciarNivelFinito it
-            Infinito -> it
-            _        -> it
+            Infinito -> it {nivelJogoInfinito = nivelJogoInfinito it, estadoIT = Jogando}
+            _        -> it {jogoIT = jogoItInicial it, estadoIT = Jogando}
+    | otherwise = it 
 
 progredirNivelInfinito :: ImmutableTowers -> ImmutableTowers
 progredirNivelInfinito it =  it {jogoIT = j {portaisJogo = pps, 

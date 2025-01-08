@@ -14,7 +14,8 @@ reageTempo t it
     | estadoIT it == EscolhendoIG = it
     | estadoIT it == EscolhendoIM = it 
     | estadoIT it == NivelPassado = it
-    | ganhouJogo j && nivelJogoFinito it /= MapaCriadoJogador && nivelJogoFinito it /= Nivel5 = it {estadoIT = NivelPassado}
+    | ganhouJogo j && modoJogo it == MapaCriado = it {estadoIT = YouWon}
+    | ganhouJogo j && nivelJogoFinito it /= Nivel5 = it {estadoIT = NivelPassado}
     | ganhouJogo j && nivelJogoFinito it == Nivel5 = it {estadoIT = YouWon}
     | perdeuJogo j = it {estadoIT = GameOver} 
     | otherwise = it {jogoIT = atualizaJogo t $ j}

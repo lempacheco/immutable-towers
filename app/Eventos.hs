@@ -48,10 +48,12 @@ reageEventos (EventKey (SpecialKey KeyDelete) Down _ _ ) it
 reageEventos (EventKey (Char 'b') Down _ _) it 
     | estadoIT it == CriandoMapa && not (baseCriada it) = 
       let (xF,yF) = posicaoSelecionadaMapa it 
+          lta = listaTerreno it 
           base = Base {vidaBase = 100,
                        posicaoBase = (xF, yF),
                        creditosBase = 1000}
-      in it {jogoIT = j {baseJogo = base}, baseCriada = True}
+      in if lookup (xF, yF) lta == Just Terra then it {jogoIT = j {baseJogo = base}, baseCriada = True}
+         else it 
      where j = jogoIT it 
 
 reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it 
@@ -111,15 +113,15 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
               let jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = []}
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it
-              in it {estadoIT = Jogando, jogoIT = jogoAtual, escolhendoParametros = parametrosAtualizados, nivelJogoFinito = MapaCriadoJogador}
+              in it {estadoIT = Jogando, jogoIT = jogoAtual, jogoItInicial = jogoAtual, escolhendoParametros = parametrosAtualizados, modoJogo = MapaCriado}
 
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -150 = progredirNivel it
-    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu}
+    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
-    | estadoIT it == GameOver && fst (botaoNivelPassado it) == 100 = progredirNivel it 
-    | estadoIT it == GameOver && fst (botaoNivelPassado it) == -600 = it {estadoIT = Menu}
-    | estadoIT it == YouWon && fst (botaoNivelPassado it) == 100 = progredirNivel it 
-    | estadoIT it == YouWon && fst (botaoNivelPassado it) == -600 = it {estadoIT = Menu}
+    | estadoIT it == GameOver && fst (botaoGameOver it) == 100 = reiniciarNivel it 
+    | estadoIT it == GameOver && fst (botaoGameOver it) == -600 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
+    | estadoIT it == YouWon && fst (botaoGameOver it) == 100 = progredirNivel it 
+    | estadoIT it == YouWon && fst (botaoGameOver it) == -600 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | otherwise = it 
 
 reageEventos (EventKey (SpecialKey KeyShiftR) Down _ _)  it 
@@ -147,7 +149,7 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
     | estadoIT it == NivelPassado && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
-    | estadoIT it == GameOver && xBotaoGameOver == -500 = it {botaoGameOver = (100, yBotaoGameOver)}
+    | estadoIT it == GameOver && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
     | estadoIT it == YouWon && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
   where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it

@@ -657,8 +657,8 @@ jogo5 = Jogo {mapaJogo = mapa5,
               baseJogo = base5,
               lojaJogo = loja}
 
-base5 = baseTds {posicaoBase = (0,15)}
+base5 = baseTds {posicaoBase = (15,0)}
 
 portal1_5 :: Portal
 portal1_5 = Portal {posicaoPortal = (0,0),
-                  ondasPortal = geraOndasPortal 1 1 1 (0,0)}
+                   ondasPortal = geraOndasPortal 1 1 1 (0,0)}

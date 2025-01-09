@@ -16,4 +16,4 @@ testSuite =
       ]
 
 main :: IO ()
-main = runTestTTAndExit $ test [{- testSuite, testesTarefa1, testesTarefa2,  -}testesTarefa3]
+main = runTestTTAndExit $ test [{- testSuite, testesTarefa1, testesTarefa2,  -}testesTarefa2]

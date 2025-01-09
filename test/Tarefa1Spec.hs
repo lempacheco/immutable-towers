@@ -9,7 +9,7 @@ testesTarefa1 :: Test
 testesTarefa1 =
   TestLabel "Testes Tarefa 1" $
     test
-      [ testesFaux, testesPortais, testesInimigos, testesTorres, testesBase, testesExistePeloMenosUmCaminho] 
+      [ testesFaux, testesPortais, testesInimigos, testesTorres, testesBase, testesExistePeloMenosUmCaminho, testesGeraUmCaminho] 
 
 testesFaux :: Test 
 testesFaux = 
@@ -26,7 +26,17 @@ testesFaux =
 
        "procuraTerreno" ~: Just Agua ~=? procuraTerreno (3.5, 0.5) mapa1, 
        "procuraTerreno" ~: Just Terra ~=? procuraTerreno (0.5, 0.5) mapa1,
-       "procuraTerreno" ~: Just Relva ~=? procuraTerreno (2.5, 0.5) mapa1
+       "procuraTerreno" ~: Just Relva ~=? procuraTerreno (2.5, 0.5) mapa1, 
+
+       "Ja passou pelo caminho" ~: True ~=? jaPassou (0.5,0.5) [(1.5, 0.5), (0.5, 0.5), (2.5,2.5)],
+       "Não passou pelo caminho" ~: False ~=? jaPassou (0.5,0.5) [(1.5, 0.5), (0.5, 1.5), (2.5,2.5)], 
+
+       "chegou a base" ~: True ~=? chegouBase (2.5,2.5) (2.5, 2.5), 
+       "Não chegou a base" ~: False ~=? chegouBase (2.5,0.5) (2.5,1.5),
+
+       "Posição ja visitada" ~: False ~=? verificaDirecaoTerra mapaInicial (2.5, 5.5) [(2.5, 6.5)] Norte,
+       "Posição inválida" ~: False ~=? verificaDirecaoTerra mapaInicial (2.5, 5.5) [] Sul,
+       "Posição válida" ~: True ~=? verificaDirecaoTerra mapaInicial (2.5,5.5) [] Norte
      ]
 
 testesPortais :: Test 
@@ -75,7 +85,7 @@ testesInimigos =
        
        "A lista de projéteis está válida" ~: True ~=? normalizaInimigos [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Resina}, 
                                                                                                       Projetil {tipoProjetil = Gelo}]},
-                                                                         Inimigo {projeteisInimigo = []}],
+                                                                         Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Resina}]}],
        "Na lista de projeteis ativos existe mais do que um projetil do mesmo tipo" ~: False ~=? normalizaInimigos 
             [Inimigo {projeteisInimigo = [projetilA, 
                                           projetilA 
@@ -138,9 +148,33 @@ testesBase =
       ]
 
 testesExistePeloMenosUmCaminho :: Test
-testesExistePeloMenosUmCaminho = test [
-    "existePeloMenosUmCaminho" ~: True ~=? existePeloMenosUmCaminho mapaInicial portalInicial baseInicial
-  ]
+testesExistePeloMenosUmCaminho = 
+  TestLabel "Testes para a função existepeloMenosUmCaminho" $
+    test [
+      "existe um Caminho" ~: True ~=? existePeloMenosUmCaminho mapaInicial portalInicial baseInicial,
+      "não existe um caminho" ~: False ~=? existePeloMenosUmCaminho mapaInicial portalInicial baseInicial {posicaoBase = (13,15)}
+        ]
+
+testesGeraUmCaminho :: Test 
+testesGeraUmCaminho = 
+  TestLabel "Testes para a função geraUmCaminho" $
+    test [
+          "Existe um caminho válido" ~:  [(True,[Este,Norte,Norte,Norte,Norte,Este,Este,Este,Este,Sul,Sul]),
+                                          (False,[Este,Norte,Norte,Norte,Norte,Este,Este,Este,Este,Sul]),
+                                          (False,[Este,Norte,Norte,Norte,Norte,Este,Este,Este,Este]),
+                                          (False,[Este,Norte,Norte,Norte,Norte,Este,Este,Este]),
+                                          (False,[Este,Norte,Norte,Norte,Norte,Este,Este]),
+                                          (False,[Este,Norte,Norte,Norte,Norte,Este]),
+                                          (False,[Este,Norte,Norte,Norte,Norte]),
+                                          (False,[Este,Norte,Norte,Norte]),
+                                          (False,[Este,Norte,Norte]),
+                                          (False,[Este,Norte]),
+                                          (False,[Este]),
+                                          (False,[])] 
+                                     ~=? geraUmCaminho mapa1 (0,0) (5,2) [] [],
+          "Não existe um caminho válido" ~: [(False, [])]
+                                         ~=? geraUmCaminho mapa1 (0,0) (5,2) [(1,0)] []
+         ]
 
 mapaInicial :: Mapa 
 mapaInicial = 
@@ -159,7 +193,7 @@ mapaInicial =
     [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
     [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
     [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r]
+    [r,r,r,r,r,r,r,r,a,a,a,a,r,t,r,r]
   ]
   where
        t = Terra
@@ -195,7 +229,7 @@ mapa1 =
 --mapa sem caminho até à torre
 mapa2 :: Mapa
 mapa2 =
- [ [t, t, r, a, a, a, a, a, a, a, a],
+ [ [t, t, r, a, a, a],
    [r, t, r, a, r, r],
    [r, a, r, a, r, t],
    [r, t, r, a, r, t],
@@ -207,7 +241,7 @@ mapa2 =
        r = Relva
        a = Agua
 
---torre válida (no mapa1)
+--torre não válida (no mapa1)
 torre1 :: Torre
 torre1 = Torre 
   {
@@ -598,7 +632,7 @@ jogo1 = Jogo
   {
     baseJogo = base1,
     portaisJogo = [portal1],
-    torresJogo = [torre1],
+    torresJogo = [torre2],
     mapaJogo = mapa1,
     inimigosJogo = [inimigoA],
     lojaJogo = [(100,torre1)]
@@ -610,7 +644,7 @@ jogo2 = Jogo
   {
     baseJogo = base1,
     portaisJogo = [portal1],
-    torresJogo = [torre3],
+    torresJogo = [torre3, torre1],
     mapaJogo = mapa1,
     inimigosJogo = [inimigoA],
     lojaJogo = [(100,torre1)]

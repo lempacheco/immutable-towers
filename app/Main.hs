@@ -204,6 +204,7 @@ main = do
   tt <- loadBMP "resources/textures/ui/tutorial.bmp"
   fraseYouWon <- loadBMP "resources/textures/ui/youWon.bmp"
   frasePaused <- loadBMP "resources/textures/ui/paused.bmp"
+  mensagemErro <- loadBMP "resources/textures/ui/mensagemErro.bmp"
   play janela 
         fundo 
         fr 
@@ -368,7 +369,8 @@ main = do
             ("cm", cm),
             ("tt", tt),
             ("fraseYouWon", fraseYouWon),
-            ("frasePaused", frasePaused)
+            ("frasePaused", frasePaused),
+            ("mensagemErro", mensagemErro)
           ]
         ) 
         desenha 

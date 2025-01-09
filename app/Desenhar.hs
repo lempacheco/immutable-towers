@@ -29,6 +29,7 @@ desenha it = case estadoIT it of
      NivelPassado -> Pictures [desenhaJogo it, desenhaNivelPassado it]
      GameOver -> Pictures [desenhaJogo it, desenhaGameOver it ]
      YouWon -> Pictures [desenhaJogo it, desenhaYouWon it]
+     MensagemErro -> Pictures [desenhaCriandoMapa it, desenhaMensagemErro it]
   where ts = texturasIT it
 
 string2FonteNumeros :: String -> [Textura] -> Picture
@@ -43,7 +44,10 @@ auxString2FonteNumeros (h:t) ts ac =
             Nothing -> [translate (ac*espacamento) 0 $ fromJust $ lookup "numero0" ts]
             _ -> (translate (ac*espacamento) 0 $ fromJust resultado) : auxString2FonteNumeros t ts (ac+1)
     where espacamento = 13
-                  
+
+desenhaMensagemErro :: ImmutableTowers -> Picture
+desenhaMensagemErro it = Pictures [fromJust $ lookup "mensagemErro" (texturasIT it), color (withAlpha 0.5 black) $ rectangleSolid 1920 1080]
+
 desenhaNivelPassado :: ImmutableTowers -> Picture
 desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, iconeRestart, fraseLevelWon, fraseBackToMenu, fraseNextLevel, fraseRestart, seta, bb ]
     where ts = texturasIT it

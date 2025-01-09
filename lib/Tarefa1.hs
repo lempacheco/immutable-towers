@@ -58,8 +58,9 @@ validaPortal :: Jogo -> Bool
 validaPortal jogo = (peloMenosUmPortal portais) && (validaPosicaoPortal portais mapa) &&
                     (existeCaminho mapa portais base) && (naoSobrepostoBasePortal base portais) && 
                     (naoSobrepostoTorrePortal torres portais)
-  where portais@(p:_) = portaisJogo jogo
-        existeCaminho mapa portais base = (existePeloMenosUmCaminho mapa p base) || (existeCaminho mapa portais base)
+  where portais = portaisJogo jogo
+        existeCaminho _ [] _ = False
+        existeCaminho m (p:ps) b = (existePeloMenosUmCaminho m p b) || (existeCaminho m ps b)
         torres = torresJogo jogo
         base = baseJogo jogo
         mapa = mapaJogo jogo
@@ -233,11 +234,22 @@ normalizaInimigos is = all normalizainimigo is
 
 -}
 
+geraUmCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> [(Bool, [Direcao])]
+geraUmCaminho m pos@(x,y) posB lpos ld
+  | chegouBase pos posB = [(True, ld)]
+  | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y+1)]) ld
+  | verificaDirecaoTerra m pos lpos Sul = geraUmCaminho m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y-1)]) ld
+  | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este]) ++ geraUmCaminho m (x,y) posB (lpos++[(x+1,y)]) ld
+  | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste]) ++ geraUmCaminho m (x,y) posB (lpos++[(x-1,y)]) ld
+  | otherwise = [(False, ld)]
+
 existePeloMenosUmCaminho :: Mapa -> Portal -> Base -> Bool
 existePeloMenosUmCaminho mapa p b =
   let posP = posicaoPortal p
       posB = posicaoBase b
-  in fst (atualizaPos mapa posP posB [])
+      caminhos = geraUmCaminho mapa posP posB [] []
+      resultado = lookup True caminhos
+  in resultado /= Nothing
 
 eFronteiras :: Posicao -> Bool
 eFronteiras (x,y) = x < 0 || y < 0 || x>=16 || y >= 16
@@ -256,14 +268,14 @@ verificaDirecaoTerra m (x,y) lpos d = case d of
   Este -> not (jaPassou (x+1,y) lpos) && not (eFronteiras (x+1,y)) && eTerra (x+1,y) m
   Oeste -> not (jaPassou (x-1,y) lpos) && not (eFronteiras (x-1,y)) && eTerra (x-1,y) m
 
-atualizaPos :: Mapa -> Posicao -> Posicao -> [Posicao] -> (Bool, [Posicao])
+{- atualizaPos :: Mapa -> Posicao -> Posicao -> [Posicao] -> (Bool, [Posicao])
 atualizaPos m pos@(x,y) posB lpos
   | chegouBase pos posB = (True, lpos)
   | verificaDirecaoTerra m pos lpos Norte = atualizaPos m (x,y+1) posB (lpos++[(x,y)])
   | verificaDirecaoTerra m pos lpos Sul = atualizaPos m (x,y-1) posB (lpos++[(x,y)])
   | verificaDirecaoTerra m pos lpos Este = atualizaPos m (x+1,y) posB (lpos++[(x,y)])
   | verificaDirecaoTerra m pos lpos Oeste = atualizaPos m (x-1,y) posB (lpos++[(x,y)])
-  | otherwise = (False, lpos)
+  | otherwise = (False, lpos) -}
 
 
 {-| A função 'validaPosicoesTorres' verifica se, numa lista de torres, todas estão posicionadas sobre terra.
@@ -340,5 +352,5 @@ naoSobrepostoBaseTorrePortal :: Base -> [Torre] -> [Portal] -> Bool
 naoSobrepostoBaseTorrePortal b ts ps = naoSobrepostoBasePortal b ps && sobrepostoBaseTorres b ts
   where
     sobrepostoBaseTorres :: Base -> [Torre] -> Bool
-    sobrepostoBaseTorres b ts = not $ elem (posicaoBase b) pts
-      where pts = map posicaoTorre ts
+    sobrepostoBaseTorres base torres = not $ elem (posicaoBase base) pts
+      where pts = map posicaoTorre torres

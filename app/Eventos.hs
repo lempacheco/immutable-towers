@@ -113,7 +113,10 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
               let jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = []}
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it
-              in it {estadoIT = Jogando, jogoIT = jogoAtual, jogoItInicial = jogoAtual, escolhendoParametros = parametrosAtualizados, modoJogo = MapaCriado}
+              in if validaJogo jogoAtual == True 
+                  then it {jogoIT = jogoAtual, jogoItInicial = jogoAtual, escolhendoParametros = parametrosAtualizados, modoJogo = MapaCriado, estadoIT = Jogando}
+                  else it {estadoIT = MensagemErro}
+    | estadoIT it == MensagemErro = it {estadoIT = CriandoMapa}
 
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -150 = progredirNivel it
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu, jogoIT = jogoItInicial it}

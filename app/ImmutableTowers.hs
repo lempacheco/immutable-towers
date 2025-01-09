@@ -40,6 +40,7 @@ data EstadoJogo = Menu
                 | YouWon 
                 | NivelPassado
                 | Tutorial
+                | MensagemErro
                 deriving (Eq, Show)
 
 data NivelJogoFinito = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 deriving (Eq, Show)

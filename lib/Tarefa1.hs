@@ -59,8 +59,8 @@ validaPortal jogo = (peloMenosUmPortal portais) && (validaPosicaoPortal portais 
                     (existeCaminho mapa portais base) && (naoSobrepostoBasePortal base portais) && 
                     (naoSobrepostoTorrePortal torres portais)
   where portais = portaisJogo jogo
-        existeCaminho _ [] _ = False
-        existeCaminho m (p:ps) b = (existePeloMenosUmCaminho m p b) || (existeCaminho m ps b)
+        existeCaminho _ [] _ = True
+        existeCaminho m (p:ps) b = (existePeloMenosUmCaminho m p b) && (existeCaminho m ps b)
         torres = torresJogo jogo
         base = baseJogo jogo
         mapa = mapaJogo jogo

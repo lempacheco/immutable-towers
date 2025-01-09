@@ -4,7 +4,7 @@ import ImmutableTowers
 import LI12425
 import Tarefa1 
 import Tarefa3
-import Data.List 
+import Data.List ( sortBy ) 
 import Data.Ord (comparing)
 
 
@@ -60,9 +60,9 @@ reageEventos (EventKey (Char 'b') Down _ _) it
      where j = jogoIT it 
 
 reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it 
-    | estadoIT it == Menu && botaoMenu it == (-160,0) = it {estadoIT = Jogando, modoJogo = Finito}
-    | estadoIT it == Menu && botaoMenu it == (-160,-100) = it {estadoIT = Jogando, modoJogo = Infinito}
-    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado}  
+    | estadoIT it == Menu && botaoMenu it == (-160,0) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, modoJogo = Finito} else it {estadoIT = MensagemErro, modoJogo = Finito}
+    | estadoIT it == Menu && botaoMenu it == (-160,-100) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, modoJogo = Infinito} else it {estadoIT = MensagemErro, modoJogo = Infinito}
+    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado} 
     | estadoIT it == Menu && botaoMenu it == (-160,-300) = it {estadoIT = Tutorial}    
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
@@ -116,10 +116,11 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
               let jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = []}
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it
-              in if validaJogo jogoAtual == True 
+              in if validaJogo jogoAtual
                   then it {jogoIT = jogoAtual, jogoItInicial = jogoAtual, escolhendoParametros = parametrosAtualizados, modoJogo = MapaCriado, estadoIT = Jogando}
                   else it {estadoIT = MensagemErro}
-    | estadoIT it == MensagemErro = it {estadoIT = CriandoMapa}
+    | estadoIT it == MensagemErro && modoJogo it == MapaCriado = it {estadoIT = CriandoMapa}
+    | estadoIT it == MensagemErro && (modoJogo it == Infinito || modoJogo it == Finito) = it {estadoIT = Menu} 
 
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -150 = progredirNivel it
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu, jogoIT = jogoItInicial it}

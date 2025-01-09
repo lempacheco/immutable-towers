@@ -22,8 +22,9 @@ data ImmutableTowers = ImmutableTowers {
     nivelJogoInfinito :: Int, 
     botaoNivelPassado :: Posicao,
     baseCriada :: Bool,
-    botaoGameOver :: Posicao, 
-    modoJogo :: ModoJogo
+    botaoGameOver :: Posicao,
+    modoJogo :: ModoJogo, 
+    jogoCriado :: Jogo 
 }
 
 data EstadoJogo = Menu 
@@ -38,6 +39,7 @@ data EstadoJogo = Menu
                 | EscolhendoIM
                 | GameOver
                 | YouWon 
+                | YouWon1
                 | NivelPassado
                 | Tutorial
                 deriving (Eq, Show)
@@ -49,7 +51,7 @@ data ModoJogo = Finito | Infinito | MapaCriado deriving (Eq, Show)
 
 progredirNivel :: ImmutableTowers -> ImmutableTowers
 progredirNivel it 
-    | estadoIT it == NivelPassado = 
+    | estadoIT it == NivelPassado || estadoIT it == YouWon = 
         case modoJogo it of 
             Finito   -> progredirNivelFinito it 
             Infinito -> progredirNivelInfinito it 
@@ -58,16 +60,17 @@ progredirNivel it
 
 reiniciarNivel :: ImmutableTowers -> ImmutableTowers
 reiniciarNivel it 
-    | estadoIT it == NivelPassado || estadoIT it == GameOver || estadoIT it == YouWon = 
+    | estadoIT it == NivelPassado || estadoIT it == GameOver || estadoIT it == YouWon || estadoIT it == YouWon1 = 
         case modoJogo it of 
             Finito   -> reiniciarNivelFinito it
             Infinito -> it {nivelJogoInfinito = nivelJogoInfinito it, estadoIT = Jogando}
-            _        -> it {jogoIT = jogoItInicial it, estadoIT = Jogando}
+            _        -> it {jogoIT = jogoCriado it, estadoIT = Jogando}
     | otherwise = it 
 
 progredirNivelInfinito :: ImmutableTowers -> ImmutableTowers
 progredirNivelInfinito it =  it {jogoIT = j {portaisJogo = pps, 
-                                             baseJogo = novaBase}, 
+                                             baseJogo = novaBase, 
+                                             torresJogo = []}, 
                                  estadoIT = Jogando, 
                                  nivelJogoInfinito = n} 
                           
@@ -99,8 +102,9 @@ aumentarDificuldadeInimigo n i = i {vidaInimigo = vidaInimigo i * fromIntegral n
 
 
 progredirNivelFinito :: ImmutableTowers -> ImmutableTowers
-progredirNivelFinito it = if estadoIT it == NivelPassado then avancaNivelFinito it 
-                          else if estadoIT it == GameOver then reiniciarNivelFinito it 
+progredirNivelFinito it = if estadoIT it == NivelPassado || estadoIT it == YouWon then avancaNivelFinito it 
+                          else if estadoIT it == GameOver || estadoIT it == YouWon || estadoIT it == NivelPassado 
+                          then reiniciarNivelFinito it 
                           else it  
 
 avancaNivelFinito :: ImmutableTowers -> ImmutableTowers 

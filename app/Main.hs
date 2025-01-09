@@ -204,6 +204,10 @@ main = do
   tt <- loadBMP "resources/textures/ui/tutorial.bmp"
   fraseYouWon <- loadBMP "resources/textures/ui/youWon.bmp"
   frasePaused <- loadBMP "resources/textures/ui/paused.bmp"
+  botaoNivel <- loadBMP "resources/textures/ui/botaoNivel.bmp"
+  infinito <- loadBMP "resources/textures/ui/infinito.bmp"
+  finito <- loadBMP "resources/textures/ui/finito.bmp"
+  criarMapa <- loadBMP "resources/textures/ui/criandoMapa.bmp"
   play janela 
         fundo 
         fr 
@@ -368,7 +372,11 @@ main = do
             ("cm", cm),
             ("tt", tt),
             ("fraseYouWon", fraseYouWon),
-            ("frasePaused", frasePaused)
+            ("frasePaused", frasePaused), 
+            ("botaoNivel", botaoNivel),
+            ("infinito", infinito), 
+            ("finito", finito), 
+            ("criarMapa", criarMapa)
           ]
         ) 
         desenha 

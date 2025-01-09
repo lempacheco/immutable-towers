@@ -18,7 +18,7 @@ comprimento = 64*16
 desenha :: ImmutableTowers -> Picture
 desenha it = case estadoIT it of
      Menu -> desenhaMenu  it 
-     Jogando -> Pictures [desenhaJogo it, Translate 0 0 $ scale 1 1 $ text $ show $ modoJogo it] 
+     Jogando -> Pictures [desenhaJogo it] 
      EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it] 
      Comprando -> desenhaComprando it
      Pausado -> Pictures [desenhaJogo it, desenhaPausa it]  
@@ -256,7 +256,6 @@ desenhaJogo it = Pictures [picMapa,
                            picTorre, 
                            creditosJog, 
                            moldBaixo,
-                           nivel, 
                            picModoJogo
                           ]
     where picMapa = desenhaMapa mapa texturas
@@ -276,7 +275,6 @@ desenhaJogo it = Pictures [picMapa,
           picLoja = desenhaLoja loja texturas
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador it texturas 
-          nivel = translate 0 0 $ scale 0.5 0.5 $ text $ show $ nivelJogoInfinito it
           picModoJogo = desenhaModoJogo it texturas
 
 
@@ -416,11 +414,15 @@ desenhaPerfilJogador it ts = Pictures [creditosJogador,
          iconeVida = Translate 750 100 $ scale 3.5 3.5 $ fromJust $ lookup "iconeVidaJg" ts
          vidaBaseJg = Translate 740 120 $ scale 1 1 $ string2FonteNumeros (show $ ceiling $ vidaBase b) ts 
          perfil = Translate 680 210 $ scale 1 1 $ fromJust $ lookup "perfil" ts 
+
          iconePausa = Pictures [Translate 650 460 $ scale 2 2 $ fromJust $ lookup "botaoPausa" ts, 
-                                Translate 740 460 $ scale 3 3 $ fromJust $ lookup "iconePausa" ts, 
-                                Translate 740 460 $ scale 0.6 0.6 $ fromJust $ lookup "frasePausa" ts
+                                Translate 770 460 $ scale 4 3.5 $ fromJust $ lookup "iconePausa" ts, 
+                                Translate 770 460 $ scale 0.5 0.5 $ fromJust $ lookup "frasePausa" ts
                                ]
-         iconeHome = Pictures [Translate 650 400 $ scale 2.5 2.5 $ fromJust $ lookup "iconeHome" ts]
+         iconeHome = Pictures [Translate 650 400 $ scale 2.5 2.5 $ fromJust $ lookup "iconeHome" ts,
+                               Translate 770 400 $ scale 4 3.5 $ fromJust $ lookup "iconePausa" ts,
+                               Translate 770 400 $ scale 0.5 0.5 $ fromJust $ lookup "voltarAoMenu" ts  
+                              ]
          iconeJogador = Pictures [Translate 760 300 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts, 
                                   Translate 760 300 $ scale 1.5 1.5 $ fromJust $ lookup "player" ts
                                  ]
@@ -447,9 +449,16 @@ desenhaModoJogo it ts = Translate 780 (-20) $ scale 0.8 0.8 $
 
 desenhaNivelJogo :: ImmutableTowers -> [Textura] -> Picture 
 desenhaNivelJogo it ts = case modoJogo it of 
-    Finito   -> Translate 750 (-70) $ scale 1 1 $ text $ show $ nivelJogoFinito it
+    Finito   -> Translate 780 (-80) $ scale 0.8 0.8 $ desenhaNivel it ts
     Infinito -> Translate 750 (-70) $ scale 1 1 $ string2FonteNumeros (show $ nivelJogoInfinito it) ts
     _        -> Pictures [] 
+  where desenhaNivel :: ImmutableTowers -> [Textura] -> Picture
+        desenhaNivel it ts = case nivelJogoFinito it of 
+            Nivel1 -> fromJust $ lookup "Nivel1" ts
+            Nivel2 -> fromJust $ lookup "Nivel2" ts
+            Nivel3 -> fromJust $ lookup "Nivel3" ts
+            Nivel4 -> fromJust $ lookup "Nivel4" ts
+            Nivel5 -> fromJust $ lookup "Nivel5" ts
 
 desenhaPausa :: ImmutableTowers -> Picture 
 desenhaPausa it = Pictures [fundo, 
@@ -464,9 +473,9 @@ desenhaPausa it = Pictures [fundo,
                             ]
     where fundo = color (withAlpha 0.8 black) $ rectangleSolid 1920 1080 
           frasePaused = scale 0.8 0.8 $ fromJust $ lookup "frasePaused" ts
-          fraseBackToMenu =  Translate (-350) (-250) $ scale 0.7 0.7 $ fromJust $ lookup "fraseBackToMenu" ts
-          fraseContinuar = Translate (0) (-250) $ scale 0.8 0.8 $ fromJust $ lookup "fraseContinuar" ts 
-          fraseRestart = Translate (350) (-250) $ scale 0.8 0.8 $ fromJust $ lookup "fraseRestart" ts
+          fraseBackToMenu =  Translate (-350) (-250) $ scale 0.6 0.6 $ fromJust $ lookup "fraseBackToMenu" ts
+          fraseContinuar = Translate (0) (-250) $ scale 1.2 1.2 $ fromJust $ lookup "fraseContinuar" ts 
+          fraseRestart = Translate (350) (-250) $ scale 0.7 0.7 $ fromJust $ lookup "fraseRestart" ts
           (x,y) = botaoNivelPassado it
           seta = Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
           iconeBackToMenu = Translate (-350) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 

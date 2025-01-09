@@ -130,11 +130,10 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == YouWon1 && fst (botaoGameOver it) == -600 = reiniciarEstado it
     | estadoIT it == YouWon && fst (botaoNivelPassado it) == -150 = progredirNivel it 
     | estadoIT it == YouWon || estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it
-    | estadoIT it == YouWon || estadoIT it == Pausado && fst (botaoNivelPassado it) == 200  = reiniciarNivel it   -- quando ganhar tem três opções: reiniciar o jogo inteiro, reiniciar nivel ou voltar ao menu
+    | estadoIT it == YouWon || estadoIT it == Pausado && fst (botaoNivelPassado it) == 200  = reiniciarNivel it  
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == -150 =  it {estadoIT = Jogando}
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it 
-    | estadoIT it == Pausado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it
-    | otherwise = it 
+    | estadoIT it == Pausado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
 
 reageEventos (EventKey (SpecialKey KeyShiftR) Down _ _)  it 
     | estadoIT it == Jogando = it {estadoIT = Pausado}
@@ -162,7 +161,7 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
     | estadoIT it == GameOver && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
     | estadoIT it == YouWon1 && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
-    | estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
+    | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
   where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
@@ -175,7 +174,7 @@ reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
     | estadoIT it == GameOver && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
     | estadoIT it == YouWon1 && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
-    | estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado && xBotaoNivelPassado > -500  = it {botaoNivelPassado = (xBotaoNivelPassado - 350, yBotaoNivelPassado)}
+    | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado > -500  = it {botaoNivelPassado = (xBotaoNivelPassado - 350, yBotaoNivelPassado)}
   where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
@@ -193,7 +192,15 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
         (px, py) = botaoMenu it 
         (nO, n1, n2) = escolhendoParametros it 
 
+reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
+    | estadoIT it == EscolhendoTorre || estadoIT it == Comprando = it {estadoIT = Jogando}
+
 reageEventos _ it = it 
+
+{-| É responsável por atulizar o jogo, após ter sido realizada, a compra de uma torre. Adiciona a torre nova ao jogo, desde que 
+o jogador tenha créditos suficientes, e a torre seja válida, de acordo com as definições da função 'validaTorre'. 
+
+-}
 
 compraTorre :: Torre -> Creditos -> Jogo -> Jogo
 compraTorre t custoTorre j 
@@ -202,14 +209,36 @@ compraTorre t custoTorre j
   where jogoNovo = j {baseJogo = (baseJogo j) {creditosBase = creditosBase (baseJogo j) - custoTorre}, 
                       torresJogo = ordenaTorre  $ t: torresJogo j}
 
+{-| Ordena a lista de torres, com base na coordenada Y da posição de cada torre. 
+
+-}
+
 ordenaTorre :: [Torre] -> [Torre]
 ordenaTorre = sortBy (comparing (snd . posicaoTorre)) 
 
 
--- adiciona terreno na lista 
+{-| Atualiza uma lista de terrenos. Caso a posição já exista, o terreno é atualizado. Caso contrário, a nova posição 
+e o terreno são adicionados a lista.
+
+==__Exemplo de utilização:__
+
+>>> let lt = [((0,0), Terra), ((1,1), Agua)]
+
+>>> atualizaMapa ((1,1), Terra) lt 
+[((0,0), Terra), ((1,1), Terra)]
+
+-}
+
 atualizaMapa :: (Posicao, Terreno) -> [(Posicao,Terreno)] -> [(Posicao, Terreno)]
 atualizaMapa (pos, ter) [] = [(pos,ter)]
 atualizaMapa (pos, ter) lt = (pos, ter): filter (\(p,_) -> p /= pos) lt 
+
+{-| Converte uma lista de terrenos com a devida posição, em um mapa ([[Terreno]])
+
+==__Nota:__
+Caso o terreno não seja definido, será preenchido com 'Relva'. 
+
+-}
 
 transformaMapa :: [(Posicao, Terreno)] -> Mapa
 transformaMapa lt =
@@ -219,7 +248,11 @@ transformaMapa lt =
     procuraTerrenoNaLista pos lt =
         case lookup pos lt of
             Just terreno -> terreno
-            Nothing -> Relva -- se não for defindio
+            Nothing -> Relva 
+
+{-| Adiciona um portal em uma lista de portais, caso a sua posição esteja em um terreno 'Terra'. 
+
+-}
 
 adicionarPortais :: Portal -> [(Posicao, Terreno)] -> [Portal] -> [Portal]
 adicionarPortais p lt ps
@@ -227,6 +260,10 @@ adicionarPortais p lt ps
     | otherwise = ps
   where
     pp = posicaoPortal p
+
+{-| Remove um portal de uma lista de portais, se a sua posição for igual a uma determinada posição. 
+
+-}
 
 deletePortal :: [Portal] -> Posicao -> [Portal] 
 deletePortal [] _ = []

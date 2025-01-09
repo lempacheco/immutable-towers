@@ -15,6 +15,7 @@ Módulo para a realização da Tarefa 1 de LI1 em 2024/25.
 module Tarefa1 where
 import LI12425
 
+
 {-| Verifica se um jogo é válido. 
 
 -}
@@ -106,7 +107,7 @@ eAgua (x,y) mapa = case procuraTerreno (x,y) mapa of
 
 {-| Devolve o tipo de terreno que está sobre uma determinada posição no mapa. 
 
-== __Exemplos de Uso:__
+== __Exemplos de utlização:__
 >>> let mapa = [[Relva, Relva, Agua], [Terra, Relva, Terra], [Relva, Terra, Agua]]
 >>> procuraTerreno (1.5, 0.5) mapa
 Just Relva
@@ -213,7 +214,7 @@ velocidadeInimigos is = all (>0) (map velocidadeInimigo is)
        1. Não pode conter mais do que um projétil do mesmo tipo;
        2. Não pode conter, simultaneamente, projéteis do tipo Fogo e Resina, nem Fogo e Gelo.
 
-== Exemplos de Uso
+== __Exemplos de utilização:__
 
 >>> let inimigos = [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}]}]
 >>> normalizaInimigos inimigos
@@ -251,12 +252,44 @@ normalizaInimigos is = all normalizainimigo is
 
 
 
-{-| Verifica se existe pelo menos um caminho um caminho (de terra) ligando um portal à base. 
- De outra forma, não seria possı́vel a base sofrer dano.
+{-| Gera todos os caminhos possíveis de uma posição inicial até a base. 
+
+== __ Comportamento: __ 
+
+Verifica se é possível mover-se em cada direção (Norte, Sul, Leste, Oeste) com base nas condições do mapa,
+nas posições já visitadas, e no terreno atual. Caso encontre um caminho até a base, retorna um par contendo
+um valor booleano indicando sucesso, *True*, e a sequência de direções.
+
+== __ Exemplo de utilizção: __ 
+
+>>> let mapa = 
+    [ [t, t, r, a, a, a],
+      [r, t, r, a, r, r],
+      [r, t, r, a, r, t],
+      [r, t, r, a, r, t],
+      [r, t, t, t, t, t],
+      [a, a, a, a, r, r]
+    ]
+    where
+          t = Terra
+          r = Relva
+          a = Agua
+>>> geraUmCaminho mapa (0,0) (1,3) [] []
+[(True, [Este, Norte, Norte, Norte])]
 
 -}
 
-geraUmCaminho :: Mapa -> Posicao -> Posicao -> [Posicao] -> [Direcao] -> [(Bool, [Direcao])]
+geraUmCaminho :: Mapa 
+             -- | Mapa do jogo.
+              -> Posicao 
+             -- | Posição do inimigo.
+              -> Posicao
+             -- | Posição da base.
+              -> [Posicao] 
+             -- | Lista de posições já visitadas.
+              -> [Direcao] 
+             -- | Lista de direções acumuladas no caminho atual.
+              -> [(Bool, [Direcao])]
 geraUmCaminho m pos@(x,y) posB lpos ld
   | chegouBase pos posB = [(True, ld)]
   | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y+1)]) ld
@@ -264,6 +297,9 @@ geraUmCaminho m pos@(x,y) posB lpos ld
   | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este]) ++ geraUmCaminho m (x,y) posB (lpos++[(x+1,y)]) ld
   | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste]) ++ geraUmCaminho m (x,y) posB (lpos++[(x-1,y)]) ld
   | otherwise = [(False, ld)]
+
+{-| Verifica se há pelo menos um caminho possível entre um portal e a base.
+-}
 
 existePeloMenosUmCaminho :: Mapa -> Portal -> Base -> Bool
 existePeloMenosUmCaminho mapa p b =
@@ -273,15 +309,34 @@ existePeloMenosUmCaminho mapa p b =
       resultado = lookup True caminhos
   in resultado /= Nothing
 
+{-| Verifica se a posição está fora dos limites do mapa.
+Retorna *True* se a posição estiver fora, e *False* caso o contrário. 
+
+-}
+
 eFronteiras :: Posicao -> Bool
 eFronteiras (x,y) = x < 0 || y < 0 || x>=16 || y >= 16
+
+{-| Verifica se uma posição já foi visitada. 
+Retorna *True* se a posição já foi visitada, e *False* caso o contrário. 
+
+-}
 
 jaPassou :: Posicao -> [Posicao] -> Bool
 jaPassou _ [] = False
 jaPassou (x,y) ((x1,y1):t) = (x==x1 && y == y1) || jaPassou (x,y) t
 
+{-| Verifica se a posição atual é a mesma da base. 
+Retorna *True* se a posição é a mesma, e *False* caso o contrário. 
+-}
+
 chegouBase :: Posicao -> Posicao -> Bool
 chegouBase (px,py) (bx,by) = px == bx && py == by
+
+{-| Verifica se é possível mover-se em uma determinada direção com base
+no terreno, nas posições já visitadas e nos limites do mapa. 
+
+-}
 
 verificaDirecaoTerra :: Mapa -> Posicao -> [Posicao] -> Direcao -> Bool
 verificaDirecaoTerra m (x,y) lpos d = case d of
@@ -289,16 +344,6 @@ verificaDirecaoTerra m (x,y) lpos d = case d of
   Sul -> not (jaPassou (x,y-1) lpos) && not (eFronteiras (x,y-1)) && eTerra (x,y-1) m
   Este -> not (jaPassou (x+1,y) lpos) && not (eFronteiras (x+1,y)) && eTerra (x+1,y) m
   Oeste -> not (jaPassou (x-1,y) lpos) && not (eFronteiras (x-1,y)) && eTerra (x-1,y) m
-
-{- atualizaPos :: Mapa -> Posicao -> Posicao -> [Posicao] -> (Bool, [Posicao])
-atualizaPos m pos@(x,y) posB lpos
-  | chegouBase pos posB = (True, lpos)
-  | verificaDirecaoTerra m pos lpos Norte = atualizaPos m (x,y+1) posB (lpos++[(x,y)])
-  | verificaDirecaoTerra m pos lpos Sul = atualizaPos m (x,y-1) posB (lpos++[(x,y)])
-  | verificaDirecaoTerra m pos lpos Este = atualizaPos m (x+1,y) posB (lpos++[(x,y)])
-  | verificaDirecaoTerra m pos lpos Oeste = atualizaPos m (x-1,y) posB (lpos++[(x,y)])
-  | otherwise = (False, lpos) -}
-
 
 {-| Verifica se, numa lista de torres, todas estão posicionadas sobre terra.
 
@@ -340,7 +385,8 @@ cicloTorresNaoNegativo [] = True
 cicloTorresNaoNegativo (t:ts) = cicloTorre t >= 0 && cicloTorresNaoNegativo ts
 
 
-{-| Verifica se, numa lista de torres, nenhuma está sobreposta a outra. Devolve *False* caso haja sobreposição.
+{-| Verifica se, numa lista de torres, nenhuma está sobreposta a outra. 
+Devolve *False* caso haja sobreposição.
 
 -}
 
@@ -366,7 +412,8 @@ validaPosicaoBase b m = eTerra (posicaoBase b) m
 creditoNaoNegativoBase :: Base -> Bool
 creditoNaoNegativoBase b = creditosBase b >= 0
 
-{-| Verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve *False* se houver sobreposição.
+{-| Verifica se uma base não está sobreposta a uma torre ou a um portal. 
+Devolve *False* se houver sobreposição.
 
 -}
 

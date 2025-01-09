@@ -15,14 +15,14 @@ Módulo para a realização da Tarefa 1 de LI1 em 2024/25.
 module Tarefa1 where
 import LI12425
 
-{-| A função 'validaJogo' verifica se um jogo é válido. 
+{-| Verifica se um jogo é válido. 
 
 -}
 
 validaJogo :: Jogo -> Bool
 validaJogo j = validaTorre j && validaBase j && validaPortal j && validaInimigo j 
 
-{-| A função 'validaTorre' verifica se as torres do jogo são válidas. 
+{-| Verifica se as torres do jogo são válidas. 
 
 -}
 
@@ -36,7 +36,7 @@ validaTorre j =
       && cicloTorresNaoNegativo ts
       && naoSobrepostoTorres ts
 
-{-| A função 'validaBase' verifica se a base do jogo é válida. 
+{-| Verifica se a base do jogo é válida. 
 
 -}
 
@@ -50,7 +50,7 @@ validaBase j =
       && creditoNaoNegativoBase b
       && naoSobrepostoBaseTorrePortal b ts ps
 
-{-| A função 'validaPortal' verifica se todos os portais do jogo são válidos. 
+{-| Verifica se todos os portais do jogo são válidos. 
 
 -}
 
@@ -65,7 +65,7 @@ validaPortal jogo = (peloMenosUmPortal portais) && (validaPosicaoPortal portais 
         base = baseJogo jogo
         mapa = mapaJogo jogo
 
-{-| A função 'validaInimigo' verifica se os inimigos do jogo são válidos. 
+{-| Verifica se os inimigos do jogo são válidos. 
 
 -}
 
@@ -77,7 +77,7 @@ validaInimigo jogo = (inimigosInicio inimigos portais) && (inimigosTerra inimigo
         torres = torresJogo jogo
         mapa = mapaJogo jogo
 
-{-| A função 'eTerra' verifica se uma determinada posição é terra. 
+{-| Verifica se uma determinada posição é terra. 
 
 -}
 
@@ -86,7 +86,7 @@ eTerra (x,y) mapa = case procuraTerreno (x,y) mapa of
   Just Terra -> True 
   _          -> False 
 
-{-| A função 'eRelva' verifica se uma determinada posição é relva.
+{-| Verifica se uma determinada posição é relva.
 
 -}
 
@@ -95,7 +95,7 @@ eRelva (x,y) mapa = case procuraTerreno (x,y) mapa of
   Just Relva -> True 
   _          -> False 
 
-{-| A função 'eAgua' verifica se uma determinada posição é água.
+{-| Verifica se uma determinada posição é água.
 
 -}
 
@@ -104,7 +104,15 @@ eAgua (x,y) mapa = case procuraTerreno (x,y) mapa of
   Just Agua -> True 
   _         -> False 
 
-{-| A função 'procuraTerreno' devolve o tipo de terreno que está sobre uma determinada posição. 
+{-| Devolve o tipo de terreno que está sobre uma determinada posição no mapa. 
+
+== __Exemplos de Uso:__
+>>> let mapa = [[Relva, Relva, Agua], [Terra, Relva, Terra], [Relva, Terra, Agua]]
+>>> procuraTerreno (1.5, 0.5) mapa
+Just Relva
+
+>>> procuraTerreno (5, 1) mapa
+Nothing
 
 -}
 
@@ -119,14 +127,14 @@ procuraTerreno (x, y) mapa =
 
 
 
-{-| A função 'peloMenosUmPortal' verifica se existe pelo menos um portal no mapa.
+{-| Verifica se existe pelo menos um portal no mapa.
 
 -}
 
 peloMenosUmPortal:: [Portal] -> Bool
 peloMenosUmPortal ps = not (null ps)
 
-{-| A função 'validaPosicaoPortal' verifica se todos os portais existentes no jogo estão posicionados sobre a Terra.
+{-| Verifica se todos os portais existentes no jogo estão posicionados sobre a Terra.
 
 -}
 
@@ -135,7 +143,7 @@ validaPosicaoPortal [] _ = True
 validaPosicaoPortal (p:ps) mapa =
   eTerra (posicaoPortal p) mapa && validaPosicaoPortal ps mapa
 
-{-| A função 'naoSobrepostoBasePortal' verifica se a base está sobreposta à algum portal. 
+{-| Verifica se a base está sobreposta à algum portal. 
  Como para um bom funcionamento do jogo, a base não pode estar sobreposta à nenhum portal, a função devolve *True* quando 
  não houver nenhum portal na mesma posição da base.
 
@@ -146,7 +154,7 @@ naoSobrepostoBasePortal _ [] = True
 naoSobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps 
   where pps = map posicaoPortal ps 
 
-{-| A função 'naoSobrepostoTorrePortal' verifica se existe alguma torre sobreposta com algum portal. 
+{-| Verifica se existe alguma torre sobreposta com algum portal. 
  Como para um bom funcionamento do jogo, não pode haver torres sobrepostas com portais, a função devolve *True* quando 
  não houver nenhuma torre na mesma posição de um portal.
 
@@ -158,10 +166,10 @@ naoSobrepostoTorrePortal (t:ts) ps = not ((posicaoTorre t) `elem` pps) && naoSob
   where pps = map posicaoPortal ps 
 
 
-{-| A função 'inimigosInicio' verifica o estado dos inimigos inicialmente. Isto é todos os inimigos inicialmente devem ter:
- 1. Posição do respetivo portal. 
- 2. Nı́vel de vida positivo. 
- 3. Lista de projéteis ativos vazia.
+{-| Verifica o estado dos inimigos inicialmente. Isto é todos os inimigos inicialmente devem ter:
+    1. Posição do respetivo portal. 
+    2. Nı́vel de vida positivo. 
+    3. Lista de projéteis ativos vazia.
 
 -}
 
@@ -174,7 +182,7 @@ inimigosInicio (i:is) ps = all (> 0) vi &&
      where pps = map posicaoPortal ps 
            vi = map vidaInimigo (i:is)
 
-{-| A função 'inimigosTerra' verifica se os inimigos encontram-se sempre sobre a Terra. 
+{-| Verifica se os inimigos encontram-se sempre sobre a Terra. 
 
 -}
 
@@ -182,8 +190,8 @@ inimigosTerra :: [Inimigo] -> Mapa -> Bool
 inimigosTerra [] _ = True 
 inimigosTerra (i:is) mapa = eTerra (posicaoInimigo i) mapa && inimigosTerra is mapa 
 
-{-| A função 'inimigosTorre' verifica se os inimigos estão sobrepostos a alguma torre. 
- Como os inimigos não podem estar sobrepostos a torres, a função devolve *True* se as posições forem diferentes.
+{-| Verifica se os inimigos estão sobrepostos a alguma torre. 
+    Como os inimigos não podem estar sobrepostos a torres, a função devolve *True* se as posições forem diferentes.
 
 -}
 
@@ -193,7 +201,7 @@ inimigosTorre _ [] = True
 inimigosTorre (i:is) torres =
   not (any (\t -> posicaoInimigo i == posicaoTorre t) torres) && inimigosTorre is torres
 
-{-| A função 'velocidadeInimigos' verifica se a velocidade dos inimigos é sempre positiva. 
+{-| Verifica se a velocidade dos inimigos é sempre positiva. 
 
 -}   
 
@@ -201,9 +209,23 @@ velocidadeInimigos :: [Inimigo] -> Bool
 velocidadeInimigos [] = True
 velocidadeInimigos is = all (>0) (map velocidadeInimigo is)  
 
-{- | A função 'normalizaInimigos' verifica se a lista de projéteis ativos encontram-se “normalizada”, ou seja:
+{- | Verifica se a lista de projéteis ativos encontram-se “normalizada”, ou seja:
        1. Não pode conter mais do que um projétil do mesmo tipo;
        2. Não pode conter, simultaneamente, projéteis do tipo Fogo e Resina, nem Fogo e Gelo.
+
+== Exemplos de Uso
+
+>>> let inimigos = [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}]}]
+>>> normalizaInimigos inimigos
+True
+
+>>> let inimigos = [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}, Projetil {tipoProjetil = Gelo}]}]
+>>> normalizaInimigos inimigos
+False
+
+>>> let inimigos = [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}, Projetil {tipoProjetil = Fogo}]}]
+>>> normalizaInimigos inimigos
+False
 
 -}
 
@@ -229,7 +251,7 @@ normalizaInimigos is = all normalizainimigo is
 
 
 
-{-| A função 'existePeloMenosUmCaminho' verifica se existe pelo menos um caminho um caminho (de terra) ligando um portal à base. 
+{-| Verifica se existe pelo menos um caminho um caminho (de terra) ligando um portal à base. 
  De outra forma, não seria possı́vel a base sofrer dano.
 
 -}
@@ -278,7 +300,7 @@ atualizaPos m pos@(x,y) posB lpos
   | otherwise = (False, lpos) -}
 
 
-{-| A função 'validaPosicoesTorres' verifica se, numa lista de torres, todas estão posicionadas sobre terra.
+{-| Verifica se, numa lista de torres, todas estão posicionadas sobre terra.
 
 -}
 
@@ -292,7 +314,7 @@ validaPosicoesTorres ts m =
         | not $ eRelva pt m = False
         | otherwise = aux pts m
 
-{-| A função 'alcanceTorresPositivo' verifica se, numa lista de torres, o alcance de todas é um valor positivo.
+{-| Verifica se, numa lista de torres, o alcance de todas é um valor positivo.
 
 -}
 
@@ -300,7 +322,7 @@ alcanceTorresPositivo :: [Torre] -> Bool
 alcanceTorresPositivo [] = True
 alcanceTorresPositivo (t:ts) = alcanceTorre t > 0 && alcanceTorresPositivo ts
 
-{-| A função 'rajadaTorresPositivo' verifica se, numa lista de torres, a rajada é um valor positivo.
+{-| Verifica se, numa lista de torres, a rajada é um valor positivo.
 
 -}
 
@@ -309,7 +331,7 @@ rajadaTorresPositivo [] = True
 rajadaTorresPositivo (t:ts) = rajadaTorre t > 0 && rajadaTorresPositivo ts
 
 
-{-| A função 'cicloTorresNaoNegativo' verifica se, numa lista de torres, o ciclo é um valor não negativo.
+{-| Verifica se, numa lista de torres, o parâmetro 'cicloTorre' é um valor não negativo.
 
 -}
 
@@ -318,7 +340,7 @@ cicloTorresNaoNegativo [] = True
 cicloTorresNaoNegativo (t:ts) = cicloTorre t >= 0 && cicloTorresNaoNegativo ts
 
 
-{-| A função 'naoSobrepostoTorres' verifica se, numa lista de torres, nenhuma está sobreposta a outra. Devolve False caso haja sobreposição.
+{-| Verifica se, numa lista de torres, nenhuma está sobreposta a outra. Devolve *False* caso haja sobreposição.
 
 -}
 
@@ -330,21 +352,21 @@ naoSobrepostoTorres (t:ts) =
       then False 
       else naoSobrepostoTorres ts
 
-{-| A função 'validaPosicaoBase' verifica se uma base tem uma posição válida.
+{-| Verifica se uma base tem uma posição válida.
 
 -}
 
 validaPosicaoBase :: Base -> Mapa -> Bool
 validaPosicaoBase b m = eTerra (posicaoBase b) m
 
-{-| A função 'creditoNaoNegativoBase' verifica se uma base não tem crédito negativo.
+{-| Verifica se uma base tem crédito positivo.
 
 -}
 
 creditoNaoNegativoBase :: Base -> Bool
 creditoNaoNegativoBase b = creditosBase b >= 0
 
-{-| A função 'naoSobrepostoBaseTorrePortal' verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve False se houver sobreposição.
+{-| Verifica se uma base não está sobreposta a uma torre ou a um portal. Devolve *False* se houver sobreposição.
 
 -}
 

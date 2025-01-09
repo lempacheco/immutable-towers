@@ -4,13 +4,16 @@ import ImmutableTowers
 import LI12425
 import Tarefa1 
 import Tarefa3
-import Data.List (sortOn)
+import Data.List 
+import Data.Ord (comparing)
+
 
 
 reageEventos :: Event -> ImmutableTowers -> ImmutableTowers
-reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
-    | estadoIT it == Jogando = it {estadoIT = Menu, jogoIT = jogoItInicial it}
-    | estadoIT it == Pausado = it {estadoIT = Menu, jogoIT = jogoItInicial it}
+reageEventos (EventKey (SpecialKey KeyShiftL) Down _ _) it 
+    | estadoIT it == Jogando = reiniciarEstado it
+    | estadoIT it == Pausado = reiniciarEstado it
+    | estadoIT it == CriandoMapa = reiniciarEstado it
     | otherwise = it
 
 reageEventos (EventKey (Char 'r') Down _ _) it
@@ -59,7 +62,7 @@ reageEventos (EventKey (Char 'b') Down _ _) it
 reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it 
     | estadoIT it == Menu && botaoMenu it == (-160,0) = it {estadoIT = Jogando, modoJogo = Finito}
     | estadoIT it == Menu && botaoMenu it == (-160,-100) = it {estadoIT = Jogando, modoJogo = Infinito}
-    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa}  
+    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado}  
     | estadoIT it == Menu && botaoMenu it == (-160,-300) = it {estadoIT = Tutorial}    
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
@@ -122,9 +125,15 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
     | estadoIT it == GameOver && fst (botaoGameOver it) == 100 = reiniciarNivel it 
-    | estadoIT it == GameOver && fst (botaoGameOver it) == -600 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
-    | estadoIT it == YouWon && fst (botaoGameOver it) == 100 = progredirNivel it 
-    | estadoIT it == YouWon && fst (botaoGameOver it) == -600 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
+    | estadoIT it == GameOver && fst (botaoGameOver it) == -600 = reiniciarEstado it
+    | estadoIT it == YouWon1 && fst (botaoGameOver it) == 100 = reiniciarNivel it 
+    | estadoIT it == YouWon1 && fst (botaoGameOver it) == -600 = reiniciarEstado it
+    | estadoIT it == YouWon && fst (botaoNivelPassado it) == -150 = progredirNivel it 
+    | estadoIT it == YouWon || estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it
+    | estadoIT it == YouWon || estadoIT it == Pausado && fst (botaoNivelPassado it) == 200  = reiniciarNivel it   -- quando ganhar tem três opções: reiniciar o jogo inteiro, reiniciar nivel ou voltar ao menu
+    | estadoIT it == Pausado && fst (botaoNivelPassado it) == -150 =  it {estadoIT = Jogando}
+    | estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it 
+    | estadoIT it == Pausado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it
     | otherwise = it 
 
 reageEventos (EventKey (SpecialKey KeyShiftR) Down _ _)  it 
@@ -151,21 +160,22 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == CriandoMapa && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
-    | estadoIT it == NivelPassado && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
     | estadoIT it == GameOver && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
-    | estadoIT it == YouWon && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
+    | estadoIT it == YouWon1 && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
+    | estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
   where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
+
 
 reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == Comprando && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
     | estadoIT it == CriandoMapa && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoOndas}
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
-    | estadoIT it == NivelPassado && xBotaoNivelPassado > -500  = it {botaoNivelPassado = (xBotaoNivelPassado - 350, yBotaoNivelPassado)}
     | estadoIT it == GameOver && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
-    | estadoIT it == YouWon && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
+    | estadoIT it == YouWon1 && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
+    | estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado && xBotaoNivelPassado > -500  = it {botaoNivelPassado = (xBotaoNivelPassado - 350, yBotaoNivelPassado)}
   where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
@@ -187,10 +197,14 @@ reageEventos _ it = it
 
 compraTorre :: Torre -> Creditos -> Jogo -> Jogo
 compraTorre t custoTorre j 
-    | custoTorre <= creditosBase (baseJogo j) && validaTorre j {torresJogo = t:torresJogo j} = jogoNovo
+    | custoTorre <= creditosBase (baseJogo j) && validaTorre j {torresJogo = t: torresJogo j} = jogoNovo
     | otherwise = j 
   where jogoNovo = j {baseJogo = (baseJogo j) {creditosBase = creditosBase (baseJogo j) - custoTorre}, 
-                      torresJogo = t:torresJogo j}
+                      torresJogo = ordenaTorre  $ t: torresJogo j}
+
+ordenaTorre :: [Torre] -> [Torre]
+ordenaTorre = sortBy (comparing (snd . posicaoTorre)) 
+
 
 -- adiciona terreno na lista 
 atualizaMapa :: (Posicao, Terreno) -> [(Posicao,Terreno)] -> [(Posicao, Terreno)]
@@ -198,8 +212,8 @@ atualizaMapa (pos, ter) [] = [(pos,ter)]
 atualizaMapa (pos, ter) lt = (pos, ter): filter (\(p,_) -> p /= pos) lt 
 
 transformaMapa :: [(Posicao, Terreno)] -> Mapa
-transformaMapa listaTerreno =
-    [[procuraTerrenoNaLista (x, y) listaTerreno | x <- [0..15]] | y <- [0..15]]
+transformaMapa lt =
+    [[procuraTerrenoNaLista (x, y) lt | x <- [0..15]] | y <- [0..15]]
   where
     procuraTerrenoNaLista :: Posicao -> [(Posicao, Terreno)] -> Terreno
     procuraTerrenoNaLista pos lt =
@@ -221,3 +235,24 @@ deletePortal (p:portais) pos
     | otherwise = p:deletePortal portais pos
   where
     pp = posicaoPortal p
+
+reiniciarEstado :: ImmutableTowers -> ImmutableTowers
+reiniciarEstado it = it {
+                         estadoIT = Menu, 
+                         jogoIT = jogoItInicial it,
+                         posicaoSelecionadaMapa = (0,0),
+                         produtoLoja = (-900, 100),
+                         botaoMenu = (-160, 0),
+                         jogoItInicial = jogo1, 
+                         listaTerreno = [], 
+                         listaPortais = [],
+                         escolhendoParametros = (0,0,0),
+                         baseCriada = False,
+                         nivelJogoFinito = Nivel1,
+                         nivelJogoInfinito = 1, 
+                         botaoNivelPassado = (-500, -250),
+                         botaoGameOver = (-600, -250)
+                        }  
+
+
+

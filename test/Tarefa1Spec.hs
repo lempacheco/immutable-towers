@@ -24,7 +24,9 @@ testesFaux =
        "eAgua 1" ~: True ~=? eAgua (3.5,0.5) mapa1,
        "eAgua 2" ~: False ~=? eAgua (0.5,0.5) mapa1,
 
-       "procuraTerreno - Terra" ~: True 
+       "procuraTerreno" ~: Just Agua ~=? procuraTerreno (3.5, 0.5) mapa1, 
+       "procuraTerreno" ~: Just Terra ~=? procuraTerreno (0.5, 0.5) mapa1,
+       "procuraTerreno" ~: Just Relva ~=? procuraTerreno (2.5, 0.5) mapa1
      ]
 
 testesPortais :: Test 

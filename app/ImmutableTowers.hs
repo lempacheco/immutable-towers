@@ -61,7 +61,7 @@ progredirNivel it
 
 reiniciarNivel :: ImmutableTowers -> ImmutableTowers
 reiniciarNivel it 
-    | estadoIT it == NivelPassado || estadoIT it == GameOver || estadoIT it == YouWon || estadoIT it == YouWon1 = 
+    | estadoIT it == NivelPassado || estadoIT it == GameOver || estadoIT it == YouWon || estadoIT it == YouWon1 || estadoIT it == Pausado = 
         case modoJogo it of 
             Finito   -> reiniciarNivelFinito it
             Infinito -> it {nivelJogoInfinito = nivelJogoInfinito it, estadoIT = Jogando}
@@ -104,13 +104,15 @@ aumentarDificuldadeInimigo n i = i {vidaInimigo = vidaInimigo i * fromIntegral n
 
 progredirNivelFinito :: ImmutableTowers -> ImmutableTowers
 progredirNivelFinito it = if estadoIT it == NivelPassado || estadoIT it == YouWon then avancaNivelFinito it 
-                          else if estadoIT it == GameOver || estadoIT it == YouWon || estadoIT it == NivelPassado 
+                          else if estadoIT it == GameOver || estadoIT it == YouWon || 
+                                  estadoIT it == NivelPassado || estadoIT it == YouWon1 || 
+                                  estadoIT it == Pausado
                           then reiniciarNivelFinito it 
                           else it  
 
 avancaNivelFinito :: ImmutableTowers -> ImmutableTowers 
-avancaNivelFinito it  
-    | estadoIT it == NivelPassado  || estadoIT it == YouWon = case nivelJogoFinito it of 
+avancaNivelFinito it  = 
+    case nivelJogoFinito it of 
         Nivel1 -> it {nivelJogoFinito = Nivel2, estadoIT = Jogando, jogoIT = jogo2}
         Nivel2 -> it {nivelJogoFinito = Nivel3, estadoIT = Jogando, jogoIT = jogo3}
         Nivel3 -> it {nivelJogoFinito = Nivel4, estadoIT = Jogando, jogoIT = jogo4}
@@ -118,8 +120,7 @@ avancaNivelFinito it
         Nivel5 -> it {nivelJogoFinito = Nivel1, estadoIT = Jogando, jogoIT = jogo1}
 
 reiniciarNivelFinito :: ImmutableTowers -> ImmutableTowers 
-reiniciarNivelFinito it  
-    | estadoIT it == GameOver || estadoIT it == NivelPassado || estadoIT it == YouWon =
+reiniciarNivelFinito it  =
          case nivelJogoFinito it of 
             Nivel1 -> it {nivelJogoFinito = Nivel1, estadoIT = Jogando, jogoIT = jogo1}
             Nivel2 -> it {nivelJogoFinito = Nivel2, estadoIT = Jogando, jogoIT = jogo2}

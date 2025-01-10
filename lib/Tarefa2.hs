@@ -12,7 +12,7 @@ module Tarefa2 where
 
 import LI12425
 
-{-| A função 'inimigosNoAlcance' filtra os inimigos que estão no alcance de uma determinada torre. 
+{-| Filtra os inimigos que estão no alcance de uma determinada torre. 
 
 -}
 
@@ -23,16 +23,35 @@ inimigosNoAlcance t is =
               (x2, y2) = posicaoTorre t
   in filter (\i -> distinimigo i <= alcanceTorre t) is
 
-{-| A função 'danoInimigo' atualiza o estado da vida do inimigo, assumindo que este acaba de ter sofrido dano.
+{-| Atualiza o estado da vida do inimigo, assumindo que este acaba de ter sofrido dano.
 
 -}
 
 danoInimigo :: Torre -> Inimigo -> Inimigo 
 danoInimigo t i = i {vidaInimigo =  vidaInimigo i - danoTorre t}
 
+{-| Retorna os tipos de projéteis que estão afetando os inimigos.
+
+-}
 
 getTiposProjsInimigo :: Inimigo -> [TipoProjetil]
 getTiposProjsInimigo i = map tipoProjetil (projeteisInimigo i)
+
+{-| Aplica os efeitos de projéteis de uma torre a um inimigo.
+
+==__Comportamento:__ 
+
+Verifica as combinações de projéteis e ajusta os efeitos aplicados ao inimigo:
+
+  1. *Fogo e Gelo*:
+       Remove os projéteis do tipo Fogo e Gelo do inimigo.
+  2. *Fogo e Resina*:
+       Remove o projétil de Resina e dobra a duração do projétil de Fogo no inimigo.
+  3. *Projetil Igual*:
+       Dobra a duração do projétil se o tipo for igual ao projétil disparado pela torre.
+  4. *Outras Combinações*:
+       Adiciona o projétil da torre ao inimigo.
+-}
 
 atingeInimigo :: Torre -> Inimigo -> Inimigo
 atingeInimigo torre inimigo
@@ -80,7 +99,23 @@ atingeInimigo torre inimigo
             outrasCombs :: Torre -> Inimigo -> Inimigo
             outrasCombs t i = i {projeteisInimigo = projetilTorre t : projeteisInimigo i}
                 
-{-| A função 'ativaInimigo' é responsável por mover o próximo inimigo a ser lanaçado pelo portal para lista de inimigos ativos. 
+{-| É responsável por mover o próximo inimigo a ser lanaçado pelo portal para lista de inimigos ativos. 
+
+== __Comportamento: __
+1. Caso o portal não possua ondas (lista de ondas vazia), o portal permanece inalterado e a lista de inimigos ativos não é modificada. 
+2. Caso a primeira onda do portal não tenha inimigos, essa onda é removida do portal. 
+3. caso a primeira onda do portal possua inimigos, o primeiro inimigo da onda é movido para a lista de inimigos ativos,
+   e a onda é atualizada, removendo este inimigo.
+
+==__Exemplo de utilização:__
+
+>>> let portal1 = Portal {ondasPortal = []}
+>>> ativaInimigo portal1 [i1,i2]
+(portal1, [i1,i2])
+
+>>> let portal2 = Portal {ondasPortal = [Onda {inimigosOnda = [i1, i2]]}
+>>> ativaInimigo portal2 []
+(portal2 {ondasPortal = [Onda{inimigosOnda = [i2]}]}, [i1])
 
 -}
 
@@ -95,7 +130,7 @@ ativaInimigo portal inimigosAtivos = case ondasPortal portal of
                   novoInimigo = i: inimigosAtivos
               in (novoPortal, novoInimigo)
 
-{-| A função 'terminouJogo' é responsável por indicar o fim do jogo, sendo possível duas eventualidaes: ganhar ou perder.
+{-| É responsável por indicar o fim do jogo, sendo possível duas eventualidaes: ganhar ou perder.
 
 -}
 
@@ -112,7 +147,7 @@ ganhouJogo j = null (inimigosJogo j)
                && vidaBase  (baseJogo j) > 0 
                && all verificaPortal (portaisJogo j) 
 
-{-| A função 'verificaPortal', verifica se um portal está "inativo". Um portal é considerado inativo se:
+{-| Verifica se um portal está "inativo". Um portal é considerado inativo se:
     1. Não possui nenhuma onda (ondasPortal é uma lista vazia);
     2. Todas as ondas no portal estão vazias, ou seja, não possuem inimigos (inimigosOnda é uma lista vazia para todas as ondas).
 
@@ -121,7 +156,7 @@ ganhouJogo j = null (inimigosJogo j)
 verificaPortal :: Portal -> Bool
 verificaPortal p = null (ondasPortal p) || all (null . inimigosOnda) (ondasPortal p)
 
-{-| A função 'perdeuJogo' indica se um jogador perdeu o jogo, o jogador perde o jogo na seguinte condição: 
+{-| Indica se um jogador perdeu o jogo, o jogador perde o jogo na seguinte condição: 
      1. nível de vida da base igual ou inferior a zero.
 -}
 

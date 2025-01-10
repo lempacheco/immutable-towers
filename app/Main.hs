@@ -209,6 +209,12 @@ main = do
   infinito <- loadBMP "resources/textures/ui/infinito.bmp"
   finito <- loadBMP "resources/textures/ui/finito.bmp"
   criarMapa <- loadBMP "resources/textures/ui/criandoMapa.bmp"
+  voltarAoMenu <- loadBMP "resources/textures/ui/voltarAoMenu.bmp"
+  nivel1 <- loadBMP "resources/textures/ui/Nivel1.bmp"
+  nivel2 <- loadBMP "resources/textures/ui/Nivel2.bmp"
+  nivel3 <- loadBMP "resources/textures/ui/Nivel3.bmp"
+  nivel4 <- loadBMP "resources/textures/ui/Nivel4.bmp"
+  nivel5 <- loadBMP "resources/textures/ui/Nivel5.bmp"
   play janela 
         fundo 
         fr 
@@ -378,9 +384,14 @@ main = do
             ("botaoNivel", botaoNivel),
             ("infinito", infinito), 
             ("finito", finito), 
-            ("criarMapa", criarMapa)
-          ]
-        ) 
+            ("criarMapa", criarMapa),
+            ("voltarAoMenu", voltarAoMenu),
+            ("Nivel1", nivel1),
+            ("Nivel2", nivel2),
+            ("Nivel3", nivel3),
+            ("Nivel4", nivel4),
+            ("Nivel5", nivel5)
+        ]) 
         desenha 
         reageEventos 
         reageTempo

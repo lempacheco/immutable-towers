@@ -24,7 +24,9 @@ data ImmutableTowers = ImmutableTowers {
     baseCriada :: Bool,
     botaoGameOver :: Posicao,
     modoJogo :: ModoJogo, 
-    jogoCriado :: Jogo 
+    jogoCriado :: Jogo,
+    etapaTT :: Int
+
 }
 
 data EstadoJogo = Menu 
@@ -42,6 +44,8 @@ data EstadoJogo = Menu
                 | YouWon1
                 | NivelPassado
                 | Tutorial
+                | TutorialEscolhendoTorre
+                | TutorialComprando
                 | MensagemErro
                 deriving (Eq, Show)
 

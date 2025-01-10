@@ -5,6 +5,7 @@ import ImmutableTowers
 import LI12425
 import Data.Maybe (fromJust)
 import GHC.Float (int2Float)
+import Tarefa3 
 
 lado :: Integer
 lado = 64
@@ -31,6 +32,11 @@ desenha it = case estadoIT it of
      YouWon -> Pictures [desenhaJogo it, desenhaYouWon it]
      MensagemErro -> if modoJogo it == MapaCriado then Pictures [desenhaCriandoMapa it, desenhaMensagemErro it] else Pictures [desenhaMenu it, desenhaMensagemErro it]
      YouWon1 -> Pictures [desenhaJogo it, desenhaYouWon1 it]
+     Tutorial -> desenhaTutorial it ts
+     TutorialEscolhendoTorre -> desenhaTutorial it ts 
+     TutorialComprando -> desenhaTutorial it ts 
+     
+  where ts = texturasIT it
 
 string2FonteNumeros :: String -> [Textura] -> Picture
 string2FonteNumeros s ts = Pictures $ auxString2FonteNumeros s ts 0
@@ -49,7 +55,7 @@ desenhaMensagemErro :: ImmutableTowers -> Picture
 desenhaMensagemErro it = Pictures [fromJust $ lookup "mensagemErro" (texturasIT it), color (withAlpha 0.5 black) $ rectangleSolid 1920 1080]
 
 desenhaNivelPassado :: ImmutableTowers -> Picture
-desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, iconeRestart, fraseLevelWon, fraseBackToMenu, fraseNextLevel, fraseRestart, seta{- , bb -} ]
+desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, iconeRestart, fraseLevelWon, fraseBackToMenu, fraseNextLevel, fraseRestart, seta]
     where ts = texturasIT it
           fundo = translate 0 0 $ color (withAlpha 0.7 orange) $ rectangleSolid 1920 1080 
           fraseLevelWon = Translate 0 200 $ scale 0.8 0.8 $ fromJust $ lookup "fraseLevelWon" ts
@@ -61,7 +67,7 @@ desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, icone
           iconeBackToMenu = Translate (-350) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
           iconeNextLevel = Translate (0) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
           iconeRestart = Translate (350) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts
-          --bb = translate 0 0 $ scale 1 1 $ text $ show $ botaoNivelPassado it 
+           
 
 desenhaGameOver :: ImmutableTowers -> Picture
 desenhaGameOver it = Pictures [fundo, 
@@ -256,7 +262,8 @@ desenhaJogo it = Pictures [picMapa,
                            picTorre, 
                            creditosJog, 
                            moldBaixo,
-                           picModoJogo
+                           picModoJogo, 
+                           Pictures [scale 1 1 $ text $ show $ estadoIT it] 
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
@@ -277,8 +284,11 @@ desenhaJogo it = Pictures [picMapa,
           creditosJog = desenhaPerfilJogador it texturas 
           picModoJogo = desenhaModoJogo it texturas
 
-
-
+{- selecionaJogo :: ImmutableTowers -> ImmutableTowers
+selecionaJogo it = case estadoIT it of 
+    Tutorial -> it {jogoIT = jogoTT }
+    _                 -> it 
+ -}
 desenhaMolduraMapa :: [Textura] -> Picture
 desenhaMolduraMapa ts = Pictures [moldCima]
     where moldCima = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa2" ts)
@@ -482,6 +492,26 @@ desenhaPausa it = Pictures [fundo,
           iconeRestart = Translate (350) (-250) $ scale 5 5 $ fromJust $ lookup "iconePausa" ts 
           ts = texturasIT it
 
-{- desenhaTutorial :: ImmutableTowers -> Picture
-desenhaTutorial it = Pictures [etapa1, etapa2, etapa3, etapa4]
-    where etapa1 = fromJust $ lookup $  -}
+desenhaTutorial :: ImmutableTowers -> [Textura] -> Picture
+desenhaTutorial it ts = case estadoIT it of
+    Tutorial -> Pictures [desenhaJogo it, desenhaEtapasTT it ts] 
+    TutorialEscolhendoTorre -> Pictures [desenhaJogo it, desenhaEscolhendoTorre it, desenhaEtapasTT it ts] 
+    TutorialComprando -> Pictures [desenhaJogo it, desenhaComprando it, desenhaEtapasTT it ts]
+
+desenhaEtapasTT :: ImmutableTowers -> [Textura] -> Picture
+desenhaEtapasTT it ts = case etapaTT it of 
+    0 -> fromJust $ lookup "tutorial1" ts  
+    1 -> fromJust $ lookup "tutorial2" ts 
+    2 -> Pictures [fromJust $ lookup "fundoPedraTT" ts,
+                   Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts,
+                   Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts,
+                   Translate 350 (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts, 
+                   Translate (-350) (-250) $ scale 1.2 1.2 $ fromJust $ lookup "no" ts,
+                   Translate 350 (-250) $ scale 1.2 1.2 $ fromJust $ lookup "yes" ts
+                   ]
+    3 -> Translate 750 (-250) $ fromJust $ lookup "etapa1" ts
+    4 -> Translate 750 (-250) $ scale 0.7 0.7 $ fromJust $ lookup "etapa2" ts
+    5 -> Translate 750 (-250) $ scale 0.6 0.6 $ fromJust $ lookup "etapa3" ts
+    6 -> Translate 750 (-250) $ scale 0.5 0.5 $ fromJust $ lookup "etapa4" ts
+  where (x,y) = botaoGameOver it
+             

@@ -30,7 +30,8 @@ itTds texturas =
                      nivelJogoFinito = Nivel1,
                      nivelJogoInfinito = 1, 
                      botaoNivelPassado = (-500, -250),
-                     botaoGameOver = (-600, -250)}
+                     botaoGameOver = (-600, -250),
+                     etapaTT = 0}
 
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
@@ -215,6 +216,15 @@ main = do
   nivel3 <- loadBMP "resources/textures/ui/Nivel3.bmp"
   nivel4 <- loadBMP "resources/textures/ui/Nivel4.bmp"
   nivel5 <- loadBMP "resources/textures/ui/Nivel5.bmp"
+  tutorial1 <- loadBMP "resources/textures/menuFundo/tutorial1.bmp"
+  tutorial2 <- loadBMP "resources/textures/menuFundo/tutorial2.bmp"
+  etapa1 <- loadBMP "resources/textures/ui/etapa1.bmp"
+  etapa2 <- loadBMP "resources/textures/ui/etapa2.bmp"
+  etapa3 <- loadBMP "resources/textures/ui/etapa3.bmp"
+  etapa4 <- loadBMP "resources/textures/ui/etapa4.bmp"
+  yes <- loadBMP "resources/textures/ui/yes.bmp"
+  no <- loadBMP "resources/textures/ui/No.bmp"
+  fundoPedraTT <- loadBMP "resources/textures/menuFundo/fundoPedraTT.bmp"
   play janela 
         fundo 
         fr 
@@ -390,7 +400,17 @@ main = do
             ("Nivel2", nivel2),
             ("Nivel3", nivel3),
             ("Nivel4", nivel4),
-            ("Nivel5", nivel5)
+            ("Nivel5", nivel5), 
+            ("etapa1", etapa1),
+            ("etapa2", etapa2),
+            ("etapa3", etapa3),
+            ("etapa4", etapa4),
+            ("tutorial1", tutorial1),
+            ("tutorial2", tutorial2),
+            ("fundoPedraTT", fundoPedraTT),
+            ("yes", yes),
+            ("no", no)
+
         ]) 
         desenha 
         reageEventos 

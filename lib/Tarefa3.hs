@@ -249,7 +249,7 @@ inimigosSemVida :: Base -> [Inimigo] -> (Base, [Inimigo])
 inimigosSemVida b [] = (b, []) 
 inimigosSemVida b (i:is)
     | vidaInimigo i <= 0 = 
-        let bAtualizada = b { creditosBase = creditosBase b + butimInimigo i }
+        let bAtualizada = b {creditosBase = creditosBase b + butimInimigo i}
         in inimigosSemVida bAtualizada is
     | otherwise = 
         let (bFinal, inimigosRestantes) = inimigosSemVida b is

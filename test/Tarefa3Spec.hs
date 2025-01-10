@@ -9,7 +9,7 @@ testesTarefa3 :: Test
 testesTarefa3 =
   TestLabel "Testes Tarefa 3" $
     test
-      [ {- teste1, 
+      [ teste1, 
         teste2, 
         teste3, 
         teste4, 
@@ -18,19 +18,19 @@ testesTarefa3 =
         teste7, 
         teste8, 
         teste9, 
-        {- teste10, teste11 -} 
-        teste12,
-        {-  teste13, teste14 -} 
+        teste10, 
+        teste11,
+        teste12, 
+        teste13, 
+        teste14, 
         teste15, 
         teste16, 
-        teste17, 
+        teste17,
         teste18, 
         teste19,
-        teste20, 
-        teste21, 
-        teste22, 
-        teste23, -}
-        teste24
+        teste20,
+        teste21,
+        teste22
       ]
 
 -- detetarInimigos 
@@ -39,22 +39,21 @@ teste1 =
   TestLabel "Testes para a função detetarInimigo" $
     test
       [ "Recebe uma lista vazia de inimigos" ~: [] ~=? detetarInimigo torreA3 [],
-        "Não tem inimigos no alcance" ~: [] ~=? detetarInimigo torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (1.5,1.5)}], 
-        "Tem inimigos no alcance" ~: [inimigoA3 {posicaoInimigo = (5.5,2.5)}, inimigoA3 {posicaoInimigo = (5.5,3.5)} ] ~=? detetarInimigo torreA3 [inimigoA3, 
-                                                                                                                                                  inimigoA3 {posicaoInimigo = (5.5,2.5)}, 
-                                                                                                                                                  inimigoA3 {posicaoInimigo = (5.5,3.5)}]
+        "Não tem inimigos no alcance" ~: [] ~=? detetarInimigo torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (1,1)}], 
+        "Tem inimigos no alcance" ~: [inimigoA3 {posicaoInimigo = (5,2)}, inimigoA3 {posicaoInimigo = (5,3)} ] ~=? detetarInimigo torreA3 [inimigoA3, 
+                                                                                                                                                   inimigoA3 {posicaoInimigo = (5,2)}, 
+                                                                                                                                                   inimigoA3 {posicaoInimigo = (5,3)}]
       ]
 
--- inimigosOrdenados  
-
+-- inimigosOrdenados
 teste2 :: Test
 teste2 =
   TestLabel "Testes para a função inimigosOrdenados" $
     test
       [ "Recebe uma lista vazia de inimigos" ~: [] ~=? inimigosOrdenados torreA3 [],
-        "Não tem inimigos no alcance" ~: [inimigoA3 {posicaoInimigo = (1.5,1.5)}, inimigoA3] ~=? inimigosOrdenados torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (1.5,1.5)}], 
-        "Tem inimigos no alcance" ~: [inimigoA3 {posicaoInimigo = (5.5,2.5)}, inimigoA3 {posicaoInimigo = (5.5,3.5)}, inimigoA3] ~=? inimigosOrdenados torreA3 [inimigoA3 {posicaoInimigo = (5.5,3.5)}, 
-                                                                                                                                                                inimigoA3 {posicaoInimigo = (5.5,2.5)}, 
+        "Não tem inimigos no alcance" ~: [inimigoA3 {posicaoInimigo = (1,1)}, inimigoA3] ~=? inimigosOrdenados torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (1,1)}], 
+        "Tem inimigos no alcance" ~: [inimigoA3 {posicaoInimigo = (5,2)}, inimigoA3 {posicaoInimigo = (5,3)}, inimigoA3] ~=? inimigosOrdenados torreA3 [inimigoA3 {posicaoInimigo = (5,3)}, 
+                                                                                                                                                                inimigoA3 {posicaoInimigo = (5,2)}, 
                                                                                                                                                                 inimigoA3]
       ]
 
@@ -65,11 +64,11 @@ teste3 =
   TestLabel "Testes para a função tirosPossiveis" $
     test
       [ "Recebe uma lista vazia de inimigos" ~: 0 ~=? tirosPossiveis torreA3 [],
-        "Tem menos inimigos que a rajada da Torre" ~: 2 ~=? tirosPossiveis torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (5.5,2.5)}, inimigoA3 {posicaoInimigo = (5.5,3.5)}], 
-        "Tem mais inimigos que a rajada da Torre" ~: 3 ~=? tirosPossiveis torreA3 [inimigoA3 {posicaoInimigo = (5.5,3.5)}, 
-                                                                                  inimigoA3 {posicaoInimigo = (5.5,2.5)}, 
-                                                                                  inimigoA3 {posicaoInimigo = (5.5,4.5)}, 
-                                                                                  inimigoA3 {posicaoInimigo = (4.5,4.5)}]
+        "Tem menos inimigos que a rajada da Torre" ~: 2 ~=? tirosPossiveis torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (5,2)}, inimigoA3 {posicaoInimigo = (5,3)}], 
+        "Tem mais inimigos que a rajada da Torre" ~: 3 ~=? tirosPossiveis torreA3 [inimigoA3 {posicaoInimigo = (5,3)}, 
+                                                                                  inimigoA3 {posicaoInimigo = (5,2)}, 
+                                                                                  inimigoA3 {posicaoInimigo = (5,4)}, 
+                                                                                  inimigoA3 {posicaoInimigo = (4,4)}]
       ]
 
 -- inimigosSobreviventes
@@ -79,66 +78,70 @@ teste4 =
   TestLabel "Testes para a função inimigosSobreviventes" $
     test
       [ "Recebe uma lista vazia de inimigos" ~: [] ~=? inimigosSobreviventes torreA3 [],
-        "Um inimigo morre" ~: [inimigoA3 {posicaoInimigo = (5.5,3.5), 
+        "Um inimigo morre" ~: [inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 0.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]},
+                              inimigoA3 {posicaoInimigo = (5,3), 
                                           vidaInimigo = 4.0, 
                                           projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]}, 
                               inimigoA3] ~=? inimigosSobreviventes torreA3 [inimigoA3, 
-                                                                                   inimigoA3 {posicaoInimigo = (5.5,2.5), vidaInimigo = 6.0}, 
-                                                                                   inimigoA3{posicaoInimigo = (5.5,3.5), vidaInimigo = 10.0}], 
-        "Tem inimigos sobreviventes" ~: [inimigoA3 {posicaoInimigo = (5.5,2.5), vidaInimigo = 2.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]}, 
-                                         inimigoA3 {posicaoInimigo = (5.5,3.5), vidaInimigo = 10.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]},
+                                                                                   inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 6.0}, 
+                                                                                   inimigoA3{posicaoInimigo = (5,3), vidaInimigo = 10.0}], 
+        "Tem inimigos sobreviventes" ~: [inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 2.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]}, 
+                                         inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = 10.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]},
                                          inimigoA3] 
-                                     ~=? inimigosSobreviventes torreA3 [inimigoA3 {posicaoInimigo = (5.5,3.5), vidaInimigo = 16.0}, 
-                                                                               inimigoA3 {posicaoInimigo = (5.5,2.5), vidaInimigo = 8}, 
+                                     ~=? inimigosSobreviventes torreA3 [inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = 16.0}, 
+                                                                               inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 8}, 
                                                                                inimigoA3], 
-        "Não tem inimigos sobreviventes" ~: [] ~=? inimigosSobreviventes torreA3 [inimigoA3 {posicaoInimigo = (5.5,3.5), vidaInimigo = 4.0}, 
-                                                                                         inimigoA3 {posicaoInimigo = (5.5,2.5), vidaInimigo = 2.0}], 
-        "Só tem inimigos sobreviventes fora do alcance da torre" ~: [ inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 6.0},
-                                                                      inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 6.0},
-                                                                      inimigoA3 {posicaoInimigo = (0.5,0.5), vidaInimigo = 6.0}
+        "Não tem inimigos sobreviventes" ~: [inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = -4.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1.0}]},
+                                             inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = -2.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1.0}]}] ~=? inimigosSobreviventes torreA3 [inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = 4.0}, 
+                                                                                         inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 2.0}], 
+        "Só tem inimigos sobreviventes fora do alcance da torre" ~: [ inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = -4.0,projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1.0}]},
+                                                                      inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = -2.0,projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1.0}]},
+                                                                      inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = 6.0},
+                                                                      inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 6.0},
+                                                                      inimigoA3 {posicaoInimigo = (0,0), vidaInimigo = 6.0}
                                                                     ] 
-                                                  ~=? inimigosSobreviventes torreA3 [ inimigoA3 {posicaoInimigo = (5.5,3.5), vidaInimigo = 4.0},
-                                                                                             inimigoA3 {posicaoInimigo = (5.5,2.5), vidaInimigo = 2.0},
-                                                                                             inimigoA3 {posicaoInimigo = (0.5,0.5), vidaInimigo = 6.0},
-                                                                                             inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 6.0},
-                                                                                             inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 6.0}
+                                                  ~=? inimigosSobreviventes torreA3 [ inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = 4.0},
+                                                                                             inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 2.0},
+                                                                                             inimigoA3 {posicaoInimigo = (0,0), vidaInimigo = 6.0},
+                                                                                             inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 6.0},
+                                                                                             inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = 6.0}
                                                                                             ]
       ]
 
--- dispaProjeteis 
+-- disparaProjeteis 
 
 teste5 :: Test
 teste5 =
   TestLabel "Testes para a função disparaProjeteis" $
     test
       [ "Recebe uma lista vazia de inimigos" ~: ([], torreA3) ~=? disparaProjeteis torreA3 [],
-        "Não tem inimigos no alcance" ~: ([inimigoA3, inimigoA3 {posicaoInimigo = (1.5,1.5)}], torreA3) ~=? disparaProjeteis torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (1.5,1.5)}], 
-        "A torre não está pronta para disparar" ~: ([inimigoA3 {posicaoInimigo = (5.5,3.5)}, 
-                                                     inimigoA3 {posicaoInimigo = (5.5,2.5)},
-                                                     inimigoA3 {posicaoInimigo = (5.5,4.5)}, 
-                                                     inimigoA3 {posicaoInimigo = (4.5,4.5)}], torreA3 {tempoTorre = 1}) ~=? disparaProjeteis torreA3 {tempoTorre = 2} [inimigoA3 {posicaoInimigo = (5.5,3.5)}, 
-                                                                                                                                                                       inimigoA3 {posicaoInimigo = (5.5,2.5)}, 
-                                                                                                                                                                       inimigoA3 {posicaoInimigo = (5.5,4.5)}, 
-                                                                                                                                                                       inimigoA3 {posicaoInimigo = (4.5,4.5)}], 
-        "A torre está pronta para disparar, e dispara" ~: ([inimigoA3 {posicaoInimigo = (5.5,2.5), vidaInimigo = 2.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]}, 
-                                                            inimigoA3 {posicaoInimigo = (5.5,3.5), vidaInimigo = 3.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]},  
-                                                            inimigoA3 {posicaoInimigo = (4.5,3.5), vidaInimigo = 4.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]}, 
-                                                            inimigoA3 {posicaoInimigo = (5.5,4.5), vidaInimigo = 8.0},
+        "Não tem inimigos no alcance" ~: ([inimigoA3, inimigoA3 {posicaoInimigo = (1,1)}], torreA3) ~=? disparaProjeteis torreA3 [inimigoA3, inimigoA3 {posicaoInimigo = (1,1)}], 
+        "A torre não está pronta para disparar" ~: ([inimigoA3 {posicaoInimigo = (5,3)}, 
+                                                     inimigoA3 {posicaoInimigo = (5,2)},
+                                                     inimigoA3 {posicaoInimigo = (5,4)}, 
+                                                     inimigoA3 {posicaoInimigo = (4,4)}], torreA3 {tempoTorre = 1}) ~=? disparaProjeteis torreA3 {tempoTorre = 2} [inimigoA3 {posicaoInimigo = (5,3)}, 
+                                                                                                                                                                       inimigoA3 {posicaoInimigo = (5,2)}, 
+                                                                                                                                                                       inimigoA3 {posicaoInimigo = (5,4)}, 
+                                                                                                                                                                       inimigoA3 {posicaoInimigo = (4,4)}], 
+        "A torre está pronta para disparar, e dispara" ~: ([inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 2.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]}, 
+                                                            inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = 3.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]},  
+                                                            inimigoA3 {posicaoInimigo = (4,3), vidaInimigo = 4.0, projeteisInimigo = [Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1}]}, 
+                                                            inimigoA3 {posicaoInimigo = (5,4), vidaInimigo = 8.0},
                                                             inimigoA3 
                                                            ],
                                                  torreA3 {tempoTorre = 2.0}) 
-                                            ~=? disparaProjeteis torreA3 [inimigoA3 {posicaoInimigo = (5.5,3.5), vidaInimigo = 9.0}, 
-                                                                          inimigoA3 {posicaoInimigo = (5.5,2.5), vidaInimigo = 8.0}, 
-                                                                          inimigoA3 {posicaoInimigo = (5.5,4.5), vidaInimigo = 8.0}, 
-                                                                          inimigoA3 {posicaoInimigo = (4.5,3.5), vidaInimigo = 10.0}, inimigoA3], 
-        "A torre está pronta para disparar, mas não dispara" ~: ([inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 9.0}, 
-                                                                  inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 8.0}, 
-                                                                  inimigoA3 {posicaoInimigo = (1.5,2.5), vidaInimigo = 8.0}, 
+                                            ~=? disparaProjeteis torreA3 [inimigoA3 {posicaoInimigo = (5,3), vidaInimigo = 9.0}, 
+                                                                          inimigoA3 {posicaoInimigo = (5,2), vidaInimigo = 8.0}, 
+                                                                          inimigoA3 {posicaoInimigo = (5,4), vidaInimigo = 8.0}, 
+                                                                          inimigoA3 {posicaoInimigo = (4,3), vidaInimigo = 10.0}, inimigoA3], 
+        "A torre está pronta para disparar, mas não dispara" ~: ([inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = 9.0}, 
+                                                                  inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 8.0}, 
+                                                                  inimigoA3 {posicaoInimigo = (1,2), vidaInimigo = 8.0}, 
                                                                   inimigoA3],
                                                                 torreA3 {tempoTorre = 0}) 
-                                            ~=? disparaProjeteis torreA3 [inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 9.0}, 
-                                                                          inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 8.0}, 
-                                                                          inimigoA3 {posicaoInimigo = (1.5,2.5), vidaInimigo = 8.0}, 
+                                            ~=? disparaProjeteis torreA3 [inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = 9.0}, 
+                                                                          inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 8.0}, 
+                                                                          inimigoA3 {posicaoInimigo = (1,2), vidaInimigo = 8.0}, 
                                                                           inimigoA3]
       ]
 
@@ -184,108 +187,97 @@ teste9 =
     test
       [
         "Teste com um inimigo não afetado por Fogo" ~: [inimigo2] ~=? atualizaInimigoFogo [inimigo2],
-        "Teste com um inimigo afetado por Fogo" ~: [inimigo1 {vidaInimigo = 5.0}] ~=? atualizaInimigoFogo [inimigo1]
+        "Teste com um inimigo afetado por Fogo" ~: [inimigo1 {vidaInimigo = 10 - 5/60}] ~=? atualizaInimigoFogo [inimigo1]
       ]
 
-{- teste10 :: Test
+teste10 :: Test
 teste10 = 
-  TestLabel "Teste para a função inimigosSemVidaIs" $
+  TestLabel "Teste para a função inimigosSemVida" $
     test
       [
-        "Teste só com inimigos com vida" ~: [inimigo1,inimigo2] ~=? inimigosSemVidaIs [inimigo1,inimigo2],
-        "Teste só com inimigos sem vida" ~: [] ~=? inimigosSemVidaIs [inimigo3,inimigo4],
-        "Teste com inimigos com e sem vida" ~: [inimigo1] ~=? inimigosSemVidaIs [inimigo1,inimigo3]
+        "Teste só com inimigos com vida" ~: (baseA, [inimigo1,inimigo2]) ~=? inimigosSemVida baseA [inimigo1,inimigo2],
+        "Teste só com inimigos sem vida" ~: (baseA {creditosBase = 25},[]) ~=? inimigosSemVida baseA [inimigo3,inimigo4],
+        "Teste com inimigos com e sem vida" ~: (baseA {creditosBase = 15} ,[inimigo1]) ~=? inimigosSemVida baseA [inimigo1,inimigo3]
       ]
 
 teste11 :: Test
 teste11 = 
-  TestLabel "Teste para a função inimigosSemVidaB" $
-    test
-      [
-        "Teste só com inimigos com vida" ~: base1 ~=? inimigosSemVidaB [inimigo1,inimigo2] base1,
-        "Teste só com inimigos sem vida" ~: base1 {creditosBase = 25} ~=? inimigosSemVidaB [inimigo3,inimigo4] base1,
-        "Teste com inimigos com e sem vida" ~: base1 {creditosBase = 15} ~=? inimigosSemVidaB [inimigo1,inimigo3] base1
-      ] -}
-
-teste12 :: Test
-teste12 = 
   TestLabel "Teste para a função atualizaDistanciaPercorridaInimigos" $
     test
       [
         "Teste com inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo1],
-        "Teste com inimigo com velocidade não nula" ~: [inimigo2 {posicaoInimigo = (10.5,0.5)}] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo2]
+        "Teste com inimigo com velocidade não nula" ~: [inimigo2 {posicaoInimigo = (10,0)}] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo2]
       ]
-{- 
-teste13 :: Test
-teste13 = 
-  TestLabel "Teste para a função inimigoAtingeBaseIs" $
+ 
+teste12 :: Test
+teste12 = 
+  TestLabel "Teste para a função inimigoAtingeBase" $
     test
       [
-        "Teste só com inimigos com posições iguais à da base" ~: [] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo3],
-        "Teste só com inimigos com posições diferentes da base" ~: [inimigo2, inimigo4] ~=? inimigoAtingeBaseIs base1 [inimigo2, inimigo4],
-        "Teste com inimigos com posições iguais e diferentes da base" ~: [inimigo2] ~=? inimigoAtingeBaseIs base1 [inimigo1, inimigo2]
+        "Teste só com inimigos com posições iguais à da base" ~: (baseA {vidaBase = 40}, []) ~=? inimigoAtingeBase baseA [inimigo1, inimigo3],
+        "Teste só com inimigos com posições diferentes da base" ~: (baseA, [inimigo2, inimigo4]) ~=? inimigoAtingeBase baseA [inimigo2, inimigo4],
+        "Teste com inimigos com posições iguais e diferentes da base" ~: (baseA {vidaBase = 45},[inimigo2]) ~=? inimigoAtingeBase baseA [inimigo1, inimigo2]
       ]
-
-teste14 :: Test
-teste14 = 
-  TestLabel "Teste para a função inimigoAtingeBaseB" $
-    test
-      [
-        "Teste só com inimigos com posições iguais à da base" ~: base1 {vidaBase = 40.0} ~=? inimigoAtingeBaseB [inimigo1, inimigo3] base1,
-        "Teste só com inimigos com posições diferentes da base" ~: base1 ~=? inimigoAtingeBaseB [inimigo2, inimigo4] base1,
-        "Teste com inimigos com posições iguais e diferentes da base" ~: base1 {vidaBase = 45.0} ~=? inimigoAtingeBaseB [inimigo1, inimigo2] base1
-      ] -}
 
 -- disparaTodosProjeteis
 
-teste15 :: Test 
-teste15 = 
+teste13 :: Test 
+teste13 = 
    TestLabel "Testes para a função disparaTodosProjeteis" $
     test
       [
-        "Três torres, todas prontas para disparar" ~: ([inimigoA3 {posicaoInimigo = (1.5,4.5), vidaInimigo = 4, projeteisInimigo = [projetil2]}, 
-                                                        inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 4, projeteisInimigo = [projetil2]}],[torreA3 {posicaoTorre = (0.5,1.5), tempoTorre = 2}, 
+        "Três torres, todas prontas para disparar" ~: ([inimigoA3 {posicaoInimigo = (1,4), vidaInimigo = 4, projeteisInimigo = [projetil2]}, 
+                                                        inimigoA3 {posicaoInimigo = (4,4), vidaInimigo = 0, projeteisInimigo = [projetil2]},
+                                                        inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 4, projeteisInimigo = [projetil2]},
+                                                        inimigoA3 {posicaoInimigo = (0,0), vidaInimigo = 0, projeteisInimigo = [projetil2]}],[torreA3 {posicaoTorre = (0,1), tempoTorre = 2}, 
                                                                                                                                                   torreA3, 
-                                                                                                                                                  torreA3 {posicaoTorre = (2.5,3.5), tempoTorre = 2}]) 
-                                                    ~=? disparaTodosProjeteis [torreA3 {posicaoTorre = (0.5,1.5)}, 
+                                                                                                                                                  torreA3 {posicaoTorre = (2,3), tempoTorre = 2}]) 
+                                                    ~=? disparaTodosProjeteis [torreA3 {posicaoTorre = (0,1)}, 
                                                                                torreA3,
-                                                                               torreA3 {posicaoTorre = (2.5,3.5)}]
+                                                                               torreA3 {posicaoTorre = (2,3)}]
                                                                               [inimigoA3, 
-                                                                               inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 10}, 
-                                                                               inimigoA3 {posicaoInimigo = (1.5,4.5), vidaInimigo = 10}, 
-                                                                               inimigoA3 {posicaoInimigo = (4.5,4.5)}], 
-         "O inimigo pertence ao alcance de mais de uma torre, simultaneamente" ~: ([inimigoA3 {posicaoInimigo = (1.5,4.5), vidaInimigo = 4, projeteisInimigo = [projetil2]}],[torreA3 {posicaoTorre = (0.5,1.5), tempoTorre = 2}, 
-                                                                                                                                                                             torreA3, torreA3 {posicaoTorre = (2.5,1.5), tempoTorre = 2},
-                                                                                                                                                                             torreA3 {posicaoTorre = (2.5,3.5), tempoTorre = 2}])
-                                                                              ~=? disparaTodosProjeteis [torreA3 {posicaoTorre = (0.5,1.5)}, 
+                                                                               inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 10}, 
+                                                                               inimigoA3 {posicaoInimigo = (1,4), vidaInimigo = 10}, 
+                                                                               inimigoA3 {posicaoInimigo = (4,4)}], 
+         "O inimigo pertence ao alcance de mais de uma torre, simultaneamente" ~: ([inimigoA3 {posicaoInimigo = (1,4), vidaInimigo = 4, projeteisInimigo = [projetil2]},
+                                                                                    inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = -8, projeteisInimigo = [projetil2 {duracaoProjetil = Finita 4}]},
+                                                                                    inimigoA3 {posicaoInimigo = (4,4), vidaInimigo = 0, projeteisInimigo = [projetil2]},
+                                                                                    inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = -2, projeteisInimigo = [projetil2 {duracaoProjetil = Finita 2}]},
+                                                                                    inimigoA3 {posicaoInimigo = (0,0), vidaInimigo = -6, projeteisInimigo = [projetil2 {duracaoProjetil = Finita 2}]}],
+                                                                              [torreA3 {posicaoTorre = (0,1), tempoTorre = 2}, 
+                                                                               torreA3, torreA3 {posicaoTorre = (2,1), tempoTorre = 2},
+                                                                               torreA3 {posicaoTorre = (2,3), tempoTorre = 2}])
+                                                                              ~=? disparaTodosProjeteis [torreA3 {posicaoTorre = (0,1)}, 
                                                                                                          torreA3,
-                                                                                                         torreA3 {posicaoTorre = (2.5,1.5)},
-                                                                                                         torreA3 {posicaoTorre = (2.5,3.5)}]
+                                                                                                         torreA3 {posicaoTorre = (2,1)},
+                                                                                                         torreA3 {posicaoTorre = (2,3)}]
                                                                                                         [inimigoA3, 
-                                                                                                         inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 10}, 
-                                                                                                         inimigoA3 {posicaoInimigo = (1.5,4.5), vidaInimigo = 10}, 
-                                                                                                         inimigoA3 {posicaoInimigo = (4.5,4.5)},
-                                                                                                         inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 10}], 
-        "Torre com diferentes tipos de Projéteis" ~: ([inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 4.0, projeteisInimigo = [projetil2]},
-                                                       inimigoA3 {posicaoInimigo = (1.5,4.5), vidaInimigo = 6.0, projeteisInimigo = [projetil3]},
-                                                       inimigoA3 {posicaoInimigo = (4.5,4.5), vidaInimigo = 2.0, projeteisInimigo = [projetil3]}],
+                                                                                                         inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 10}, 
+                                                                                                         inimigoA3 {posicaoInimigo = (1,4), vidaInimigo = 10}, 
+                                                                                                         inimigoA3 {posicaoInimigo = (4,4)},
+                                                                                                         inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = 10}], 
+        "Torre com diferentes tipos de Projéteis" ~: ([inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = 0.0, projeteisInimigo = [projetil2,projetil3]},
+                                                       inimigoA3 {posicaoInimigo = (0,0), vidaInimigo = 0.0, projeteisInimigo = [projetil2]},
+                                                       inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 4.0, projeteisInimigo = [projetil2]},
+                                                       inimigoA3 {posicaoInimigo = (1,4), vidaInimigo = 6.0, projeteisInimigo = [projetil3]},
+                                                       inimigoA3 {posicaoInimigo = (4,4), vidaInimigo = 2.0, projeteisInimigo = [projetil3]}],
                                                                     [torreA3 {tempoTorre = 1.0}, 
                                                                     torreB3 {tempoTorre = 2.0},
-                                                                    torreA3 {posicaoTorre = (0.5,1.5), tempoTorre = 2.0} ]) 
+                                                                    torreA3 {posicaoTorre = (0,1), tempoTorre = 2.0} ]) 
                                                   ~=? disparaTodosProjeteis [torreA3 {tempoTorre = 2.0}, 
                                                                              torreB3, 
-                                                                             torreA3 {posicaoTorre = (0.5,1.5)}] [inimigoA3, 
-                                                                                                                  inimigoA3 {posicaoInimigo = (1.5,0.5), vidaInimigo = 10}, 
-                                                                                                                  inimigoA3 {posicaoInimigo = (1.5,4.5), vidaInimigo = 10}, 
-                                                                                                                  inimigoA3 {posicaoInimigo = (4.5,4.5)},
-                                                                                                                  inimigoA3 {posicaoInimigo = (1.5,1.5), vidaInimigo = 10}]
+                                                                             torreA3 {posicaoTorre = (0,1)}] [inimigoA3, 
+                                                                                                                  inimigoA3 {posicaoInimigo = (1,0), vidaInimigo = 10}, 
+                                                                                                                  inimigoA3 {posicaoInimigo = (1,4), vidaInimigo = 10}, 
+                                                                                                                  inimigoA3 {posicaoInimigo = (4,4)},
+                                                                                                                  inimigoA3 {posicaoInimigo = (1,1), vidaInimigo = 10}]
       ]
 
--- lancaTodosInimigos
+-- lancaTodosPortais
 
-teste16 :: Test 
-teste16 = 
-   TestLabel "Testes para a função lancaTodosInimigos" $
+teste14 :: Test 
+teste14 = 
+   TestLabel "Testes para a função lancaTodosPortais" $
     test
      [
       "Sem portais e inimigos" ~:
@@ -302,8 +294,8 @@ teste16 =
 
 -- atualizaPortaisEInimigos
 
-teste17 :: Test 
-teste17 = 
+teste15 :: Test 
+teste15 = 
    TestLabel "Testes para a função atualizaPortaisEInimigos" $
     test
      [
@@ -317,8 +309,8 @@ teste17 =
 
 -- duraçaoFogoOuGelo
 
-teste18 :: Test 
-teste18 = 
+teste16 :: Test 
+teste16 = 
    TestLabel "Testes para a função duracaoFogoOuGelo" $
     test
      [
@@ -329,8 +321,8 @@ teste18 =
 
 -- atualizaDuracaoProjeteisInimigos
 
-teste19 :: Test 
-teste19 = 
+teste17 :: Test 
+teste17 = 
   TestLabel "Testes para a função atualizaDuracaoProjeteisInimigos" $
    test
     [
@@ -340,7 +332,7 @@ teste19 =
 
 -- inimigosSemVida
 
-teste20 :: Test 
+{- teste20 :: Test 
 teste20 = 
   TestLabel "Testes para a função inimigosSemVida" $
    test 
@@ -350,9 +342,9 @@ teste20 =
       "Recebe inimigos sem vida" ~: (baseA {creditosBase = 20}, [inimigoA3])
                                  ~=? inimigosSemVida baseA [inimigoA3, inimigoB3 {vidaInimigo = 0}, inimigoC3 {vidaInimigo = 0}]
       
-    ]
+    ] -}
 
-teste21 :: Test 
+{- teste21 :: Test 
 teste21 = 
   TestLabel "Testes para a função inimigoAtingeBase" $
    test 
@@ -360,47 +352,51 @@ teste21 =
      "Recebe uma lista de inimigos que não chegaram a base" ~: (baseA, [inimigoA3, inimigoB3, inimigoC3])
                                                             ~=? inimigoAtingeBase baseA [inimigoA3, inimigoB3, inimigoC3], 
      "Inimigos chegam a base" ~: (baseA {vidaBase = 40}, [inimigoB3])
-                              ~=? inimigoAtingeBase baseA [inimigoA3 {posicaoInimigo = (5.5, 4.5)}, inimigoB3, inimigoC3 {posicaoInimigo = (5.5, 4.5)}]
-    ]
+                              ~=? inimigoAtingeBase baseA [inimigoA3 {posicaoInimigo = (5, 4)}, inimigoB3, inimigoC3 {posicaoInimigo = (5, 4)}]
+    ] -}
 
-teste22 :: Test
-teste22 =
+teste18 :: Test
+teste18 =
   TestLabel "Testes para a função atualizaTorres" $ 
    test
     [
       "Recebe um jogo no estado inicial (sem torres)" ~: jogoInicial ~=? atualizaTorres jogoInicial,
       "Recebe um jogo com torres" ~: jogoInicial {torresJogo = [torreA3, torreB3]} ~=? atualizaTorres jogoInicial {torresJogo = [torreA3, torreB3]},
-      "Recebe um jogo com torres, e com inimigos" ~: jogoInicial {torresJogo = [torreA3 {tempoTorre = 2}, torreB3 {tempoTorre = 2}], inimigosJogo = [inimigoA3 {vidaInimigo = 2, 
+      "Recebe um jogo com torres, e com inimigos" ~: jogoInicial {torresJogo = [torreA3 {tempoTorre = 2}, torreB3 {tempoTorre = 2}], inimigosJogo = [inimigoF3 {vidaInimigo = -2, 
+                                                                                                                                                                projeteisInimigo = [Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}]},
+                                                                                                                                                     inimigoE3 {vidaInimigo = 0, 
+                                                                                                                                                                projeteisInimigo = [Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}, Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita 1.0}]},
+                                                                                                                                                     inimigoA3 {vidaInimigo = 2, 
                                                                                                                                                                 projeteisInimigo = [Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita}]}]}
                                                   ~=? atualizaTorres jogoInicial {torresJogo = [torreA3, torreB3], inimigosJogo = [inimigoE3, inimigoA3, inimigoF3]}
     ]
 
-teste23 :: Test 
-teste23 = 
+teste19 :: Test 
+teste19 = 
   TestLabel "Testes para a função atualizaInimigosEBase" $
    test 
     [
       "Recebe um jogo no estado inicial" ~: jogoInicial ~=? atualizaInimigosEBase 1 jogoInicial, 
       "Recebe um jogo com inimigos no mapa, que não morrem, e nem chegam a base" ~: jogoInicial {portaisJogo = [portalB3], 
                                                                                                  baseJogo = baseB, 
-                                                                                                 inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), 
+                                                                                                 inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), 
                                                                                                                            direcaoInimigo = Este, 
                                                                                                                            caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}, 
-                                                                                                                 inimigoB3 {posicaoInimigo = (1.5,1.5), 
+                                                                                                                 inimigoB3 {posicaoInimigo = (1,1), 
                                                                                                                             direcaoInimigo = Norte, 
                                                                                                                             caminhoInimigo = [Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}]} 
                                                                                  ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
                                                                                                                           inimigosJogo = [inimigoA3, inimigoB3],
                                                                                                                           baseJogo = baseB}, 
       "Recebe um jogo, e o inimigo atinge a base" ~: jogoInicial {portaisJogo = [portalB3], 
-                                                                  baseJogo = baseB, 
-                                                                  inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), 
+                                                                  baseJogo = baseB {vidaBase = 45}, 
+                                                                  inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), 
                                                                                              direcaoInimigo = Este, 
                                                                                              caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]} 
                                                                                  ]}
                                                   ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
                                                                                              inimigosJogo = [inimigoA3, 
-                                                                                                             inimigoB3 {posicaoInimigo = (5.5, 3.5), caminhoInimigo = []}],
+                                                                                                             inimigoB3 {posicaoInimigo = (5, 2), caminhoInimigo = []}],
                                                                                              baseJogo = baseB},
       "Recebe um jogo, e o inimigo morre" ~: jogoInicial {portaisJogo = [portalB3], 
                                                           torresJogo = [torreB3 {tempoTorre = 0}],
@@ -408,43 +404,64 @@ teste23 =
                                                           inimigosJogo = []}
                                           ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
                                                                                      torresJogo = [torreB3 {tempoTorre = 0}],
-                                                                                     inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5,3.5), vidaInimigo = 0}],
+                                                                                     inimigosJogo = [inimigoA3 {posicaoInimigo = (1,3), vidaInimigo = 0}],
                                                                                      baseJogo = baseB}
     ]
 
-teste24 :: Test 
-teste24 = 
+teste20 :: Test 
+teste20 = 
   TestLabel "Testes para a função atualizaJogo" $
    test 
     [
-      {- "Recebe um jogo no estado inicial" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
-                                                         inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), caminhoInimigo = []}], 
+      "Recebe um jogo no estado inicial" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
+                                                         inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), caminhoInimigo = []}], 
                                                          baseJogo = baseB}
-                                        ~=? atualizaJogo 0.1 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {entradaOnda = 0, inimigosOnda = [inimigoA3 {posicaoInimigo = (1.5,0.5)}]}, ondaB3]}],
+                                        ~=? atualizaJogo 0.1 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {entradaOnda = 0, inimigosOnda = [inimigoA3 {posicaoInimigo = (1,0)}]}, ondaB3]}],
                                                                           inimigosJogo = [], 
                                                                           baseJogo = baseB}, 
-     "Recebe o jogo acima" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 2.5), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1.5,0.5)}], 
+     "Recebe o jogo acima 1" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 2), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1,0)}], 
                                            baseJogo = baseB}
                           ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
-                                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 0.5), caminhoInimigo = []}], 
+                                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), caminhoInimigo = []}], 
                                                             baseJogo = baseB},
-      "Recebe o jogo acima" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 4.5), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1.5,2.5)}], 
+      "Recebe o jogo acima 2" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 4), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1,2)}], 
                                            baseJogo = baseB}
                             ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 2.5), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1.5,0.5)}], 
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 2), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1,0)}], 
                                            baseJogo = baseB},
-      "Recebe o jogo acima" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 0.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (3.5, 4.5), caminhoInimigo = [Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo =4, acDirecao = (1.5,4.5)}], 
+      "Recebe o jogo acima 3" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 0.0, entradaOnda = 0.0}, ondaB3]}],
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 6), caminhoInimigo = [Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo =4, acDirecao = (1,4)}], 
                                            baseJogo = baseB}
                             ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.5, 4.5), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1.5,2.5)}], 
-                                           baseJogo = baseB}, -}
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 4), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1,2)}], 
+                                           baseJogo = baseB},
       "Teste com um inimigo com vida nula" ~: (baseJogo jogoJ) {creditosBase = 350} ~=? baseJogo (atualizaJogo 1 jogoJ),
       "Teste com um inimigo com vida negativa" ~: (baseJogo jogoH) {creditosBase = 350} ~=? baseJogo (atualizaJogo 1 jogoH),
       "Teste com mais de um inimigo" ~: (baseJogo jogoI) {creditosBase = 500} ~=? baseJogo (atualizaJogo 1 jogoI)
     ]                       
+
+teste21 :: Test 
+teste21 = 
+  TestLabel "Testes para a função atualizaAnimaçãoTorres" $
+   test 
+    [
+      "Torre sem animação com inimigo no alcance e tempo 0" ~: jogoInicial {inimigosJogo = [inimigoA3 {posicaoInimigo = (5,1)}], torresJogo = [torreA3 {iteracoesDesdeInicioAnimacao = 2}]} ~=? atualizaAnimacaoTorres jogoInicial {inimigosJogo = [inimigoA3 {posicaoInimigo = (5,1)}], torresJogo = [torreA3]},
+      "Torre com animação a meio" ~: jogoInicial {torresJogo = [torreB3 {iteracoesDesdeInicioAnimacao = 3}]} ~=? atualizaAnimacaoTorres jogoInicial {torresJogo = [torreB3]},
+      "Torre com animação no final" ~: jogoInicial {torresJogo = [torreC3 {iteracoesDesdeInicioAnimacao = 1}]} ~=? atualizaAnimacaoTorres jogoInicial {torresJogo = [torreC3]},
+      "Torre sem animação e sem inimigo no alcance" ~: jogoInicial {inimigosJogo = [inimigoA3 {posicaoInimigo = (15,15)}], torresJogo = [torreA3]} ~=? atualizaAnimacaoTorres jogoInicial {inimigosJogo = [inimigoA3 {posicaoInimigo = (15,15)}], torresJogo = [torreA3]}
+    ]
+
+teste22 :: Test 
+teste22 = 
+  TestLabel "Testes para a função atualizaAnimaçãoInimigos" $
+   test 
+    [
+      "Inimigo com efeito de Gelo" ~: jogoInicial {inimigosJogo = [inimigoA3 {iteracoesDesdeInicioAnimacaoInimigo = 0}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoA3]},
+      "Inimigo com animação a meio" ~: jogoInicial {inimigosJogo = [inimigoB3 {iteracoesDesdeInicioAnimacaoInimigo = 2}]} ~=? atualizaAnimacaoTorres jogoInicial {inimigosJogo = [inimigoB3]},
+      "Inimigo com animação no final" ~: jogoInicial {inimigosJogo = [inimigoC3 {iteracoesDesdeInicioAnimacaoInimigo = 1}]} ~=? atualizaAnimacaoTorres jogoInicial {inimigosJogo = [inimigoC3]}
+    ]
 
 jogoJ :: Jogo
 jogoJ = Jogo {baseJogo = baseJ,
@@ -573,12 +590,22 @@ mapaJ =
 
 mapaA :: Mapa
 mapaA =
- [ [t, t, r, a, a, a],
-   [r, t, r, a, r, r],                     
-   [r, t, r, a, r, t],
-   [r, t, r, a, t, t],
-   [r, t, t, t, t, t],
-   [a, a, a, a, r, r]
+ [ [t,t,r,a,a,a,r,r,r,r,r,r,r,r,r,r],
+   [r,t,r,a,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,t,r,a,r,t,r,r,r,r,r,r,r,r,r,r],
+   [r,t,r,a,t,t,r,r,r,r,r,r,r,r,r,r],
+   [r,t,t,t,t,t,r,r,r,r,r,r,r,r,r,r],
+   [a,a,a,a,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r],
+   [r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r]
  ]
  where
        t = Terra
@@ -588,7 +615,7 @@ baseB :: Base
 baseB = Base 
   { 
     vidaBase = 50.0,
-    posicaoBase = (5.5, 2.5),
+    posicaoBase = (5, 2),
     creditosBase = 10
   }
 
@@ -605,11 +632,11 @@ jogoInicial = Jogo
 lojaA :: Loja
 lojaA = [(50, torreA3)]
 
--- Torre com gelo
+-- Torre com gelo e sem animação
 torreA3 :: Torre
 torreA3 = Torre 
  {
-    posicaoTorre = (5.5,1.5),
+    posicaoTorre = (5,1),
     danoTorre = 6,
     alcanceTorre = 3,
     rajadaTorre = 3,
@@ -619,32 +646,46 @@ torreA3 = Torre
     iteracoesDesdeInicioAnimacao = 1
  }
 
--- Torre com resina
+-- Torre com resina e a meio da animação
 torreB3 :: Torre 
 torreB3 = Torre 
  {
-    posicaoTorre = (2.5,3.5),
+    posicaoTorre = (2,3),
     danoTorre = 4,
     alcanceTorre = 5,
     rajadaTorre = 3,
     cicloTorre = 2,
     tempoTorre = 0,
     projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita},
-    iteracoesDesdeInicioAnimacao = 1
+    iteracoesDesdeInicioAnimacao = 2
+ }
+
+--torre no final da animação
+torreC3 :: Torre 
+torreC3 = Torre 
+ {
+    posicaoTorre = (2,3),
+    danoTorre = 4,
+    alcanceTorre = 5,
+    rajadaTorre = 3,
+    cicloTorre = 2,
+    tempoTorre = 0,
+    projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita},
+    iteracoesDesdeInicioAnimacao = 29
  }
 
 
 portalA3 :: Portal 
 portalA3 = Portal 
  {
-    posicaoPortal = (1.5, 0.5),
+    posicaoPortal = (1, 0),
     ondasPortal = [ondaA3, ondaB3] 
  }
 
 portalB3 :: Portal 
 portalB3 = Portal 
  {
-    posicaoPortal = (0.5, 0.5),
+    posicaoPortal = (0, 0),
     ondasPortal = [ondaA3, ondaB3] 
  }
 
@@ -713,7 +754,7 @@ ondaD'3 = Onda
 inimigoA3 :: Inimigo 
 inimigoA3 = Inimigo 
  {
-  posicaoInimigo = (0.5,0.5),
+  posicaoInimigo = (0,0),
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
   velocidadeInimigo = 10.0,
@@ -722,14 +763,14 @@ inimigoA3 = Inimigo
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (0.5,0.5),
+  acDirecao = (0,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
  }
 
 inimigoB3 :: Inimigo 
 inimigoB3 = Inimigo 
  {
-  posicaoInimigo = (1.5, 0.5),
+  posicaoInimigo = (1, 0),
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
   ataqueInimigo = 5.0, 
@@ -738,14 +779,14 @@ inimigoB3 = Inimigo
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (1.5,0.5),
-  iteracoesDesdeInicioAnimacaoInimigo = 1  
+  acDirecao = (1,0),
+  iteracoesDesdeInicioAnimacaoInimigo = 2  
  }
 
 inimigoC3 :: Inimigo 
 inimigoC3 = Inimigo 
  {
-  posicaoInimigo = (0.5, 0.5),
+  posicaoInimigo = (0, 0),
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
   ataqueInimigo = 5.0, 
@@ -754,14 +795,14 @@ inimigoC3 = Inimigo
   projeteisInimigo = [],
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (0.5,0.5),
-  iteracoesDesdeInicioAnimacaoInimigo = 1  
+  acDirecao = (0,0),
+  iteracoesDesdeInicioAnimacaoInimigo = 32  
  }
 
 inimigoD3 :: Inimigo 
 inimigoD3 = Inimigo 
  {
-  posicaoInimigo = (1.5, 0.5),
+  posicaoInimigo = (1, 0),
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
   ataqueInimigo = 5.0, 
@@ -770,14 +811,14 @@ inimigoD3 = Inimigo
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (1.5,0.5),
+  acDirecao = (1,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
  }
 
 inimigoE3 :: Inimigo 
 inimigoE3 = Inimigo 
  {
-  posicaoInimigo = (5.5, 2.5),
+  posicaoInimigo = (5, 2),
   direcaoInimigo = Norte,
   vidaInimigo = 10.0,
   ataqueInimigo = 5.0, 
@@ -786,14 +827,14 @@ inimigoE3 = Inimigo
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (4.5,1.5),
+  acDirecao = (5,2),
   iteracoesDesdeInicioAnimacaoInimigo = 1 
  }
 
 inimigoF3 :: Inimigo 
 inimigoF3 = Inimigo 
  {
-  posicaoInimigo = (2.5, 4.5),
+  posicaoInimigo = (2, 4),
   direcaoInimigo = Norte,
   vidaInimigo = 2.0,
   ataqueInimigo = 5.0, 
@@ -802,7 +843,7 @@ inimigoF3 = Inimigo
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (4.5,1.5),
+  acDirecao = (2,4),
   iteracoesDesdeInicioAnimacaoInimigo = 1 
  }
 
@@ -831,7 +872,7 @@ projetil3 = Projetil
 inimigo1 :: Inimigo 
 inimigo1 = Inimigo 
  {
-  posicaoInimigo = (5.5,4.5),
+  posicaoInimigo = (5,4),
   direcaoInimigo = Norte,
   vidaInimigo = 10.0,
   velocidadeInimigo = 0.0,
@@ -840,7 +881,7 @@ inimigo1 = Inimigo
   projeteisInimigo = [projetil1, projetil2, projetil3],
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (5.5,4.5),
+  acDirecao = (5,4),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
  }
 
@@ -848,7 +889,7 @@ inimigo1 = Inimigo
 inimigo2 :: Inimigo 
 inimigo2 = Inimigo 
  {
-  posicaoInimigo = (0.5,0.5),
+  posicaoInimigo = (0,0),
   direcaoInimigo = Este,
   vidaInimigo = 10.0,
   velocidadeInimigo = 10.0,
@@ -857,7 +898,7 @@ inimigo2 = Inimigo
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (0.5,0.5),
+  acDirecao = (0,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
  }
 
@@ -865,7 +906,7 @@ inimigo2 = Inimigo
 inimigo3 :: Inimigo 
 inimigo3 = Inimigo 
  {
-  posicaoInimigo = (5.5,4.5),
+  posicaoInimigo = (5,4),
   direcaoInimigo = Sul,
   vidaInimigo = 0.0,
   velocidadeInimigo = 10.0,
@@ -874,7 +915,7 @@ inimigo3 = Inimigo
   projeteisInimigo = [],
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
-  acDirecao = (5.5,24.5),
+  acDirecao = (5,4),
   iteracoesDesdeInicioAnimacaoInimigo = 1   
  }
 
@@ -882,7 +923,7 @@ inimigo3 = Inimigo
 inimigo4 :: Inimigo 
 inimigo4 = Inimigo 
  {
-  posicaoInimigo = (0.5,0.5),
+  posicaoInimigo = (0,0),
   direcaoInimigo = Norte,
   vidaInimigo = 0.0,
   velocidadeInimigo = 10.0,
@@ -891,7 +932,7 @@ inimigo4 = Inimigo
   projeteisInimigo = [], 
   tipoInimigo = MulherLanca , 
   caminhoInimigo = [],
-  acDirecao = (0.5,0.5),
+  acDirecao = (0,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
  }
 
@@ -899,6 +940,6 @@ baseA :: Base
 baseA = Base 
   { 
     vidaBase = 50.0,
-    posicaoBase = (5.5, 4.5),
+    posicaoBase = (5, 4),
     creditosBase = 10
   }

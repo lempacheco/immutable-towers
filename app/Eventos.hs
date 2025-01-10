@@ -121,8 +121,8 @@ reageEventos (EventKey (SpecialKey KeyShiftR) Down _ _)  it
 
 reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it
     | estadoIT it == Menu && py > (-300)= it {botaoMenu = (px, py-100)}
-    | estadoIT it == EscolhendoTorre || estadoIT it == TutorialEscolhendoTorre && b > (-300) = it {produtoLoja = (a, b - 200)}
-    | estadoIT it == Comprando || estadoIT it == TutorialComprando && y < 15 = it {posicaoSelecionadaMapa = (x, y + 1)}
+    | (estadoIT it == EscolhendoTorre || estadoIT it == TutorialEscolhendoTorre) && b > (-300) = it {produtoLoja = (a, b - 200)}
+    | (estadoIT it == Comprando || estadoIT it == TutorialComprando) && y < 15 = it {posicaoSelecionadaMapa = (x, y + 1)}
     | estadoIT it == CriandoMapa && y < 15 = it {posicaoSelecionadaMapa = (x, y + 1)}
     | estadoIT it == EscolhendoOndas && nO > 0 = it {escolhendoParametros = (nO - 1, n1, n2)} 
     | estadoIT it == EscolhendoIG && n1 > 0 = it {escolhendoParametros = (nO, n1 - 1, n2)}
@@ -134,7 +134,7 @@ reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it
         (nO, n1, n2) = escolhendoParametros it 
 
 reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
-    | estadoIT it == Comprando || estadoIT it == TutorialComprando && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
+    | (estadoIT it == Comprando || estadoIT it == TutorialComprando) && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
     | estadoIT it == CriandoMapa && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
@@ -147,7 +147,7 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
 
 
 reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
-    | estadoIT it == Comprando || estadoIT it == TutorialComprando && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
+    | (estadoIT it == Comprando || estadoIT it == TutorialComprando) && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
     | estadoIT it == CriandoMapa && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoOndas}
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
@@ -160,8 +160,8 @@ reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     
 reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
     | estadoIT it == Menu && py < 0 = it {botaoMenu = (px, py+100)}
-    | estadoIT it == EscolhendoTorre || estadoIT it == TutorialEscolhendoTorre && b < 100 = it {produtoLoja = (a, b + 200)}
-    | estadoIT it == Comprando || estadoIT it == TutorialComprando && y > 0  = it {posicaoSelecionadaMapa = (x, y - 1)}
+    | (estadoIT it == EscolhendoTorre || estadoIT it == TutorialEscolhendoTorre) && b < 100 = it {produtoLoja = (a, b + 200)}
+    | (estadoIT it == Comprando || estadoIT it == TutorialComprando) && y > 0  = it {posicaoSelecionadaMapa = (x, y - 1)}
     | estadoIT it == CriandoMapa && y > 0 = it {posicaoSelecionadaMapa = (x, y - 1)}
     | estadoIT it == EscolhendoOndas = it {escolhendoParametros = (nO + 1, n1, n2)} 
     | estadoIT it == EscolhendoIG = it {escolhendoParametros = (nO, n1 + 1, n2)}

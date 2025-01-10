@@ -225,6 +225,9 @@ main = do
   yes <- loadBMP "resources/textures/ui/yes.bmp"
   no <- loadBMP "resources/textures/ui/No.bmp"
   fundoPedraTT <- loadBMP "resources/textures/menuFundo/fundoPedraTT.bmp"
+  indicativoProjetilGelo <- loadBMP "resources/textures/ui/indicativoProjetilGelo.bmp"
+  indicativoProjetilResina <- loadBMP "resources/textures/ui/indicativoProjetilResina.bmp"
+  indicativoProjetilFogo <- loadBMP "resources/textures/ui/indicativoProjetilFogo.bmp"
   play janela 
         fundo 
         fr 
@@ -409,8 +412,10 @@ main = do
             ("tutorial2", tutorial2),
             ("fundoPedraTT", fundoPedraTT),
             ("yes", yes),
-            ("no", no)
-
+            ("no", no),
+            ("indicativoProjetilGelo", indicativoProjetilGelo),
+            ("indicativoProjetilFogo",indicativoProjetilFogo),
+            ("indicativoProjetilResina", indicativoProjetilResina)
         ]) 
         desenha 
         reageEventos 

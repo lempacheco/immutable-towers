@@ -23,8 +23,7 @@ data ImmutableTowers = ImmutableTowers {
     botaoNivelPassado :: Posicao,
     baseCriada :: Bool,
     botaoGameOver :: Posicao,
-    modoJogo :: ModoJogo, 
-    jogoCriado :: Jogo,
+    modoJogo :: ModoJogo,
     etapaTT :: Int
 
 }
@@ -69,7 +68,7 @@ reiniciarNivel it
         case modoJogo it of 
             Finito   -> reiniciarNivelFinito it
             Infinito -> it {nivelJogoInfinito = nivelJogoInfinito it, estadoIT = Jogando}
-            _        -> it {jogoIT = jogoCriado it, estadoIT = Jogando}
+            _        -> it {jogoIT = jogoItInicial it, estadoIT = Jogando}
     | otherwise = it 
 
 progredirNivelInfinito :: ImmutableTowers -> ImmutableTowers

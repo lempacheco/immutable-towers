@@ -30,7 +30,8 @@ testesTarefa3 =
         teste19,
         teste20,
         teste21,
-        teste22
+        teste22,
+        teste23
       ]
 
 -- detetarInimigos 
@@ -458,9 +459,29 @@ teste22 =
   TestLabel "Testes para a função atualizaAnimaçãoInimigos" $
    test 
     [
-      "Inimigo com efeito de Gelo" ~: jogoInicial {inimigosJogo = [inimigoA3 {iteracoesDesdeInicioAnimacaoInimigo = 0}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoA3]},
-      "Inimigo com animação a meio" ~: jogoInicial {inimigosJogo = [inimigoB3 {iteracoesDesdeInicioAnimacaoInimigo = 2}]} ~=? atualizaAnimacaoTorres jogoInicial {inimigosJogo = [inimigoB3]},
-      "Inimigo com animação no final" ~: jogoInicial {inimigosJogo = [inimigoC3 {iteracoesDesdeInicioAnimacaoInimigo = 1}]} ~=? atualizaAnimacaoTorres jogoInicial {inimigosJogo = [inimigoC3]}
+      "Inimigo com efeito de Gelo" ~: jogoInicial {inimigosJogo = [inimigoA3 {iteracoesDesdeInicioAnimacaoInimigo = 0, projeteisInimigo = [projetil2]}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoA3 {projeteisInimigo = [projetil2]}]},
+      "Inimigo com animação a meio" ~: jogoInicial {inimigosJogo = [inimigoA3 {iteracoesDesdeInicioAnimacaoInimigo = 2}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoA3]},
+      "Inimigo com animação no final" ~: jogoInicial {inimigosJogo = [inimigoB3 {iteracoesDesdeInicioAnimacaoInimigo = 1}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoB3]}
+    ]
+
+teste23 :: Test
+teste23 = 
+  TestLabel "Testes para a função geraCaminhos" $
+   test 
+    [
+      "existe caminho" ~: [Inimigo {tipoInimigo = MulherLanca, 
+                                      projeteisInimigo = [], 
+                                      vidaInimigo = 0, 
+                                      butimInimigo = 150,  
+                                      ataqueInimigo = 20, 
+                                      velocidadeInimigo = 1,
+                                      caminhoInimigo = [Norte,Este,Este,Norte,Norte,Norte,Norte,Norte,Oeste,Norte,Norte,Norte,Norte,Este,Este,Este,Este,Este,Este,Este,Sul,Sul,Este,Este],
+                                      iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                      posicaoInimigo = (5,1),
+                                      acDirecao = (5,1),
+                                      direcaoInimigo = Norte
+                                      }] ~=? geraCaminhos (inimigosJogo jogoJ) mapaJ baseJ
+      
     ]
 
 jogoJ :: Jogo
@@ -780,7 +801,7 @@ inimigoB3 = Inimigo
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
   acDirecao = (1,0),
-  iteracoesDesdeInicioAnimacaoInimigo = 2  
+  iteracoesDesdeInicioAnimacaoInimigo = 32  
  }
 
 inimigoC3 :: Inimigo 
@@ -796,7 +817,7 @@ inimigoC3 = Inimigo
   tipoInimigo = MulherLanca,
   caminhoInimigo = [],
   acDirecao = (0,0),
-  iteracoesDesdeInicioAnimacaoInimigo = 32  
+  iteracoesDesdeInicioAnimacaoInimigo = 1  
  }
 
 inimigoD3 :: Inimigo 

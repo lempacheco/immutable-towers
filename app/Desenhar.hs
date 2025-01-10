@@ -5,7 +5,7 @@ import ImmutableTowers
 import LI12425
 import Data.Maybe (fromJust)
 import GHC.Float (int2Float)
-import Tarefa3 
+import Tarefa2 
 
 lado :: Integer
 lado = 64
@@ -332,10 +332,27 @@ desenhaUmInimigo inimigo texturas =
         --ataqueInimig1 = Translate x y $ scale 1 1 ( text ( show ( ataqueInimigo inimigo)))
         coracaoVida = translate (x+offsetNumeroVida) (y+40-(16/2*0.7)) $ scale 0.7 0.7 $ fromJust $ lookup "vida" texturas
         textura = desenhaAnimacaoInimigo inimigo texturas
+        indicativoProjeteis = Translate x (y + 50) $ desenhaIndicativoProjeteis inimigo texturas
     in Pictures [translate x y textura, 
                  numeroDaVida, 
-                 coracaoVida
+                 coracaoVida,
+                 indicativoProjeteis
                 ]
+
+desenhaIndicativoProjeteis :: Inimigo -> [Textura] -> Picture
+desenhaIndicativoProjeteis i ts
+    | elem Gelo tiposProjs && elem Resina tiposProjs && elem Fogo tiposProjs = Pictures [Translate (-30) 0 iGelo, Translate 0 0 iResina, Translate 30 0 iFogo]
+    | elem Gelo tiposProjs && elem Resina tiposProjs = Pictures [Translate (-10) 0 iGelo, Translate 10 0 iResina]
+    | elem Gelo tiposProjs && elem Fogo tiposProjs = Pictures [Translate (-10) 0 iGelo, Translate 10 0 iFogo]
+    | elem Fogo tiposProjs && elem Resina tiposProjs = Pictures [Translate (-10) 0 iFogo, Translate 10 0 iResina]
+    | elem Gelo tiposProjs = Pictures [iGelo]
+    | elem Fogo tiposProjs = Pictures [iFogo]
+    | elem Resina tiposProjs = Pictures [iResina]
+    | otherwise = Pictures []
+    where tiposProjs = getTiposProjsInimigo i
+          iGelo = fromJust $ lookup "indicativoProjetilGelo" ts
+          iFogo = fromJust $ lookup "indicativoProjetilFogo" ts
+          iResina = fromJust $ lookup "indicativoProjetilResina" ts
 
 desenhaTorres :: [Torre] -> [Textura] -> Picture 
 desenhaTorres torres texturas = Pictures $ map (`desenhaUmaTorre` texturas) torres 

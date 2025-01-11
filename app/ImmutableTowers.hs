@@ -26,7 +26,6 @@ data ImmutableTowers = ImmutableTowers {
     botaoGameOver :: Posicao,
     modoJogo :: ModoJogo,
     etapaTT :: Int
-
 }
 
 data EstadoJogo = Menu 

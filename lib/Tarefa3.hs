@@ -132,8 +132,9 @@ atualizaInimigosEBase t j =
                             $ atualizaInimigoFogo
                             $ map atualizaDuracaoProjeteisInimigos 
                             $ map moveInimigo 
-                            $ geraCaminhos nnIs m nnB,
-                            baseJogo = nnB
+                            $ geraCaminhos nnIs m nnB (acGeraCaminhos j),
+                            baseJogo = nnB,
+                            acGeraCaminhos = acGeraCaminhos j + 1
                          }
  
 
@@ -401,14 +402,20 @@ Para cada inimigo:
 
 -}
 
-geraCaminhos :: [Inimigo] -> Mapa -> Base -> [Inimigo]
-geraCaminhos [] _ _ = []
-geraCaminhos (i:is) m b =
+escolheCaminho :: [(Bool, [Direcao])] -> Int -> [Direcao]
+escolheCaminho caminhos ac
+    | ac >= len = escolheCaminho caminhos (ac-len)
+    | otherwise = snd (caminhos !! ac)
+    where len = length caminhos
+
+geraCaminhos :: [Inimigo] -> Mapa -> Base -> Int -> [Inimigo]
+geraCaminhos [] _ _ _ = []
+geraCaminhos (i:is) m b ac =
     let posI = posicaoInimigo i
         posB = posicaoBase b
-        caminhos = geraUmCaminho m posI posB [] []
-        l = fromJust $ lookup True caminhos
-    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b else i : geraCaminhos is m b
+        caminhos = filter (\v -> fst v == True) (geraUmCaminho m posI posB [] [])
+        l = escolheCaminho caminhos ac
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b (ac+1) else i : geraCaminhos is m b (ac+1)
 
 {-| Movimenta um inimigo ao longo de um caminho de terra, previamente calculado. 
 
@@ -424,7 +431,7 @@ moveInimigo i =
         (d:[]) 
           | sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1 -> i
           | otherwise -> i {caminhoInimigo = [d], acDirecao = posicaoInimigo i, direcaoInimigo = d}
-        (d:rt) 
+        (_:rt) 
           | sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1 -> i
           | otherwise -> i {caminhoInimigo = rt, acDirecao = posicaoInimigo i, direcaoInimigo = head rt}
 
@@ -523,7 +530,8 @@ jogo1 = Jogo {baseJogo = base1,
               portaisJogo = [portal1_1, portal2_1],
               mapaJogo = mapa1,
               inimigosJogo = [],
-              lojaJogo = loja
+              lojaJogo = loja,
+              acGeraCaminhos = 0
             }
 
 base1 :: Base
@@ -570,7 +578,8 @@ jogo2 = Jogo {baseJogo = base2,
               portaisJogo = [portal1_2, portal2_2, portal3_2],
               mapaJogo = mapa2,
               inimigosJogo = [],
-              lojaJogo = loja
+              lojaJogo = loja,
+              acGeraCaminhos = 0
             } 
 
 mapa2 :: Mapa 
@@ -644,7 +653,8 @@ jogo3 = Jogo {mapaJogo = mapa3,
               portaisJogo = [portal2_3, portal1_3], 
               torresJogo = [], 
               baseJogo = base3,
-              lojaJogo = loja}
+              lojaJogo = loja,
+              acGeraCaminhos = 0}
 
 base3 = baseTds {posicaoBase = (8,15)}
 
@@ -689,8 +699,10 @@ jogo4 = Jogo {mapaJogo = mapa4,
               portaisJogo = [portal1_4], 
               torresJogo = [], 
               baseJogo = base4,
-              lojaJogo = loja}
+              lojaJogo = loja,
+              acGeraCaminhos = 0}
 
+base4 :: Base
 base4 = baseTds {posicaoBase = (15,14)}
 
 portal1_4 :: Portal
@@ -730,7 +742,8 @@ jogo5 = Jogo {mapaJogo = mapa5,
               portaisJogo = [portal1_5, portal2_5, portal3_5], 
               torresJogo = [], 
               baseJogo = base5,
-              lojaJogo = loja}
+              lojaJogo = loja,
+              acGeraCaminhos = 0}
 
 base5 = baseTds {posicaoBase = (12,15)}
 
@@ -753,7 +766,8 @@ jogoTT = Jogo {mapaJogo = mapa1,
                      portaisJogo = [portal6_1], 
                      torresJogo = [], 
                      baseJogo = base1, 
-                     lojaJogo = loja}
+                     lojaJogo = loja,
+                     acGeraCaminhos = 0}
 
 portal6_1 :: Portal
 portal6_1 = Portal {posicaoPortal = (5,0), 

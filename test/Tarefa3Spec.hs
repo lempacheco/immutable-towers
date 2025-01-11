@@ -31,7 +31,9 @@ testesTarefa3 =
         teste20,
         teste21,
         teste22,
-        teste23
+        teste23,
+        teste24,
+        teste25
       ]
 
 -- detetarInimigos 
@@ -464,12 +466,13 @@ teste22 =
       "Inimigo com animação no final" ~: jogoInicial {inimigosJogo = [inimigoB3 {iteracoesDesdeInicioAnimacaoInimigo = 1}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoB3]}
     ]
 
+--a função geraCaminhos apenas corre quando o mapa é válido, ou seja, não há necessidade de um caso de teste para um caso em que não exista um caminho
 teste23 :: Test
 teste23 = 
   TestLabel "Testes para a função geraCaminhos" $
    test 
     [
-      "existe caminho" ~: [Inimigo {tipoInimigo = MulherLanca, 
+      "teste 1" ~: [Inimigo {tipoInimigo = MulherLanca, 
                                       projeteisInimigo = [], 
                                       vidaInimigo = 0, 
                                       butimInimigo = 150,  
@@ -480,9 +483,108 @@ teste23 =
                                       posicaoInimigo = (5,1),
                                       acDirecao = (5,1),
                                       direcaoInimigo = Norte
-                                      }] ~=? geraCaminhos (inimigosJogo jogoJ) mapaJ baseJ
-      
+                                      }] ~=? geraCaminhos (inimigosJogo jogoJ) mapaJ baseJ,
+      "teste 2" ~: [Inimigo {tipoInimigo = MulherLanca, 
+                                      projeteisInimigo = [], 
+                                      vidaInimigo = 0, 
+                                      butimInimigo = 150,  
+                                      ataqueInimigo = 20, 
+                                      velocidadeInimigo = 1,
+                                      caminhoInimigo = [Norte,Norte,Oeste,Oeste,Oeste,Oeste,Sul,Sul,Sul,Sul,Oeste],
+                                      iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                      posicaoInimigo = (5,2),
+                                      acDirecao = (5,2),
+                                      direcaoInimigo = Norte
+                                      }] ~=? geraCaminhos [Inimigo {tipoInimigo = MulherLanca, 
+                                                                    projeteisInimigo = [], 
+                                                                    vidaInimigo = 0, 
+                                                                    butimInimigo = 150,  
+                                                                    ataqueInimigo = 20, 
+                                                                    velocidadeInimigo = 1,
+                                                                    caminhoInimigo = [],
+                                                                    iteracoesDesdeInicioAnimacaoInimigo = 1,
+                                                                    posicaoInimigo = (5,2),
+                                                                    acDirecao = (5,2)
+                                                                    }] mapaA baseJ {posicaoBase = (0,0)}
     ]
+
+teste24 :: Test
+teste24 = 
+  TestLabel "Testes para a função moveInimigo" $
+   test 
+    [
+      "inimigo não tem caminho" ~: inimigoA3 ~=? moveInimigo inimigoA3,
+      "inimigo tem apenas mais uma direção no caminho e está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,1), acDirecao = (0,1), direcaoInimigo = Sul} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,1), acDirecao = (0,0)},
+      "inimigo tem apenas mais uma direção no caminho e não está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,0.5), acDirecao = (0,0)} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,0.5), acDirecao = (0,0)},
+      "inimigo tem mais de uma direção no caminho e está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Oeste, Este], posicaoInimigo = (0,1), acDirecao = (0,1), direcaoInimigo = Oeste} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,1), acDirecao = (0,0), direcaoInimigo = Sul},
+      "inimigo tem mais de uma direção no caminho e não está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)}
+    ]
+
+teste25 :: Test
+teste25 = 
+  TestLabel "Testes para a função geraOndasPortal" $
+   test 
+    [
+      "apenas um inimigo 1 e dois inimigos 2" ~: [ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}], tempoOnda = 0},
+                                                  ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}]}] ~=? escolheDirecao (geraOndasPortal 2 1 2 (0,9)),
+      "apenas inimigos 1" ~: [ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}], tempoOnda = 0},
+                              ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}]}] ~=? escolheDirecao (geraOndasPortal 2 3 0 (0,9)),
+      "sem inimigos" ~: [ondaGOP {inimigosOnda = [], tempoOnda = 0},
+                        ondaGOP {inimigosOnda = []}] ~=? escolheDirecao (geraOndasPortal 2 0 0 (0,9)),
+      "inimigos 1 e inimigos 2" ~: [ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}], tempoOnda = 0},
+                                    ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
+                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}]}] ~=? escolheDirecao (geraOndasPortal 2 3 2 (0,9))
+    ]
+
+--esta função serve para conseguir fazer teste da geraOndasPortal, dado que a geraOndasPortal não atribui uma direção aos inimigos, e, embora isso não seja um problema para o jogo, dado que a geraCaminhos faz isso, para correr os testes é necessário que os inimigos tenham direções
+escolheDirecao :: [Onda] -> [Onda]
+escolheDirecao [] = []
+escolheDirecao (o:os) =
+  let is = inimigosOnda o
+  in o {inimigosOnda = map (\i -> i {direcaoInimigo = Norte}) is} : escolheDirecao os
+
+ondaGOP :: Onda
+ondaGOP = Onda {cicloOnda = 5*60,
+                tempoOnda = 10*60,
+                entradaOnda = 0
+                }
+
+inimigo1GOP :: Inimigo
+inimigo1GOP = Inimigo {tipoInimigo = Guerreiro, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 150, 
+                        butimInimigo = 50, 
+                        ataqueInimigo = 40, 
+                        velocidadeInimigo = 0.5, 
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1,
+                        direcaoInimigo = Norte}
+
+inimigo2GOP :: Inimigo
+inimigo2GOP = Inimigo {tipoInimigo = MulherLanca, 
+                        projeteisInimigo = [], 
+                        vidaInimigo = 100, 
+                        butimInimigo = 45,  
+                        ataqueInimigo = 20, 
+                        velocidadeInimigo = 1,
+                        caminhoInimigo = [],
+                        iteracoesDesdeInicioAnimacaoInimigo = 1,
+                        direcaoInimigo = Norte}
 
 jogoJ :: Jogo
 jogoJ = Jogo {baseJogo = baseJ,

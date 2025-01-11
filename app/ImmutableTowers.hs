@@ -12,6 +12,7 @@ data ImmutableTowers = ImmutableTowers {
     jogoIT :: Jogo,
     texturasIT :: [Textura], 
     posicaoSelecionadaMapa :: (Float, Float),
+    posicaoSelecionadaMapaSndJog :: (Float, Float),
     produtoLoja :: (Float, Float),
     botaoMenu :: (Float, Float),
     jogoItInicial :: Jogo,
@@ -24,7 +25,6 @@ data ImmutableTowers = ImmutableTowers {
     baseCriada :: Bool,
     botaoGameOver :: Posicao,
     modoJogo :: ModoJogo, 
-    jogoCriado :: Jogo,
     etapaTT :: Int
 
 }
@@ -34,9 +34,13 @@ data EstadoJogo = Menu
                 | VoltandoMenu
                 | Jogando 
                 | EscolhendoTorre
+                | EscolhendoTorre2
+                | EscolhendoTorre3
                 | Comprando 
+                | Comprando2
+                | Comprando3
                 | CriandoMapa
-                | EscolhendoOndas
+                | EscolhendoOndas 
                 | EscolhendoIG
                 | EscolhendoIM
                 | GameOver
@@ -69,7 +73,7 @@ reiniciarNivel it
         case modoJogo it of 
             Finito   -> reiniciarNivelFinito it
             Infinito -> it {nivelJogoInfinito = nivelJogoInfinito it, estadoIT = Jogando}
-            _        -> it {jogoIT = jogoCriado it, estadoIT = Jogando}
+            _        -> it {jogoIT = jogoItInicial it, estadoIT = Jogando}
     | otherwise = it 
 
 progredirNivelInfinito :: ImmutableTowers -> ImmutableTowers

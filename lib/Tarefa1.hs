@@ -232,23 +232,23 @@ False
 
 normalizaInimigos :: [Inimigo] -> Bool
 normalizaInimigos is = all normalizainimigo is
-  where 
+   where 
     projetilIgual :: [Projetil] -> Bool
     projetilIgual [] = True 
-    projetilIgual (p:ps) = length ps == length (foldr (\x ac -> if x `elem` ac then ac else x:ac) [] (p:ps))
-    
+    projetilIgual [_] = True
+    projetilIgual (p:ps) =  if elem p ps then False
+                             else projetilIgual ps
     projeteisValidos :: [TipoProjetil] -> Bool
     projeteisValidos tps =
-      let contemFogo = Fogo `elem` tps
-          contemResina = Resina `elem` tps
-          contemGelo = Gelo `elem` tps
-      in not (contemFogo && contemResina) && not (contemFogo && contemGelo)
-
-   
+          let contemFogo = Fogo `elem` tps
+              contemResina = Resina `elem` tps
+              contemGelo = Gelo `elem` tps
+          in not (contemFogo && contemResina) && not (contemFogo && contemGelo)
+      
     normalizainimigo :: Inimigo -> Bool
     normalizainimigo i = projeteisValidos tProjetil && projetilIgual projetil 
-      where projetil = projeteisInimigo i 
-            tProjetil = map tipoProjetil projetil  
+          where projetil = projeteisInimigo i 
+                tProjetil = map tipoProjetil projetil  
 
 
 

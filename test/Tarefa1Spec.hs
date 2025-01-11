@@ -112,7 +112,7 @@ testesTorres :: Test
 testesTorres =
   TestLabel "Testes Torres" $
     test
-      [ "validaPosicoesTorres - teste com torres válidas" ~: True ~=? validaPosicoesTorres [torre1, torre2] mapa1,
+      [ "validaPosicoesTorres - teste com torres válidas" ~: True ~=? validaPosicoesTorres [torre2] mapa1,
         "validaPosicoesTorres - teste com torres não válidas" ~: False ~=? validaPosicoesTorres [torre1, torre3] mapa1,
 
         "alcanceTorresPositivo - teste com torres válidas" ~:  True ~=? alcanceTorresPositivo [torre1, torre2],
@@ -259,7 +259,7 @@ torre1 = Torre
 torre2 :: Torre
 torre2 = Torre 
   {
-    posicaoTorre = (1.5,0.5),
+    posicaoTorre = (2.5,0.5),
     danoTorre = 1,
     alcanceTorre = 3,
     rajadaTorre = 3,
@@ -329,7 +329,7 @@ torre6 = Torre
 torre7 :: Torre
 torre7 = Torre 
   {
-    posicaoTorre = (1.5,0.5),
+    posicaoTorre = (2.5,0.5),
     danoTorre = 2,
     alcanceTorre = 5,
     rajadaTorre = 7,

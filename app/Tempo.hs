@@ -15,6 +15,7 @@ reageTempo t it
     | estadoIT it == EscolhendoIM = it 
     | estadoIT it == NivelPassado = it
     | estadoIT it == Tutorial && etapaTT it < 3 = it
+    | (perdeuJogo j || ganhouJogo j) && (estadoIT it == Tutorial || estadoIT it == TutorialEscolhendoTorre || estadoIT it == TutorialComprando) = it
     | ganhouJogo j && modoJogo it == MapaCriado = it {estadoIT = YouWon1}
     | ganhouJogo j && nivelJogoFinito it /= Nivel5 = it {estadoIT = NivelPassado}
     | ganhouJogo j && nivelJogoFinito it == Nivel5 = it {estadoIT = YouWon}

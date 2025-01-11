@@ -145,6 +145,8 @@ desenhaEscolhendoOnda it = Pictures [fundo,
                                      setaBaixo1, 
                                      setaBaixo2, 
                                      setaBaixo3, 
+                                     nOndas,
+                                     setaLado,
                                      enO, 
                                      enIG, 
                                      enIM
@@ -164,6 +166,8 @@ desenhaEscolhendoOnda it = Pictures [fundo,
         setaBaixo1 = translate 100 (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
         setaBaixo2 = translate (-5) (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
         setaBaixo3 = translate (-105) (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
+        nOndas = translate (-250) (-180) $ scale 0.7 0.7 $ fromJust $ lookup "nOndas" ts
+        setaLado = translate (-120) (-180) $ scale 3 3 $ fromJust $ lookup "seta" ts
         fundo = Pictures [desenhaCriandoMapa it, translate 0 0 $ color (withAlpha 0.8 black) $ rectangleSolid 1920 1080]
 
 desenhaCriandoMapa :: ImmutableTowers -> Picture 
@@ -255,11 +259,11 @@ desenhaMenu it = Pictures
     [fundoTela,
     translate 0 250 $ scale 1 1 $ itTitulo, 
     translate 0 0 $ scale 5 5 $ botaoMenu, 
-    translate 0 0 $ scale 1.2 1.2 $ fm, 
+    translate 0 0 $ fm, 
     translate (0) (-100) $ scale 5 5 $ botaoMenu,
-    translate 0 (-100) $ scale 1.1 1.1 $ im, 
+    translate 0 (-100) $ im, 
     translate  (0) (-200) $ scale 5 5 $ botaoMenu,
-    translate 0 (-200) $ scale 1.2 1.2 $ cm, 
+    translate 0 (-200) $ cm, 
     translate 0 (-300) $ scale 5 5 $ botaoMenu,
     translate 0 (-300) $ scale 1.2 1.2 $ tt,
     desenhaEscolhendoMenu it  

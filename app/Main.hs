@@ -229,6 +229,7 @@ main = do
   indicativoProjetilGelo <- loadBMP "resources/textures/ui/indicativoProjetilGelo.bmp"
   indicativoProjetilResina <- loadBMP "resources/textures/ui/indicativoProjetilResina.bmp"
   indicativoProjetilFogo <- loadBMP "resources/textures/ui/indicativoProjetilFogo.bmp"
+  nOndas <- loadBMP "resources/textures/ui/nOndas.bmp"
   play janela 
         fundo 
         fr 
@@ -416,7 +417,8 @@ main = do
             ("no", no),
             ("indicativoProjetilGelo", indicativoProjetilGelo),
             ("indicativoProjetilFogo",indicativoProjetilFogo),
-            ("indicativoProjetilResina", indicativoProjetilResina)
+            ("indicativoProjetilResina", indicativoProjetilResina), 
+            ("nOndas", nOndas)
         ]) 
         desenha 
         reageEventos 

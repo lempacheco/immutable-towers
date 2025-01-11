@@ -68,6 +68,35 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
     | estadoIT it == Comprando =  
         let jogo = jogoIT it
+            colocaTorre:: ImmutableTowers -> (Torre, Creditos)
+            colocaTorre it = case produtoLoja it of
+                (-900, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                                        danoTorre = 15,
+                                        alcanceTorre = 4,
+                                        rajadaTorre = 4,
+                                        cicloTorre = 5*60,
+                                        tempoTorre = 5*60,
+                                        projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita (2*60)},
+                                        iteracoesDesdeInicioAnimacao = 1}, 100)
+
+                (-900, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                                        danoTorre = 25,
+                                        alcanceTorre = 4,
+                                        rajadaTorre = 3,
+                                        cicloTorre = 4*60,
+                                        tempoTorre = 4*60,
+                                        projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita},
+                                        iteracoesDesdeInicioAnimacao = 1}, 150)
+
+                _ -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                            danoTorre = 30,
+                            alcanceTorre = 3,
+                            rajadaTorre = 5,
+                            cicloTorre = 4*60,
+                            tempoTorre = 4*60,
+                            projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita (3*60)},
+                            iteracoesDesdeInicioAnimacao = 1}, 200)
+            (xF, yF) = posicaoSelecionadaMapa it 
             jogoAtualizado = compraTorre (fst (colocaTorre it)) (snd (colocaTorre it)) jogo
          in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
 
@@ -97,12 +126,12 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
     | estadoIT it == GameOver && fst (botaoGameOver it) == 100 = reiniciarNivel it 
-    | estadoIT it == GameOver || estadoIT it == Tutorial && fst (botaoGameOver it) == -600 = reiniciarEstado it
+    | (estadoIT it == GameOver || estadoIT it == Tutorial) && fst (botaoGameOver it) == -600 = reiniciarEstado it
     | estadoIT it == YouWon1 && fst (botaoGameOver it) == 100 = reiniciarNivel it 
     | estadoIT it == YouWon1 && fst (botaoGameOver it) == -600 = reiniciarEstado it
     | estadoIT it == YouWon && fst (botaoNivelPassado it) == -150 = progredirNivel it 
-    | estadoIT it == YouWon || estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it
-    | estadoIT it == YouWon || estadoIT it == Pausado && fst (botaoNivelPassado it) == 200  = reiniciarNivel it  
+    | (estadoIT it == YouWon || estadoIT it == Pausado) && fst (botaoNivelPassado it) == -500 = reiniciarEstado it
+    | (estadoIT it == YouWon || estadoIT it == Pausado) && fst (botaoNivelPassado it) == 200  = reiniciarNivel it  
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == -150 =  it {estadoIT = Jogando}
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it 
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
@@ -138,7 +167,7 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == CriandoMapa && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
-    | estadoIT it == GameOver || estadoIT it == Tutorial && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
+    | (estadoIT it == GameOver || estadoIT it == Tutorial) && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
     | estadoIT it == YouWon1 && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
     | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
   where (x, y) = posicaoSelecionadaMapa it
@@ -151,7 +180,7 @@ reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == CriandoMapa && x > 0 = it {posicaoSelecionadaMapa = (x - 1, y)}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoOndas}
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
-    | estadoIT it == GameOver || estadoIT it == Tutorial && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
+    | (estadoIT it == GameOver || estadoIT it == Tutorial) && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
     | estadoIT it == YouWon1 && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
     | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado > -500  = it {botaoNivelPassado = (xBotaoNivelPassado - 350, yBotaoNivelPassado)}
   where (x, y) = posicaoSelecionadaMapa it
@@ -172,11 +201,68 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
         (nO, n1, n2) = escolhendoParametros it 
 
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
-    | estadoIT it == EscolhendoTorre || estadoIT it == Comprando = it {estadoIT = Jogando}
+    | (estadoIT it == EscolhendoTorre || estadoIT it == Comprando) = it {estadoIT = Jogando}
     | estadoIT it == Tutorial && etapaTT it == 0 = it {estadoIT = Tutorial, etapaTT = 1}
     | estadoIT it == Tutorial && etapaTT it == 1 = it {estadoIT = Tutorial, jogoIT = jogoTT, etapaTT = 2}
     | estadoIT it == Tutorial && etapaTT it == 6 = reiniciarEstado it 
-  
+
+reageEventos (EventKey (SpecialKey KeyTab) Down _ _) it 
+    | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre2}
+    | estadoIT it == EscolhendoTorre2 = it {estadoIT = Comprando2}
+    | estadoIT it == Comprando2 =  
+        let jogo = jogoIT it
+            colocaTorre:: ImmutableTowers -> (Torre, Creditos)
+            colocaTorre it = case produtoLoja it of
+                (-900, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                                        danoTorre = 15,
+                                        alcanceTorre = 4,
+                                        rajadaTorre = 4,
+                                        cicloTorre = 5*60,
+                                        tempoTorre = 5*60,
+                                        projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita (2*60)},
+                                        iteracoesDesdeInicioAnimacao = 1}, 100)
+
+                (-900, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                                        danoTorre = 25,
+                                        alcanceTorre = 4,
+                                        rajadaTorre = 3,
+                                        cicloTorre = 4*60,
+                                        tempoTorre = 4*60,
+                                        projetilTorre = Projetil {tipoProjetil = Resina, duracaoProjetil = Infinita},
+                                        iteracoesDesdeInicioAnimacao = 1}, 150)
+
+                _ -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                            danoTorre = 30,
+                            alcanceTorre = 3,
+                            rajadaTorre = 5,
+                            cicloTorre = 4*60,
+                            tempoTorre = 4*60,
+                            projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita (3*60)},
+                            iteracoesDesdeInicioAnimacao = 1}, 200)
+            (xF, yF) = posicaoSelecionadaMapaSndJog it 
+            jogoAtualizado = compraTorre (fst (colocaTorre it)) (snd (colocaTorre it)) jogo
+         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
+
+
+reageEventos (EventKey (Char 'w') Down _ _) it
+    | estadoIT it == EscolhendoTorre2 && b < 100 = it {produtoLoja = (a, b + 200)}
+    | estadoIT it == Comprando2 && y > 0  = it {posicaoSelecionadaMapaSndJog = (x, y - 1)}
+  where (a,b) = produtoLoja it 
+        (x,y) = posicaoSelecionadaMapaSndJog it 
+
+reageEventos (EventKey (Char 's') Down _ _) it
+    | estadoIT it == EscolhendoTorre2  && b > (-300) = it {produtoLoja = (a, b - 200)}
+    | estadoIT it == Comprando2 && y < 15 = it {posicaoSelecionadaMapaSndJog = (x, y + 1)}
+  where (a,b) = produtoLoja it 
+        (x,y) = posicaoSelecionadaMapaSndJog it 
+
+reageEventos (EventKey (Char 'a') Down _ _) it
+   | estadoIT it == Comprando2 && x > 0 = it {posicaoSelecionadaMapaSndJog = (x - 1, y)}
+  where (x,y) = posicaoSelecionadaMapaSndJog it 
+
+reageEventos (EventKey (Char 'd') Down _ _) it
+   | estadoIT it == Comprando2 && x < 15 = it {posicaoSelecionadaMapaSndJog = (x + 1, y)}
+  where (x,y) = posicaoSelecionadaMapaSndJog it 
 
 reageEventos _ it = it 
 
@@ -260,7 +346,7 @@ colocaTorre:: ImmutableTowers -> (Torre, Creditos)
 colocaTorre it = case produtoLoja it of
     (-900, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                             danoTorre = 15,
-                            alcanceTorre = 5,
+                            alcanceTorre = 4,
                             rajadaTorre = 4,
                             cicloTorre = 5*60,
                             tempoTorre = 5*60,
@@ -269,7 +355,7 @@ colocaTorre it = case produtoLoja it of
 
     (-900, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                             danoTorre = 25,
-                            alcanceTorre = 3,
+                            alcanceTorre = 4,
                             rajadaTorre = 3,
                             cicloTorre = 4*60,
                             tempoTorre = 4*60,
@@ -278,14 +364,15 @@ colocaTorre it = case produtoLoja it of
 
     _ -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                   danoTorre = 30,
-                  alcanceTorre = 4,
+                  alcanceTorre = 3,
                   rajadaTorre = 5,
                   cicloTorre = 4*60,
                   tempoTorre = 4*60,
                   projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita (3*60)},
                   iteracoesDesdeInicioAnimacao = 1}, 200)
     where (xF,yF) =  posicaoSelecionadaMapa it -- posição da seleção vermelha
-        
+
+
 
 reiniciarEstado :: ImmutableTowers -> ImmutableTowers
 reiniciarEstado it = it {

@@ -21,7 +21,10 @@ desenha it = case estadoIT it of
      Menu -> desenhaMenu  it 
      Jogando -> Pictures [desenhaJogo it] 
      EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it] 
+     EscolhendoTorre2 -> Pictures [desenhaEscolhendoTorre it]
      Comprando -> desenhaComprando it
+     Comprando2 -> desenhaComprando2 it
+     Comprando3 -> desenhaComprando3 it
      Pausado -> Pictures [desenhaJogo it, desenhaPausa it]  
      CriandoMapa -> desenhaCriandoMapa it
      EscolhendoOndas -> desenhaEscolhendoOnda it 
@@ -201,11 +204,25 @@ desenhaTerreno Terra ts = fromJust $ lookup "terra" ts
 desenhaTerreno Relva ts = fromJust $ lookup "relva" ts
 desenhaTerreno Agua ts = fromJust $ lookup "agua" ts 
 
+desenhaComprando3 :: ImmutableTowers -> Picture 
+desenhaComprando3 it = Pictures [desenhaJogo it, 
+                                desenhaSelecao selec, 
+                                desenhaSelecaoSndJog selec2]
+  where
+    selec = posicaoSelecionadaMapa it
+    selec2 = posicaoSelecionadaMapaSndJog it 
+
+desenhaComprando2 :: ImmutableTowers -> Picture 
+desenhaComprando2 it = Pictures [desenhaJogo it, 
+                                desenhaSelecaoSndJog selec2]
+  where
+    selec2 = posicaoSelecionadaMapaSndJog it 
+
 desenhaComprando :: ImmutableTowers -> Picture 
 desenhaComprando it = Pictures [desenhaJogo it, 
                                 desenhaSelecao selec]
   where
-    selec = posicaoSelecionadaMapa it
+    selec = posicaoSelecionadaMapa it 
 
 desenhaEscolhendoMenu :: ImmutableTowers -> Picture 
 desenhaEscolhendoMenu it = Pictures [desenhaSelecaoLoja selec ts]
@@ -226,6 +243,12 @@ desenhaSelecao pos =
     let (x,y) = conversaoCoordsGloss pos
     in translate x y $
        color (withAlpha 0.5 red) $ rectangleSolid 64 64
+
+desenhaSelecaoSndJog :: (Float, Float) -> Picture
+desenhaSelecaoSndJog pos =
+    let (x,y) = conversaoCoordsGloss pos
+    in translate x y $
+       color (withAlpha 0.5 blue) $ rectangleSolid 64 64
 
 desenhaMenu :: ImmutableTowers -> Picture 
 desenhaMenu it = Pictures 

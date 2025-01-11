@@ -432,14 +432,14 @@ moveInimigo i =
 
 baseTds :: Base
 baseTds = Base {vidaBase = 100,
-             creditosBase = 200} 
+                creditosBase = 200} 
 
 -- inimigos Guerreiro
 inimigo1Tds :: Inimigo
 inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
                         projeteisInimigo = [], 
-                        vidaInimigo = 1000, 
-                        butimInimigo = 100, 
+                        vidaInimigo = 150, 
+                        butimInimigo = 50, 
                         ataqueInimigo = 40, 
                         velocidadeInimigo = 0.5, 
                         caminhoInimigo = [],
@@ -449,8 +449,8 @@ inimigo1Tds = Inimigo {tipoInimigo = Guerreiro,
 inimigo2Tds :: Inimigo
 inimigo2Tds = Inimigo {tipoInimigo = MulherLanca, 
                         projeteisInimigo = [], 
-                        vidaInimigo = 50, 
-                        butimInimigo = 150,  
+                        vidaInimigo = 100, 
+                        butimInimigo = 45,  
                         ataqueInimigo = 20, 
                         velocidadeInimigo = 1,
                         caminhoInimigo = [],
@@ -602,15 +602,15 @@ base2 = baseTds {posicaoBase = (15,7)}
 
 portal1_2 :: Portal
 portal1_2 = Portal {posicaoPortal = (0,1),
-                  ondasPortal = geraOndasPortal 1 1 1 (0,1)}
+                  ondasPortal = geraOndasPortal 1 2 4 (0,1)}
 
 portal2_2 :: Portal
 portal2_2 = Portal {posicaoPortal = (0,12), 
-                  ondasPortal = geraOndasPortal 0 1 2 (0,12)}
+                  ondasPortal = geraOndasPortal 2 3 3 (0,12)}
 
 portal3_2 :: Portal
 portal3_2 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = geraOndasPortal 0 1 1 (5,0)}
+                  ondasPortal = geraOndasPortal 2 3 2 (5,0)}
 
 -- Nível 3
 
@@ -650,11 +650,11 @@ base3 = baseTds {posicaoBase = (8,15)}
 
 portal1_3 :: Portal
 portal1_3 = Portal {posicaoPortal = (6,0),
-                  ondasPortal = geraOndasPortal 1 1 1 (6,0)}
+                  ondasPortal = geraOndasPortal 2 5 3 (6,0)}
 
 portal2_3 :: Portal
 portal2_3 = Portal {posicaoPortal = (9,0), 
-                  ondasPortal = geraOndasPortal 0 0 0 (9,0)}
+                  ondasPortal = geraOndasPortal 2 3 2 (9,0)}
 
 -- Nivel 4
 
@@ -669,7 +669,7 @@ mapa4 =
     [a,t,a,r,r,r,a,t,a,a,a,a,a,a,t,a],
     [a,t,a,r,r,r,a,t,a,a,t,t,t,t,t,a],
     [a,t,a,a,a,a,a,t,a,a,t,a,a,a,t,a],
-    [a,t,t,t,t,t,t,t,t,t,t,a,r,a,t,t],
+    [a,t,t,t,t,t,t,t,t,t,t,a,r,a,t,a],
     [a,a,a,a,t,a,a,a,a,a,t,a,r,a,t,a],
     [a,a,a,a,t,a,r,r,r,a,t,a,a,a,t,a],
     [a,a,a,a,t,a,r,r,r,a,t,t,t,t,t,a],
@@ -695,7 +695,7 @@ base4 = baseTds {posicaoBase = (15,14)}
 
 portal1_4 :: Portal
 portal1_4 = Portal {posicaoPortal = (1,0),
-                  ondasPortal = geraOndasPortal 1 1 1 (1,0)}
+                  ondasPortal = geraOndasPortal 6 3 2 (1,0)}
 
 -- Nivel 5
 
@@ -727,16 +727,25 @@ mapa5 =
 jogo5 :: Jogo 
 jogo5 = Jogo {mapaJogo = mapa5, 
               inimigosJogo = [], 
-              portaisJogo = [portal1_5], 
+              portaisJogo = [portal1_5, portal2_5, portal3_5], 
               torresJogo = [], 
               baseJogo = base5,
               lojaJogo = loja}
 
-base5 = baseTds {posicaoBase = (15,0)}
+base5 = baseTds {posicaoBase = (12,15)}
 
 portal1_5 :: Portal
 portal1_5 = Portal {posicaoPortal = (0,0),
-                   ondasPortal = geraOndasPortal 1 1 1 (0,0)}
+                   ondasPortal = geraOndasPortal 2 3 1 (0,0)}
+
+portal2_5 :: Portal
+portal2_5 = Portal {posicaoPortal = (0,0),
+                   ondasPortal = geraOndasPortal 1 2 1 (0,10)}
+
+portal3_5 :: Portal
+portal3_5 = Portal {posicaoPortal = (0,0),
+                   ondasPortal = geraOndasPortal 2 3 2 (11,0)}
+
 -- Jogo tutorial
 jogoTT :: Jogo
 jogoTT = Jogo {mapaJogo = mapa1,

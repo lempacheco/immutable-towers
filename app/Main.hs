@@ -19,6 +19,7 @@ itTds texturas =
     ImmutableTowers {estadoIT = Menu, 
                      texturasIT = texturas, 
                      posicaoSelecionadaMapa = (0,0), 
+                     posicaoSelecionadaMapaSndJog = (0,0),
                      produtoLoja = (-900, 100),
                      botaoMenu = (-160, 0),
                      jogoItInicial = jogo1, 

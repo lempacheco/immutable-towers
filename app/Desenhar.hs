@@ -17,7 +17,7 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = Pictures [desenhaPrimeiroJogador it, desenhaSegundoJogador it, text $ show $ botaoNivelPassado it ]
+desenha it = Pictures [desenhaPrimeiroJogador it, desenhaSegundoJogador it]
 
 desenhaPrimeiroJogador :: ImmutableTowers -> Picture
 desenhaPrimeiroJogador it = case estadoIT it of
@@ -344,10 +344,7 @@ desenhaJogo it = Pictures [picMapa,
                            picTorre, 
                            creditosJog, 
                            moldBaixo,
-                           picModoJogo, 
-                           Pictures [scale 0.7 0.7 $ text $ show $ estadoIT it],
-                           Pictures [translate 100 100 $ scale 0.7 0.7 $ text $ show $ estadoIT2 it],
-                           Pictures [scale 1 1 $ text $ show $ acGeraCaminhos jogo] 
+                           picModoJogo
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
@@ -414,7 +411,6 @@ desenhaUmInimigo inimigo it texturas =
         comprimentoNumeroVidaPxs = int2Float (length (show $ ceiling $ vidaInimigo inimigo) * 13)
         offsetNumeroVida = (comprimentoNumeroVidaPxs+27+18)/2*0.5 --metade do comprimento da vida, da largura do inimigo e da largura do coração, escalado a 0.5
         numeroDaVida = translate (x-offsetNumeroVida) (y+40) $ scale 0.5 0.5 $ string2FonteNumeros (show $ ceiling $ vidaInimigo inimigo) texturas
-        --ataqueInimig1 = Translate x y $ scale 1 1 ( text ( show ( ataqueInimigo inimigo)))
         coracaoVida = translate (x+offsetNumeroVida) (y+40-(16/2*0.7)) $ scale 0.7 0.7 $ fromJust $ lookup "vida" texturas
         textura = desenhaAnimacaoInimigo inimigo it texturas
         indicativoProjeteis = Translate x (y + 50) $ desenhaIndicativoProjeteis inimigo texturas
@@ -548,8 +544,6 @@ desenhaPerfilJogador it ts = Pictures [creditosJogador,
                                   Translate 780 (-85) $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts, 
                                   desenhaNivelJogo it ts
                                  ]
--- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
--- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
 
 desenhaModoJogo :: ImmutableTowers -> [Textura] -> Picture
 desenhaModoJogo it ts = Translate 780 (-20) $ scale 0.8 0.8 $ 
@@ -561,15 +555,15 @@ desenhaModoJogo it ts = Translate 780 (-20) $ scale 0.8 0.8 $
 desenhaNivelJogo :: ImmutableTowers -> [Textura] -> Picture 
 desenhaNivelJogo it ts = case modoJogo it of 
     Finito   -> Translate 780 (-80) $ scale 0.8 0.8 $ desenhaNivel it ts
-    Infinito -> Translate 750 (-70) $ scale 1 1 $ string2FonteNumeros (show $ nivelJogoInfinito it) ts
-    _        -> Pictures [] 
+    Infinito -> Translate 750 (-70) $ string2FonteNumeros (show $ nivelJogoInfinito it) ts
+    _        -> Translate 775 (-85) $ fromJust $ lookup "semNivel" ts
   where desenhaNivel :: ImmutableTowers -> [Textura] -> Picture
-        desenhaNivel it ts = case nivelJogoFinito it of 
-            Nivel1 -> fromJust $ lookup "Nivel1" ts
-            Nivel2 -> fromJust $ lookup "Nivel2" ts
-            Nivel3 -> fromJust $ lookup "Nivel3" ts
-            Nivel4 -> fromJust $ lookup "Nivel4" ts
-            Nivel5 -> fromJust $ lookup "Nivel5" ts
+        desenhaNivel it_ texturas = case nivelJogoFinito it_ of 
+            Nivel1 -> fromJust $ lookup "Nivel1" texturas
+            Nivel2 -> fromJust $ lookup "Nivel2" texturas
+            Nivel3 -> fromJust $ lookup "Nivel3" texturas
+            Nivel4 -> fromJust $ lookup "Nivel4" texturas
+            Nivel5 -> fromJust $ lookup "Nivel5" texturas
 
 desenhaPausa :: ImmutableTowers -> Picture 
 desenhaPausa it = Pictures [fundo, 

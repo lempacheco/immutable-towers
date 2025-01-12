@@ -379,7 +379,7 @@ teste19 =
   TestLabel "Testes para a função atualizaInimigosEBase" $
    test 
     [
-      "Recebe um jogo no estado inicial" ~: jogoInicial ~=? atualizaInimigosEBase 1 jogoInicial, 
+      "Recebe um jogo no estado inicial" ~: jogoInicial {acGeraCaminhos = 1} ~=? atualizaInimigosEBase 1 jogoInicial, 
       "Recebe um jogo com inimigos no mapa, que não morrem, e nem chegam a base" ~: jogoInicial {portaisJogo = [portalB3], 
                                                                                                  baseJogo = baseB, 
                                                                                                  inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), 
@@ -387,7 +387,7 @@ teste19 =
                                                                                                                            caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}, 
                                                                                                                  inimigoB3 {posicaoInimigo = (1,1), 
                                                                                                                             direcaoInimigo = Norte, 
-                                                                                                                            caminhoInimigo = [Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}], acGeraCaminhos = 1} 
+                                                                                                                            caminhoInimigo = [Norte, Norte, Norte, Norte, Este, Este, Este, Este, Sul, Sul]}], acGeraCaminhos = 1} 
                                                                                  ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
                                                                                                                           inimigosJogo = [inimigoA3, inimigoB3],
                                                                                                                           baseJogo = baseB}, 

@@ -32,7 +32,11 @@ itTds texturas =
                      nivelJogoInfinito = 1, 
                      botaoNivelPassado = (-500, -250),
                      botaoGameOver = (-600, -250),
-                     etapaTT = 0}
+                     etapaTT = 0,
+                     selecaoCostumizar = (-400,350),
+                     inimigoHomem = "guerreiro",
+                     inimigoMulher = "mulherLanca",
+                     perfil = "perfilGuerreiro"}
 
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
@@ -139,7 +143,9 @@ main = do
   animacaoTorreResina27 <- loadBMP "resources/textures/towers/animacoesTorreResina/27.bmp"
   animacaoTorreResina28 <- loadBMP "resources/textures/towers/animacoesTorreResina/28.bmp"
   animacaoTorreResina29 <- loadBMP "resources/textures/towers/animacoesTorreResina/29.bmp"
-  perfil <- loadBMP "resources/textures/entities/fireWarrior.bmp"
+  perfilGuerreiro <- loadBMP "resources/textures/entities/guerreiro_avatar.bmp"
+  perfilViking <- loadBMP "resources/textures/entities/viking_avatar.bmp"
+  perfilMulherLanca <- loadBMP "resources/textures/entities/mulherLanca_avatar.bmp"
   base <- loadBMP "resources/textures/base/Base.bmp"
   portal <- loadBMP "resources/textures/portal/Portal.bmp"
   guerreiro0 <- loadBMP "resources/textures/entities/guerreiro0.bmp"
@@ -160,6 +166,24 @@ main = do
   mulherLanca6 <- loadBMP "resources/textures/entities/mulherLanca6.bmp"
   mulherLanca7 <- loadBMP "resources/textures/entities/mulherLanca7.bmp"
   mulherLanca8 <- loadBMP "resources/textures/entities/mulherLanca8.bmp"
+  guerreiraMulher0 <- loadBMP "resources/textures/entities/guerreiraMulher0.bmp"
+  guerreiraMulher1 <- loadBMP "resources/textures/entities/guerreiraMulher1.bmp"
+  guerreiraMulher2 <- loadBMP "resources/textures/entities/guerreiraMulher2.bmp"
+  guerreiraMulher3 <- loadBMP "resources/textures/entities/guerreiraMulher3.bmp"
+  guerreiraMulher4 <- loadBMP "resources/textures/entities/guerreiraMulher4.bmp"
+  guerreiraMulher5 <- loadBMP "resources/textures/entities/guerreiraMulher5.bmp"
+  guerreiraMulher6 <- loadBMP "resources/textures/entities/guerreiraMulher6.bmp"
+  guerreiraMulher7 <- loadBMP "resources/textures/entities/guerreiraMulher7.bmp"
+  guerreiraMulher8 <- loadBMP "resources/textures/entities/guerreiraMulher8.bmp"
+  viking0 <- loadBMP "resources/textures/entities/viking0.bmp"
+  viking1 <- loadBMP "resources/textures/entities/viking1.bmp"
+  viking2 <- loadBMP "resources/textures/entities/viking2.bmp"
+  viking3 <- loadBMP "resources/textures/entities/viking3.bmp"
+  viking4 <- loadBMP "resources/textures/entities/viking4.bmp"
+  viking5 <- loadBMP "resources/textures/entities/viking5.bmp"
+  viking6 <- loadBMP "resources/textures/entities/viking6.bmp"
+  viking7 <- loadBMP "resources/textures/entities/viking7.bmp"
+  viking8 <- loadBMP "resources/textures/entities/viking8.bmp"
   vida <- loadBMP "resources/textures/ui/vida.bmp"
   fundoMenu <- loadBMP "resources/textures/menuFundo/fundoMenu.bmp"
   botaoPlay <- loadBMP "resources/textures/menuFundo/botaoPlay.bmp"
@@ -229,6 +253,9 @@ main = do
   indicativoProjetilGelo <- loadBMP "resources/textures/ui/indicativoProjetilGelo.bmp"
   indicativoProjetilResina <- loadBMP "resources/textures/ui/indicativoProjetilResina.bmp"
   indicativoProjetilFogo <- loadBMP "resources/textures/ui/indicativoProjetilFogo.bmp"
+  customize <- loadBMP "resources/textures/ui/customize.bmp"
+  menuCustomize <- loadBMP "resources/textures/menuFundo/menuCustomize.bmp"
+
   play janela 
         fundo 
         fr 
@@ -260,6 +287,24 @@ main = do
             ("mulherLanca6",mulherLanca6),
             ("mulherLanca7",mulherLanca7),
             ("mulherLanca8",mulherLanca8),
+            ("guerreiraMulher0",guerreiraMulher0),
+            ("guerreiraMulher1",guerreiraMulher1),
+            ("guerreiraMulher2",guerreiraMulher2),
+            ("guerreiraMulher3",guerreiraMulher3),
+            ("guerreiraMulher4",guerreiraMulher4),
+            ("guerreiraMulher5",guerreiraMulher5),
+            ("guerreiraMulher6",guerreiraMulher6),
+            ("guerreiraMulher7",guerreiraMulher7),
+            ("guerreiraMulher8",guerreiraMulher8),
+            ("viking0",viking0),
+            ("viking1",viking1),
+            ("viking2",viking2),
+            ("viking3",viking3),
+            ("viking4",viking4),
+            ("viking5",viking5),
+            ("viking6",viking6),
+            ("viking7",viking7),
+            ("viking8",viking8),
             ("vida", vida), --18x16 px
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
@@ -370,7 +415,9 @@ main = do
             ("molduraMapa2", molduraMapa2),
             ("Store", store),
             ("player", player),
-            ("perfil", perfil),
+            ("perfilGuerreiro", perfilGuerreiro),
+            ("perfilViking", perfilViking),
+            ("perfilMulherLanca", perfilMulherLanca),
             ("botaoPausa", botaoPausa),
             ("fraseContinuar", fraseContinuar),
             ("frasePausa", frasePausa),
@@ -416,7 +463,9 @@ main = do
             ("no", no),
             ("indicativoProjetilGelo", indicativoProjetilGelo),
             ("indicativoProjetilFogo",indicativoProjetilFogo),
-            ("indicativoProjetilResina", indicativoProjetilResina)
+            ("indicativoProjetilResina", indicativoProjetilResina),
+            ("customize", customize),
+            ("menuCustomize", menuCustomize)
         ]) 
         desenha 
         reageEventos 

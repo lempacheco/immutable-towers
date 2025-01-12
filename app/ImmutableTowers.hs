@@ -27,8 +27,11 @@ data ImmutableTowers = ImmutableTowers {
     botaoGameOver :: Posicao,
     modoJogo :: ModoJogo,
     etapaTT :: Int, 
-    produtoLoja2 :: (Float, Float)
-
+    produtoLoja2 :: (Float, Float),
+    selecaoCostumizar :: Posicao,
+    inimigoHomem :: String,
+    inimigoMulher :: String,
+    perfil :: String
 }
 
 data EstadoJogo = Menu 
@@ -53,6 +56,7 @@ data EstadoJogo = Menu
                 | TutorialEscolhendoTorre
                 | TutorialComprando
                 | MensagemErro
+                | Costumizar
                 deriving (Eq, Show)
 
 data NivelJogoFinito = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 deriving (Eq, Show)

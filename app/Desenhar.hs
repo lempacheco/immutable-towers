@@ -38,6 +38,7 @@ desenhaPrimeiroJogador it = case estadoIT it of
      TutorialEscolhendoTorre -> desenhaTutorial it ts 
      TutorialComprando -> desenhaTutorial it ts 
      Jogando -> Pictures [desenhaJogo it] 
+     Costumizar -> desenhaCostumizar it ts
      
   where ts = texturasIT it
 
@@ -62,6 +63,20 @@ auxString2FonteNumeros (h:t) ts ac =
 
 desenhaMensagemErro :: ImmutableTowers -> Picture
 desenhaMensagemErro it = Pictures [fromJust $ lookup "mensagemErro" (texturasIT it), color (withAlpha 0.5 black) $ rectangleSolid 1920 1080]
+
+desenhaCostumizar :: ImmutableTowers -> [Textura] -> Picture
+desenhaCostumizar it ts = Pictures [
+        fromJust $ lookup "menuCustomize" ts,
+        Translate (-300) 350 $ Scale 3 3 (fromJust $ lookup "guerreiro0" ts),
+        Translate 300 350 $ Scale 3 3 (fromJust $ lookup "viking0" ts),
+        Translate (-300) (-50) $ Scale 3 3 (fromJust $ lookup "mulherLanca0" ts),
+        Translate 300 (-50) $ Scale 3 3 (fromJust $ lookup "guerreiraMulher0" ts),
+        Translate (-500) (-350) $ Scale 2 2 (fromJust $ lookup "perfilGuerreiro" ts),
+        Translate 0 (-350) $ Scale 2 2 (fromJust $ lookup "perfilViking" ts),
+        Translate 500 (-350) $ Scale 2 2 (fromJust $ lookup "perfilMulherLanca" ts),
+        Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
+    ]
+    where (x,y) = selecaoCostumizar it
 
 desenhaNivelPassado :: ImmutableTowers -> Picture
 desenhaNivelPassado it = Pictures [fundo, iconeBackToMenu, iconeNextLevel, iconeRestart, fraseLevelWon, fraseBackToMenu, fraseNextLevel, fraseRestart, seta]
@@ -303,6 +318,8 @@ desenhaMenu it = Pictures
     translate 0 (-200) $ cm, 
     translate 0 (-300) $ scale 5 5 $ botaoMenu,
     translate 0 (-300) $ scale 1.2 1.2 $ tt,
+    translate 0 (-400) $ scale 5 5 $ botaoMenu,
+    translate 0 (-400) $ scale 1.2 1.2 $ costumize,
     desenhaEscolhendoMenu it  
          ]
      where texturas = texturasIT it 
@@ -313,6 +330,7 @@ desenhaMenu it = Pictures
            im = fromJust $ lookup "im" texturas 
            cm = fromJust $ lookup "cm" texturas 
            tt = fromJust $ lookup "tt" texturas
+           costumize = fromJust $ lookup "customize" texturas
     
 
 
@@ -339,7 +357,7 @@ desenhaJogo it = Pictures [picMapa,
           texturas = texturasIT it
           picBase = desenhaBase base (fromJust $ lookup "base" texturas)
           base = baseJogo jogo
-          picInimigo = desenhaInimigos inimigos texturas
+          picInimigo = Pictures $ desenhaInimigos inimigos it texturas
           inimigos = inimigosJogo jogo
           picPortais = desenhaPortais portais (fromJust $ lookup "portal" texturas)
           portais = portaisJogo jogo
@@ -386,18 +404,19 @@ desenhaBase base textura =
     let (x,y) = conversaoCoordsGloss $ posicaoBase base
     in translate x (y  + (104-64)/2) textura  --desenho no mapa tendo em conta a altura da textura 
 
-desenhaInimigos :: [Inimigo] -> [Textura] -> Picture
-desenhaInimigos inimigos texturas = Pictures $ map (`desenhaUmInimigo` texturas) inimigos 
+desenhaInimigos :: [Inimigo] -> ImmutableTowers -> [Textura] -> [Picture]
+desenhaInimigos [] _ _ = []
+desenhaInimigos (i:is) it texturas = desenhaUmInimigo i it texturas : desenhaInimigos is it texturas
 
-desenhaUmInimigo :: Inimigo -> [Textura] -> Picture 
-desenhaUmInimigo inimigo texturas = 
+desenhaUmInimigo :: Inimigo -> ImmutableTowers -> [Textura] -> Picture 
+desenhaUmInimigo inimigo it texturas = 
     let (x, y) = conversaoCoordsGloss $ posicaoInimigo inimigo
         comprimentoNumeroVidaPxs = int2Float (length (show $ ceiling $ vidaInimigo inimigo) * 13)
         offsetNumeroVida = (comprimentoNumeroVidaPxs+27+18)/2*0.5 --metade do comprimento da vida, da largura do inimigo e da largura do coração, escalado a 0.5
         numeroDaVida = translate (x-offsetNumeroVida) (y+40) $ scale 0.5 0.5 $ string2FonteNumeros (show $ ceiling $ vidaInimigo inimigo) texturas
         --ataqueInimig1 = Translate x y $ scale 1 1 ( text ( show ( ataqueInimigo inimigo)))
         coracaoVida = translate (x+offsetNumeroVida) (y+40-(16/2*0.7)) $ scale 0.7 0.7 $ fromJust $ lookup "vida" texturas
-        textura = desenhaAnimacaoInimigo inimigo texturas
+        textura = desenhaAnimacaoInimigo inimigo it texturas
         indicativoProjeteis = Translate x (y + 50) $ desenhaIndicativoProjeteis inimigo texturas
     in Pictures [translate x y textura, 
                  numeroDaVida, 
@@ -443,12 +462,12 @@ desenhaAnimacaoTorre t ts =
             Fogo -> fromJust $ lookup ("animacaoTorreFogo" ++ show iteracoes) ts
     in translate x (y+80) textura
 
-desenhaAnimacaoInimigo :: Inimigo -> [Textura] -> Picture
-desenhaAnimacaoInimigo i ts =
+desenhaAnimacaoInimigo :: Inimigo -> ImmutableTowers -> [Textura] -> Picture
+desenhaAnimacaoInimigo i it ts =
     let its = iteracoesDesdeInicioAnimacaoInimigo i
         textura = case tipoInimigo i of
-            Guerreiro -> fromJust $ lookup ("guerreiro" ++ show (ceiling $ int2Float(its) / 4)) ts
-            MulherLanca -> fromJust $ lookup ("mulherLanca" ++ show (ceiling $ int2Float(its) / 4)) ts
+            Guerreiro -> fromJust $ lookup (inimigoHomem it ++ show (ceiling $ int2Float(its) / 4)) ts
+            MulherLanca -> fromJust $ lookup (inimigoMulher it ++ show (ceiling $ int2Float(its) / 4)) ts
     in  Pictures [textura]
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]
@@ -491,7 +510,7 @@ desenhaPerfilJogador it ts = Pictures [creditosJogador,
                                         creditos, 
                                         iconeVida, 
                                         vidaBaseJg, 
-                                        perfil, 
+                                        perfilJogador, 
                                         iconePausa, 
                                         iconeHome, 
                                         iconeJogador, 
@@ -505,7 +524,7 @@ desenhaPerfilJogador it ts = Pictures [creditosJogador,
          creditos = Translate 750 202 $ scale 1 1 $ string2FonteNumeros (show $ creditosBase b) ts
          iconeVida = Translate 750 100 $ scale 3.5 3.5 $ fromJust $ lookup "iconeVidaJg" ts
          vidaBaseJg = Translate 740 120 $ scale 1 1 $ string2FonteNumeros (show $ ceiling $ vidaBase b) ts 
-         perfil = Translate 680 210 $ scale 1 1 $ fromJust $ lookup "perfil" ts 
+         perfilJogador = Translate 680 210 $ scale 1 1 $ fromJust $ lookup (perfil it) ts 
 
          iconePausa = Pictures [Translate 650 460 $ scale 2 2 $ fromJust $ lookup "botaoPausa" ts, 
                                 Translate 770 460 $ scale 4 3.5 $ fromJust $ lookup "iconePausa" ts, 

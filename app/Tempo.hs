@@ -21,6 +21,7 @@ reageTempo t it
     | ganhouJogo j && nivelJogoFinito it == Nivel5 = it {estadoIT = YouWon}
     | perdeuJogo j = it {estadoIT = GameOver} 
     | estadoIT it == MensagemErro = it
+    | estadoIT it == Costumizar = it
     | otherwise = it {jogoIT = atualizaJogo t $ j}
     where j = jogoIT it
  

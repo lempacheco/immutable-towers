@@ -64,6 +64,7 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == Menu && botaoMenu it == (-160,-100) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, estadoIT2 = Jogando, modoJogo = Infinito} else it {estadoIT = MensagemErro, estadoIT2= MensagemErro, modoJogo = Infinito}
     | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado} 
     | estadoIT it == Menu && botaoMenu it == (-160,-300) = it {estadoIT = Tutorial, etapaTT = 0}    
+    | estadoIT it == Menu && botaoMenu it == (-160,-400) = it {estadoIT = Costumizar}    
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando}
     | estadoIT it == Comprando =  
@@ -142,6 +143,8 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == TutorialComprando && etapaTT it == 5 = 
         let jogoAtualizado = compraTorre  (fst (colocaTorre it)) (snd (colocaTorre it)) (jogoIT it)
         in it {estadoIT = Tutorial, jogoIT = jogoAtualizado , etapaTT = 6}
+    | estadoIT it == Costumizar = alteraITCostumizar it
+    | otherwise = it
 
 reageEventos (EventKey (SpecialKey KeyShiftR) Down _ _)  it 
     | estadoIT it == Jogando = it {estadoIT = Pausado}
@@ -149,18 +152,21 @@ reageEventos (EventKey (SpecialKey KeyShiftR) Down _ _)  it
     | otherwise = it
 
 reageEventos (EventKey (SpecialKey KeyDown) Down _ _) it
-    | estadoIT it == Menu && py > (-300)= it {botaoMenu = (px, py-100)}
+    | estadoIT it == Menu && py > (-400)= it {botaoMenu = (px, py-100)}
     | (estadoIT it == EscolhendoTorre || estadoIT it == TutorialEscolhendoTorre) && b > (-300) = it {produtoLoja = (a, b - 200)}
     | (estadoIT it == Comprando || estadoIT it == TutorialComprando) && y < 15 = it {posicaoSelecionadaMapa = (x, y + 1)}
     | estadoIT it == CriandoMapa && y < 15 = it {posicaoSelecionadaMapa = (x, y + 1)}
     | estadoIT it == EscolhendoOndas && nO > 0 = it {escolhendoParametros = (nO - 1, n1, n2)} 
     | estadoIT it == EscolhendoIG && n1 > 0 = it {escolhendoParametros = (nO, n1 - 1, n2)}
     | estadoIT it == EscolhendoIM && n2 > 0 = it {escolhendoParametros = (nO, n1, n2 - 1)}
-    | otherwise = it 
+    | estadoIT it == Costumizar && ySelecaoCostumizar == 350 = it {selecaoCostumizar = (-400, -50)}
+    | estadoIT it == Costumizar && ySelecaoCostumizar == -50 = it {selecaoCostumizar = (-600, -350)}
+    | otherwise = it
   where (x, y) = posicaoSelecionadaMapa it
         (a, b) = produtoLoja it 
         (px, py) = botaoMenu it 
-        (nO, n1, n2) = escolhendoParametros it 
+        (nO, n1, n2) = escolhendoParametros it
+        (_, ySelecaoCostumizar) = selecaoCostumizar it 
 
 reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | (estadoIT it == Comprando || estadoIT it == TutorialComprando) && x < 15 = it {posicaoSelecionadaMapa = (x + 1, y)}
@@ -170,9 +176,12 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | (estadoIT it == GameOver || estadoIT it == Tutorial) && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
     | estadoIT it == YouWon1 && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
     | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
+    | estadoIT it == Costumizar && (xSelecaoCostumizar < 200 && ySelecaoCostumizar > -350) = it {selecaoCostumizar = (xSelecaoCostumizar + 600, ySelecaoCostumizar)}
+    | estadoIT it == Costumizar && (xSelecaoCostumizar < 200 && ySelecaoCostumizar == -350) = it {selecaoCostumizar = (xSelecaoCostumizar + 500, ySelecaoCostumizar)}
   where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
+        (xSelecaoCostumizar, ySelecaoCostumizar) = selecaoCostumizar it
 
 
 reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
@@ -183,9 +192,12 @@ reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | (estadoIT it == GameOver || estadoIT it == Tutorial) && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
     | estadoIT it == YouWon1 && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
     | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado > -500  = it {botaoNivelPassado = (xBotaoNivelPassado - 350, yBotaoNivelPassado)}
+    | estadoIT it == Costumizar && (xSelecaoCostumizar > -400 && ySelecaoCostumizar > -350) = it {selecaoCostumizar = (xSelecaoCostumizar - 600, ySelecaoCostumizar)}
+    | estadoIT it == Costumizar && (xSelecaoCostumizar > -400 && ySelecaoCostumizar == -350) = it {selecaoCostumizar = (xSelecaoCostumizar - 500, ySelecaoCostumizar)}
   where (x, y) = posicaoSelecionadaMapa it
         (xBotaoNivelPassado, yBotaoNivelPassado) = botaoNivelPassado it
         (xBotaoGameOver, yBotaoGameOver) = botaoGameOver it
+        (xSelecaoCostumizar, ySelecaoCostumizar) = selecaoCostumizar it
     
 reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
     | estadoIT it == Menu && py < 0 = it {botaoMenu = (px, py+100)}
@@ -195,10 +207,13 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
     | estadoIT it == EscolhendoOndas = it {escolhendoParametros = (nO + 1, n1, n2)} 
     | estadoIT it == EscolhendoIG = it {escolhendoParametros = (nO, n1 + 1, n2)}
     | estadoIT it == EscolhendoIM = it {escolhendoParametros = (nO, n1, n2 + 1)}
+    | estadoIT it == Costumizar && ySelecaoCostumizar == -50 = it {selecaoCostumizar = (-400, 350)}
+    | estadoIT it == Costumizar && ySelecaoCostumizar == -350 = it {selecaoCostumizar = (-400, -50)}
   where (x, y) = posicaoSelecionadaMapa it
         (a, b) = produtoLoja it 
         (px, py) = botaoMenu it 
-        (nO, n1, n2) = escolhendoParametros it 
+        (nO, n1, n2) = escolhendoParametros it
+        (xSelecaoCostumizar, ySelecaoCostumizar) = selecaoCostumizar it 
 
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
     | (estadoIT it == EscolhendoTorre || estadoIT it == Comprando) = it {estadoIT = Jogando}
@@ -206,6 +221,7 @@ reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it
     | estadoIT it == Tutorial && etapaTT it == 0 = it {estadoIT = Tutorial, etapaTT = 1}
     | estadoIT it == Tutorial && etapaTT it == 1 = it {estadoIT = Tutorial, jogoIT = jogoTT, etapaTT = 2}
     | estadoIT it == Tutorial && etapaTT it == 6 = reiniciarEstado it 
+    | estadoIT it == Costumizar = it {estadoIT = Menu}
 
 reageEventos (EventKey (SpecialKey KeyTab) Down _ _) it 
     | estadoIT2 it == Jogando = it {estadoIT2 = EscolhendoTorre2}
@@ -266,6 +282,16 @@ reageEventos (EventKey (Char 'd') Down _ _) it
   where (x,y) = posicaoSelecionadaMapaSndJog it 
 
 reageEventos _ it = it 
+
+alteraITCostumizar :: ImmutableTowers -> ImmutableTowers
+alteraITCostumizar it = case selecaoCostumizar it of
+    (-400, 350) -> it {inimigoHomem = "guerreiro"}
+    (200, 350) -> it {inimigoHomem = "viking"}
+    (-400, -50) -> it {inimigoMulher = "mulherLanca"}
+    (200, -50) -> it {inimigoMulher = "guerreiraMulher"}
+    (-600, -350) -> it {perfil = "perfilGuerreiro"}
+    (-100, -350) -> it {perfil = "perfilViking"}
+    _ -> it {perfil = "perfilMulherLanca"}
 
 {-| É responsável por atulizar o jogo, após ter sido realizada, a compra de uma torre. Adiciona a torre nova ao jogo, desde que 
 o jogador tenha créditos suficientes, e a torre seja válida, de acordo com as definições da função 'validaTorre'. 

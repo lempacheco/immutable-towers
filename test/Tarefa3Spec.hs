@@ -387,7 +387,7 @@ teste19 =
                                                                                                                            caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}, 
                                                                                                                  inimigoB3 {posicaoInimigo = (1,1), 
                                                                                                                             direcaoInimigo = Norte, 
-                                                                                                                            caminhoInimigo = [Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}]} 
+                                                                                                                            caminhoInimigo = [Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}], acGeraCaminhos = 1} 
                                                                                  ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
                                                                                                                           inimigosJogo = [inimigoA3, inimigoB3],
                                                                                                                           baseJogo = baseB}, 
@@ -396,7 +396,7 @@ teste19 =
                                                                   inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), 
                                                                                              direcaoInimigo = Este, 
                                                                                              caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]} 
-                                                                                 ]}
+                                                                                 ], acGeraCaminhos = 1}
                                                   ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
                                                                                              inimigosJogo = [inimigoA3, 
                                                                                                              inimigoB3 {posicaoInimigo = (5, 2), caminhoInimigo = []}],
@@ -404,7 +404,7 @@ teste19 =
       "Recebe um jogo, e o inimigo morre" ~: jogoInicial {portaisJogo = [portalB3], 
                                                           torresJogo = [torreB3 {tempoTorre = 0}],
                                                           baseJogo = baseB {creditosBase = 15}, 
-                                                          inimigosJogo = []}
+                                                          inimigosJogo = [], acGeraCaminhos = 1}
                                           ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
                                                                                      torresJogo = [torreB3 {tempoTorre = 0}],
                                                                                      inimigosJogo = [inimigoA3 {posicaoInimigo = (1,3), vidaInimigo = 0}],
@@ -418,25 +418,25 @@ teste20 =
     [
       "Recebe um jogo no estado inicial" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
                                                          inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), caminhoInimigo = []}], 
-                                                         baseJogo = baseB}
+                                                         baseJogo = baseB, acGeraCaminhos = 1}
                                         ~=? atualizaJogo 0.1 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {entradaOnda = 0, inimigosOnda = [inimigoA3 {posicaoInimigo = (1,0)}]}, ondaB3]}],
                                                                           inimigosJogo = [], 
                                                                           baseJogo = baseB}, 
      "Recebe o jogo acima 1" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 2), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1,0)}], 
-                                           baseJogo = baseB}
+                                           baseJogo = baseB, acGeraCaminhos = 1}
                           ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
                                                             inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), caminhoInimigo = []}], 
                                                             baseJogo = baseB},
       "Recebe o jogo acima 2" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 4), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1,2)}], 
-                                           baseJogo = baseB}
+                                           baseJogo = baseB, acGeraCaminhos = 1}
                             ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 2), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1,0)}], 
                                            baseJogo = baseB},
       "Recebe o jogo acima 3" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 0.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 6), caminhoInimigo = [Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo =4, acDirecao = (1,4)}], 
-                                           baseJogo = baseB}
+                                           baseJogo = baseB, acGeraCaminhos = 1}
                             ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 4), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1,2)}], 
                                            baseJogo = baseB},
@@ -483,7 +483,7 @@ teste23 =
                                       posicaoInimigo = (5,1),
                                       acDirecao = (5,1),
                                       direcaoInimigo = Norte
-                                      }] ~=? geraCaminhos (inimigosJogo jogoJ) mapaJ baseJ,
+                                      }] ~=? geraCaminhos (inimigosJogo jogoJ) mapaJ baseJ 0,
       "teste 2" ~: [Inimigo {tipoInimigo = MulherLanca, 
                                       projeteisInimigo = [], 
                                       vidaInimigo = 0, 
@@ -505,7 +505,7 @@ teste23 =
                                                                     iteracoesDesdeInicioAnimacaoInimigo = 1,
                                                                     posicaoInimigo = (5,2),
                                                                     acDirecao = (5,2)
-                                                                    }] mapaA baseJ {posicaoBase = (0,0)}
+                                                                    }] mapaA baseJ {posicaoBase = (0,0)} 0
     ]
 
 teste24 :: Test
@@ -750,7 +750,8 @@ jogoInicial = Jogo
   torresJogo = [],
   mapaJogo = mapaA, 
   inimigosJogo = [], 
-  lojaJogo = lojaA
+  lojaJogo = lojaA,
+  acGeraCaminhos = 0
  }
 lojaA :: Loja
 lojaA = [(50, torreA3)]

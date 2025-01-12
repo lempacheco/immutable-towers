@@ -17,14 +17,13 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = case estadoIT it of
+desenha it = Pictures [desenhaPrimeiroJogador it, desenhaSegundoJogador it]
+
+desenhaPrimeiroJogador :: ImmutableTowers -> Picture
+desenhaPrimeiroJogador it = case estadoIT it of
      Menu -> desenhaMenu  it 
-     Jogando -> Pictures [desenhaJogo it] 
-     EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it] 
-     EscolhendoTorre2 -> Pictures [desenhaEscolhendoTorre it]
+     EscolhendoTorre -> Pictures [desenhaEscolhendoTorre it]
      Comprando -> desenhaComprando it
-     Comprando2 -> desenhaComprando2 it
-     Comprando3 -> desenhaComprando3 it
      Pausado -> Pictures [desenhaJogo it, desenhaPausa it]  
      CriandoMapa -> desenhaCriandoMapa it
      EscolhendoOndas -> desenhaEscolhendoOnda it 
@@ -38,9 +37,16 @@ desenha it = case estadoIT it of
      Tutorial -> desenhaTutorial it ts
      TutorialEscolhendoTorre -> desenhaTutorial it ts 
      TutorialComprando -> desenhaTutorial it ts 
+     Jogando -> Pictures [desenhaJogo it] 
      
   where ts = texturasIT it
 
+desenhaSegundoJogador :: ImmutableTowers -> Picture
+desenhaSegundoJogador it = if (estadoIT it == Jogando || estadoIT it == EscolhendoTorre || estadoIT it == Comprando) then case estadoIT2 it of 
+    EscolhendoTorre2 -> Pictures [desenhaEscolhendoTorre2 it]
+    Comprando2 -> Pictures [desenhaComprando2 it]
+    _  -> Pictures []
+ else Pictures []
 string2FonteNumeros :: String -> [Textura] -> Picture
 string2FonteNumeros s ts = Pictures $ auxString2FonteNumeros s ts 0
 
@@ -135,22 +141,53 @@ desenhaYouWon it = Pictures [fundo,
 
 
 desenhaEscolhendoOnda :: ImmutableTowers -> Picture 
-desenhaEscolhendoOnda it = Pictures [fundo, 
-                                     botao1, 
-                                     botao2, 
-                                     botao3, 
-                                     setaCima1, 
-                                     setaCima2, 
-                                     setaCima3, 
-                                     setaBaixo1, 
-                                     setaBaixo2, 
-                                     setaBaixo3, 
-                                     nOndas,
-                                     setaLado,
-                                     enO, 
-                                     enIG, 
-                                     enIM
-                                    ]
+desenhaEscolhendoOnda it = case estadoIT it of 
+    EscolhendoOndas -> Pictures [fundo, 
+                                 botao1, 
+                                 botao2, 
+                                 botao3, 
+                                 setaCima1, 
+                                 setaCima2, 
+                                 setaCima3, 
+                                 setaBaixo1, 
+                                 setaBaixo2, 
+                                 setaBaixo3, 
+                                 nOndas,
+                                 setaLado,
+                                 enO, 
+                                 enIG, 
+                                 enIM]
+    EscolhendoIG -> Pictures  [fundo, 
+                                 botao1, 
+                                 botao2, 
+                                 botao3, 
+                                 setaCima1, 
+                                 setaCima2, 
+                                 setaCima3, 
+                                 setaBaixo1, 
+                                 setaBaixo2, 
+                                 setaBaixo3, 
+                                 ninimigoM,
+                                 Translate (-10) 0 $ setaLadoL,
+                                 Translate 250 0 $ setaLado,
+                                 enO, 
+                                 enIG, 
+                                 enIM]
+    EscolhendoIM -> Pictures  [fundo, 
+                                 botao1, 
+                                 botao2, 
+                                 botao3, 
+                                 setaCima1, 
+                                 setaCima2, 
+                                 setaCima3, 
+                                 setaBaixo1, 
+                                 setaBaixo2, 
+                                 setaBaixo3, 
+                                 ninimigoF,
+                                 Translate 240 0 $ setaLadoL,
+                                 enO, 
+                                 enIG, 
+                                 enIM]
     where 
         ts = texturasIT it 
         (nO, nIG, nIM) = escolhendoParametros it
@@ -167,7 +204,10 @@ desenhaEscolhendoOnda it = Pictures [fundo,
         setaBaixo2 = translate (-5) (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
         setaBaixo3 = translate (-105) (-90) $ scale 4 4 $ fromJust $ lookup "setaBaixo" ts
         nOndas = translate (-250) (-180) $ scale 0.7 0.7 $ fromJust $ lookup "nOndas" ts
+        ninimigoM = translate (0) (-180) $ scale 0.5 0.5 $ fromJust $ lookup "ninimigoM" ts 
+        ninimigoF = translate (250) (-180) $ scale 0.5 0.5 $ fromJust $ lookup "ninimigoF" ts
         setaLado = translate (-120) (-180) $ scale 3 3 $ fromJust $ lookup "seta" ts
+        setaLadoL = translate (-120) (-180) $ scale 3 3 $ rotate 180 $ fromJust $ lookup "seta" ts
         fundo = Pictures [desenhaCriandoMapa it, translate 0 0 $ color (withAlpha 0.8 black) $ rectangleSolid 1920 1080]
 
 desenhaCriandoMapa :: ImmutableTowers -> Picture 
@@ -208,17 +248,8 @@ desenhaTerreno Terra ts = fromJust $ lookup "terra" ts
 desenhaTerreno Relva ts = fromJust $ lookup "relva" ts
 desenhaTerreno Agua ts = fromJust $ lookup "agua" ts 
 
-desenhaComprando3 :: ImmutableTowers -> Picture 
-desenhaComprando3 it = Pictures [desenhaJogo it, 
-                                desenhaSelecao selec, 
-                                desenhaSelecaoSndJog selec2]
-  where
-    selec = posicaoSelecionadaMapa it
-    selec2 = posicaoSelecionadaMapaSndJog it 
-
 desenhaComprando2 :: ImmutableTowers -> Picture 
-desenhaComprando2 it = Pictures [desenhaJogo it, 
-                                desenhaSelecaoSndJog selec2]
+desenhaComprando2 it = Pictures [desenhaSelecaoSndJog selec2]
   where
     selec2 = posicaoSelecionadaMapaSndJog it 
 
@@ -238,8 +269,14 @@ desenhaEscolhendoTorre it = Pictures [desenhaJogo it, desenhaSelecaoLoja selec t
   where selec = produtoLoja it 
         ts = texturasIT it
 
+desenhaEscolhendoTorre2 :: ImmutableTowers -> Picture 
+desenhaEscolhendoTorre2 it = Pictures [desenhaSelecaoLoja selec2 ts]
+  where 
+        selec2 = produtoLoja2 it 
+        ts = texturasIT it
+
 desenhaSelecaoLoja :: (Float, Float) -> [Textura] -> Picture
-desenhaSelecaoLoja (x,y) ts = Pictures [Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts]
+desenhaSelecaoLoja (x,y) ts = Pictures [Translate x y $ scale 3 3 $ fromJust $ lookup "seta" ts]
 
 -- Função para desenhar a seleção no mapa
 desenhaSelecao :: (Float, Float) -> Picture
@@ -290,7 +327,8 @@ desenhaJogo it = Pictures [picMapa,
                            creditosJog, 
                            moldBaixo,
                            picModoJogo, 
-                           Pictures [scale 1 1 $ text $ show $ estadoIT it] 
+                           Pictures [scale 0.7 0.7 $ text $ show $ estadoIT it],
+                           Pictures [translate 100 100 $ scale 0.7 0.7 $ text $ show $ estadoIT2 it]  
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it
@@ -483,7 +521,7 @@ desenhaPerfilJogador it ts = Pictures [creditosJogador,
                                Translate 780 40 $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts, 
                                Translate 750 55 $ scale 1 1 $ string2FonteNumeros (show $ length (inimigosJogo j)) ts 
                               ]
-         modoJogo = Pictures [Translate 670 (-20) $ scale 3.5 3.5 $ fromJust $ lookup "botaoNivel" ts, 
+         modoJogo = Pictures [Translate 670 (-20) $ scale 3.5 3.5 $ fromJust $ lookup "botaomodo" ts, 
                               Translate 780 (-20) $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts 
                              ]
          nivelJogador = Pictures [Translate 670 (-85) $ scale 3.5 3.5 $ fromJust $ lookup "botaoNivel" ts, 

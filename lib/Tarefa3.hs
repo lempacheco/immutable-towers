@@ -739,11 +739,11 @@ portal1_5 = Portal {posicaoPortal = (0,0),
                    ondasPortal = geraOndasPortal 2 3 1 (0,0)}
 
 portal2_5 :: Portal
-portal2_5 = Portal {posicaoPortal = (0,0),
+portal2_5 = Portal {posicaoPortal = (0,10),
                    ondasPortal = geraOndasPortal 1 2 1 (0,10)}
 
 portal3_5 :: Portal
-portal3_5 = Portal {posicaoPortal = (0,0),
+portal3_5 = Portal {posicaoPortal = (11,0),
                    ondasPortal = geraOndasPortal 2 3 2 (11,0)}
 
 -- Jogo tutorial

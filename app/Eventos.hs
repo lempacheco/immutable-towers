@@ -60,12 +60,12 @@ reageEventos (EventKey (Char 'b') Down _ _) it
      where j = jogoIT it 
 
 reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it 
-    | estadoIT it == Menu && botaoMenu it == (-160,0) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, modoJogo = Finito} else it {estadoIT = MensagemErro, modoJogo = Finito}
-    | estadoIT it == Menu && botaoMenu it == (-160,-100) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, modoJogo = Infinito} else it {estadoIT = MensagemErro, modoJogo = Infinito}
+    | estadoIT it == Menu && botaoMenu it == (-160,0) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, estadoIT2 = Jogando, modoJogo = Finito} else it {estadoIT = MensagemErro, estadoIT2 = MensagemErro, modoJogo = Finito}
+    | estadoIT it == Menu && botaoMenu it == (-160,-100) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, estadoIT2 = Jogando, modoJogo = Infinito} else it {estadoIT = MensagemErro, estadoIT2= MensagemErro, modoJogo = Infinito}
     | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado} 
     | estadoIT it == Menu && botaoMenu it == (-160,-300) = it {estadoIT = Tutorial, etapaTT = 0}    
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
-    | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando, produtoLoja = produtoLoja it}
+    | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando}
     | estadoIT it == Comprando =  
         let jogo = jogoIT it
             colocaTorre:: ImmutableTowers -> (Torre, Creditos)
@@ -202,18 +202,19 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
 
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
     | (estadoIT it == EscolhendoTorre || estadoIT it == Comprando) = it {estadoIT = Jogando}
+    | (estadoIT2 it == EscolhendoTorre2 || estadoIT2 it == Comprando2) = it {estadoIT2 = Jogando}
     | estadoIT it == Tutorial && etapaTT it == 0 = it {estadoIT = Tutorial, etapaTT = 1}
     | estadoIT it == Tutorial && etapaTT it == 1 = it {estadoIT = Tutorial, jogoIT = jogoTT, etapaTT = 2}
     | estadoIT it == Tutorial && etapaTT it == 6 = reiniciarEstado it 
 
 reageEventos (EventKey (SpecialKey KeyTab) Down _ _) it 
-    | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre2}
-    | estadoIT it == EscolhendoTorre2 = it {estadoIT = Comprando2}
-    | estadoIT it == Comprando2 =  
+    | estadoIT2 it == Jogando = it {estadoIT2 = EscolhendoTorre2}
+    | estadoIT2 it == EscolhendoTorre2 = it {estadoIT2 = Comprando2}
+    | estadoIT2 it == Comprando2 =  
         let jogo = jogoIT it
             colocaTorre:: ImmutableTowers -> (Torre, Creditos)
-            colocaTorre it = case produtoLoja it of
-                (-900, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+            colocaTorre it = case produtoLoja2 it of
+                (-940, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                                         danoTorre = 15,
                                         alcanceTorre = 4,
                                         rajadaTorre = 4,
@@ -222,7 +223,7 @@ reageEventos (EventKey (SpecialKey KeyTab) Down _ _) it
                                         projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita (2*60)},
                                         iteracoesDesdeInicioAnimacao = 1}, 100)
 
-                (-900, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+                (-940, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                                         danoTorre = 25,
                                         alcanceTorre = 4,
                                         rajadaTorre = 3,
@@ -241,27 +242,27 @@ reageEventos (EventKey (SpecialKey KeyTab) Down _ _) it
                             iteracoesDesdeInicioAnimacao = 1}, 200)
             (xF, yF) = posicaoSelecionadaMapaSndJog it 
             jogoAtualizado = compraTorre (fst (colocaTorre it)) (snd (colocaTorre it)) jogo
-         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
+         in it {jogoIT = jogoAtualizado, estadoIT2 = Jogando}
 
 
 reageEventos (EventKey (Char 'w') Down _ _) it
-    | estadoIT it == EscolhendoTorre2 && b < 100 = it {produtoLoja = (a, b + 200)}
-    | estadoIT it == Comprando2 && y > 0  = it {posicaoSelecionadaMapaSndJog = (x, y - 1)}
-  where (a,b) = produtoLoja it 
+    | estadoIT2 it == EscolhendoTorre2 && b < 100 = it {produtoLoja2 = (a, b + 200)}
+    | estadoIT2 it == Comprando2 && y > 0 = it {posicaoSelecionadaMapaSndJog = (x, y - 1)}
+  where (a,b) = produtoLoja2 it 
         (x,y) = posicaoSelecionadaMapaSndJog it 
 
 reageEventos (EventKey (Char 's') Down _ _) it
-    | estadoIT it == EscolhendoTorre2  && b > (-300) = it {produtoLoja = (a, b - 200)}
-    | estadoIT it == Comprando2 && y < 15 = it {posicaoSelecionadaMapaSndJog = (x, y + 1)}
-  where (a,b) = produtoLoja it 
+    | estadoIT2 it == EscolhendoTorre2  && b > (-300) = it {produtoLoja2 = (a, b - 200)}
+    | estadoIT2 it == Comprando2 && y < 15 = it {posicaoSelecionadaMapaSndJog = (x, y + 1)}
+  where (a,b) = produtoLoja2 it 
         (x,y) = posicaoSelecionadaMapaSndJog it 
 
 reageEventos (EventKey (Char 'a') Down _ _) it
-   | estadoIT it == Comprando2 && x > 0 = it {posicaoSelecionadaMapaSndJog = (x - 1, y)}
+   | estadoIT2 it == Comprando2 && x > 0 = it {posicaoSelecionadaMapaSndJog = (x - 1, y)}
   where (x,y) = posicaoSelecionadaMapaSndJog it 
 
 reageEventos (EventKey (Char 'd') Down _ _) it
-   | estadoIT it == Comprando2 && x < 15 = it {posicaoSelecionadaMapaSndJog = (x + 1, y)}
+   | estadoIT2 it == Comprando2 && x < 15 = it {posicaoSelecionadaMapaSndJog = (x + 1, y)}
   where (x,y) = posicaoSelecionadaMapaSndJog it 
 
 reageEventos _ it = it 

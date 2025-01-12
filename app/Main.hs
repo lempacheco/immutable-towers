@@ -17,11 +17,13 @@ itInicial ts =
 itTds :: [Textura] -> ImmutableTowers
 itTds texturas = 
     ImmutableTowers {estadoIT = Menu, 
+                     estadoIT2 = Menu, 
                      texturasIT = texturas, 
                      posicaoSelecionadaMapa = (0,0), 
                      posicaoSelecionadaMapaSndJog = (0,0),
                      produtoLoja = (-900, 100),
                      botaoMenu = (-160, 0),
+                     produtoLoja2 = (-940, 100),
                      jogoItInicial = jogo1, 
                      listaTerreno = [], 
                      listaPortais = [],
@@ -230,6 +232,9 @@ main = do
   indicativoProjetilResina <- loadBMP "resources/textures/ui/indicativoProjetilResina.bmp"
   indicativoProjetilFogo <- loadBMP "resources/textures/ui/indicativoProjetilFogo.bmp"
   nOndas <- loadBMP "resources/textures/ui/nOndas.bmp"
+  botaomodo <- loadBMP "resources/textures/ui/botaomodo.bmp"
+  ninimigoM <- loadBMP "resources/textures/ui/nInimigosM.bmp"
+  ninimigoF <- loadBMP "resources/textures/ui/nInimigosF.bmp"
   play janela 
         fundo 
         fr 
@@ -418,7 +423,10 @@ main = do
             ("indicativoProjetilGelo", indicativoProjetilGelo),
             ("indicativoProjetilFogo",indicativoProjetilFogo),
             ("indicativoProjetilResina", indicativoProjetilResina), 
-            ("nOndas", nOndas)
+            ("nOndas", nOndas), 
+            ("botaomodo", botaomodo),
+            ("ninimigoM", ninimigoM), 
+            ("ninimigoF", ninimigoF)
         ]) 
         desenha 
         reageEventos 

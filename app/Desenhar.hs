@@ -328,7 +328,8 @@ desenhaJogo it = Pictures [picMapa,
                            moldBaixo,
                            picModoJogo, 
                            Pictures [scale 0.7 0.7 $ text $ show $ estadoIT it],
-                           Pictures [translate 100 100 $ scale 0.7 0.7 $ text $ show $ estadoIT2 it]  
+                           Pictures [translate 100 100 $ scale 0.7 0.7 $ text $ show $ estadoIT2 it],
+                           Pictures [scale 1 1 $ text $ show $ acGeraCaminhos jogo] 
                           ]
     where picMapa = desenhaMapa mapa texturas
           jogo = jogoIT it

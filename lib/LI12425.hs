@@ -176,7 +176,8 @@ data Jogo = Jogo
     -- | Inimigos em movimento no mapa.
     inimigosJogo :: [Inimigo],
     -- | Loja de torres disponíveis para construir.
-    lojaJogo :: Loja
+    lojaJogo :: Loja,
+    acGeraCaminhos :: Int
   }
   deriving (Eq, Show)
 

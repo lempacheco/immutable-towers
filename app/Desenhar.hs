@@ -17,7 +17,7 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = Pictures [desenhaPrimeiroJogador it, desenhaSegundoJogador it]
+desenha it = Pictures [desenhaPrimeiroJogador it, desenhaSegundoJogador it, text $ show $ botaoNivelPassado it ]
 
 desenhaPrimeiroJogador :: ImmutableTowers -> Picture
 desenhaPrimeiroJogador it = case estadoIT it of

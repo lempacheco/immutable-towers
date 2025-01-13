@@ -270,7 +270,9 @@ main = do
   cadeadoFechado <- loadBMP "resources/textures/ui/cadeadoFechado.bmp"
   multiplayer <- loadBMP "resources/textures/ui/multiplayer.bmp"
   costumizarVoltar <- loadBMP "resources/textures/ui/costumizarVoltarMenu.bmp"
-
+  fogo <- loadBMP "resources/textures/ui/fogo.bmp"
+  gelo <- loadBMP "resources/textures/ui/Gelo.bmp"
+  resina <- loadBMP "resources/textures/ui/Resina.bmp"
   play janela 
         fundo 
         fr 
@@ -490,7 +492,10 @@ main = do
             ("cadeadoFechado", cadeadoFechado),
             ("multiplayer", multiplayer),
             ("costumizarVoltar", costumizarVoltar),
-            ("fundoMapa", fundoMapa)
+            ("fundoMapa", fundoMapa), 
+            ("fogo", fogo),
+            ("resina", resina), 
+            ("gelo", gelo)
         ]) 
         desenha 
         reageEventos 

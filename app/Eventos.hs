@@ -87,8 +87,8 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando}
     | estadoIT it == Comprando =  
         let jogo = jogoIT it
-            (t,c) = colocaTorre it (posicaoSelecionadaMapa it)
-            jogoAtualizado = compraTorre t c jogo
+           {-  (t,c) = colocaTorre it (posicaoSelecionadaMapa it) -}
+            jogoAtualizado = compraTorre (fst (colocaTorre it (posicaoSelecionadaMapa it))) (snd (colocaTorre it (posicaoSelecionadaMapa it))) jogo
          in it {jogoIT = jogoAtualizado, 
                 estadoIT = Jogando}
 

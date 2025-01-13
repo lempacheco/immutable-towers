@@ -155,8 +155,8 @@ naoSobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps
   where pps = map posicaoPortal ps 
 
 {-| Verifica se existe alguma torre sobreposta com algum portal. 
- Como para um bom funcionamento do jogo, não pode haver torres sobrepostas com portais, a função devolve __True__ quando 
- não houver nenhuma torre na mesma posição de um portal.
+Como para um bom funcionamento do jogo, não pode haver torres sobrepostas com portais, a função devolve __True__ quando 
+não houver nenhuma torre na mesma posição de um portal.
 
 -}
 
@@ -192,7 +192,7 @@ inimigosTerra [] _ = True
 inimigosTerra (i:is) mapa = eTerra (posicaoInimigo i) mapa && inimigosTerra is mapa 
 
 {-| Verifica se os inimigos estão sobrepostos a alguma torre. 
-    Como os inimigos não podem estar sobrepostos a torres, a função devolve __True__ se as posições forem diferentes.
+Como os inimigos não podem estar sobrepostos a torres, a função devolve __True__ se as posições forem diferentes.
 
 -}
 

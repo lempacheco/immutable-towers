@@ -109,13 +109,13 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it 
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
 
-    | estadoIT it == Tutorial && etapaTT it == 2 && fst (botaoGameOver it) == 100 = it {estadoIT = Tutorial, etapaTT = 3}
-    | estadoIT it == Tutorial && etapaTT it == 3 = it {estadoIT = TutorialEscolhendoTorre,  etapaTT = 4}
-    | estadoIT it == TutorialEscolhendoTorre && etapaTT it == 4 = it {estadoIT = TutorialComprando, etapaTT = 5} 
-    | estadoIT it == TutorialComprando && etapaTT it == 5 = 
+    | estadoIT it == Tutorial && etapaTT it == 3 && fst (botaoGameOver it) == 100 = it {estadoIT = Tutorial, jogoIT = jogoTT, etapaTT = 4}
+    | estadoIT it == Tutorial && etapaTT it == 4 = it {estadoIT = TutorialEscolhendoTorre,  etapaTT = 5}
+    | estadoIT it == TutorialEscolhendoTorre && etapaTT it == 5 = it {estadoIT = TutorialComprando, etapaTT = 6} 
+    | estadoIT it == TutorialComprando && etapaTT it == 6 = 
         let (t,c) = colocaTorre it (posicaoSelecionadaMapa it)
             jogoAtualizado = compraTorre  t c (jogoIT it)
-        in it {estadoIT = Tutorial, jogoIT = jogoAtualizado , etapaTT = 6}
+        in it {estadoIT = Tutorial, jogoIT = jogoAtualizado , etapaTT = 7}
     | estadoIT it == Costumizar = alteraITCostumizar it
     | otherwise = it
 
@@ -191,8 +191,9 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
     | (estadoIT it == EscolhendoTorre || estadoIT it == Comprando) = it {estadoIT = Jogando}
     | estadoIT it == Tutorial && etapaTT it == 0 = it {estadoIT = Tutorial, etapaTT = 1}
-    | estadoIT it == Tutorial && etapaTT it == 1 = it {estadoIT = Tutorial, jogoIT = jogoTT, etapaTT = 2}
-    | estadoIT it == Tutorial && etapaTT it == 6 = reiniciarEstado it 
+    | estadoIT it == Tutorial && etapaTT it == 1 = it {estadoIT = Tutorial, etapaTT = 2}
+    | estadoIT it == Tutorial && etapaTT it == 2 = it {estadoIT = Tutorial, etapaTT = 3}
+    | estadoIT it == Tutorial && etapaTT it == 7 = reiniciarEstado it 
     | estadoIT it == Costumizar = it {estadoIT = Menu}
 
 reageEventos (EventKey (SpecialKey KeyCtrlL) Down _ _) it 

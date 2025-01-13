@@ -74,7 +74,8 @@ desenhaCostumizar it ts = Pictures [
         Translate (-500) (-350) $ Scale 2 2 (fromJust $ lookup "perfilGuerreiro" ts),
         Translate 0 (-350) $ Scale 2 2 (fromJust $ lookup "perfilViking" ts),
         Translate 500 (-350) $ Scale 2 2 (fromJust $ lookup "perfilMulherLanca" ts),
-        Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts
+        Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts,
+        Translate (650) (-450) $ fromJust $ lookup "costumizarVoltar" ts
     ]
     where (x,y) = selecaoCostumizar it
 
@@ -498,18 +499,33 @@ desenhaLoja loja ts = Pictures [iconeLoja,
                              ]
 
 desenhaPerfilJogador :: ImmutableTowers -> [Textura] -> Picture 
-desenhaPerfilJogador it ts = Pictures [creditosJogador, 
-                                        creditos, 
-                                        iconeVida, 
-                                        vidaBaseJg, 
-                                        perfilJogador, 
-                                        iconePausa, 
-                                        iconeHome, 
-                                        iconeJogador, 
-                                        nInimigos, 
-                                        nivelJogador, 
-                                        modoJogo
-                                        ]
+desenhaPerfilJogador it ts  
+    | (modoJogo it == MapaCriado) || (estadoIT it == Tutorial) || (estadoIT it == TutorialEscolhendoTorre) || (estadoIT it == TutorialComprando)
+               =  Pictures [creditosJogador, 
+                            creditos, 
+                            iconeVida, 
+                            vidaBaseJg, 
+                            perfilJogador, 
+                            iconePausa, 
+                            iconeHome, 
+                            iconeJogador, 
+                            nInimigos, 
+                            nivelJogador, 
+                            modoJogo1
+                            ]
+    | otherwise         = Pictures [creditosJogador, 
+                            creditos, 
+                            iconeVida, 
+                            vidaBaseJg, 
+                            perfilJogador, 
+                            iconePausa, 
+                            iconeHome, 
+                            iconeJogador, 
+                            nInimigos, 
+                            nivelJogador, 
+                            modoJogo1,
+                            multiplayer1
+                            ]
    where j = jogoIT it 
          b = baseJogo j 
          creditosJogador = Translate 750 210 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts 
@@ -533,13 +549,18 @@ desenhaPerfilJogador it ts = Pictures [creditosJogador,
                                Translate 780 40 $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts, 
                                Translate 750 55 $ scale 1 1 $ string2FonteNumeros (show $ length (inimigosJogo j)) ts 
                               ]
-         modoJogo = Pictures [Translate 670 (-20) $ scale 3.5 3.5 $ fromJust $ lookup "botaomodo" ts, 
+         modoJogo1 = Pictures [Translate 670 (-20) $ scale 3.5 3.5 $ fromJust $ lookup "botaomodo" ts, 
                               Translate 780 (-20) $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts 
                              ]
          nivelJogador = Pictures [Translate 670 (-85) $ scale 3.5 3.5 $ fromJust $ lookup "botaoNivel" ts, 
                                   Translate 780 (-85) $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts, 
                                   desenhaNivelJogo it ts
                                  ]
+         multiplayer1 = Pictures [if (multiplayer it) then Translate 670 (-150) $ scale 1.2 1.2 $ fromJust $ lookup "cadeadoAberto" ts 
+                                   else Translate 670 (-150) $ scale 1.2 1.2 $  fromJust $ lookup "cadeadoFechado" ts,  
+                                   Translate 780 (-150) $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts, 
+                                   Translate 780 (-150) $ scale 0.5 0.5 $ fromJust $ lookup "multiplayer" ts
+                                  ]
 
 desenhaModoJogo :: ImmutableTowers -> [Textura] -> Picture
 desenhaModoJogo it ts = Translate 780 (-20) $ scale 0.8 0.8 $ 
@@ -594,16 +615,17 @@ desenhaEtapasTT :: ImmutableTowers -> [Textura] -> Picture
 desenhaEtapasTT it ts = case etapaTT it of 
     0 -> fromJust $ lookup "tutorial1" ts  
     1 -> fromJust $ lookup "tutorial2" ts 
-    2 -> Pictures [fromJust $ lookup "fundoPedraTT" ts,
+    2 -> fromJust $ lookup "tutorial3" ts
+    3 -> Pictures [fromJust $ lookup "fundoPedraTT" ts,
                    Translate x y $ scale 4 4 $ fromJust $ lookup "seta" ts,
                    Translate (-350) (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts,
                    Translate 350 (-250) $ scale 8 8 $ fromJust $ lookup "iconePausa" ts, 
                    Translate (-350) (-250) $ scale 1.2 1.2 $ fromJust $ lookup "no" ts,
                    Translate 350 (-250) $ scale 1.2 1.2 $ fromJust $ lookup "yes" ts
                    ]
-    3 -> Translate 750 (-250) $ fromJust $ lookup "etapa1" ts
-    4 -> Translate 750 (-250) $ scale 0.7 0.7 $ fromJust $ lookup "etapa2" ts
-    5 -> Translate 750 (-250) $ scale 0.6 0.6 $ fromJust $ lookup "etapa3" ts
-    6 -> Translate 750 (-250) $ scale 0.5 0.5 $ fromJust $ lookup "etapa4" ts
+    4 -> Translate 750 (-250) $ fromJust $ lookup "etapa1" ts
+    5 -> Translate 750 (-250) $ scale 0.7 0.7 $ fromJust $ lookup "etapa2" ts
+    6 -> Translate 750 (-250) $ scale 0.6 0.6 $ fromJust $ lookup "etapa3" ts
+    7 -> Translate 750 (-250) $ scale 0.5 0.5 $ fromJust $ lookup "etapa4" ts
   where (x,y) = botaoGameOver it
              

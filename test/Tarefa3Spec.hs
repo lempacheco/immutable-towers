@@ -16,22 +16,22 @@ testesTarefa3 =
         teste5, 
         teste6, 
         teste7, 
+        teste8, 
         teste9, 
-        teste10, 
-        teste11,
+        teste10,
+        teste11, 
         teste12, 
         teste13, 
         teste14, 
         teste15, 
-        teste16, 
-        teste17,
-        teste18, 
+        teste16,
+        teste17, 
+        teste18,
         teste19,
         teste20,
         teste21,
         teste22,
-        teste23,
-        teste24
+        teste23
       ]
 
 -- detetarInimigos 
@@ -163,20 +163,24 @@ teste6 =
                                             lancaInimigo portalA3 {ondasPortal = [ondaB3 {inimigosOnda = [],tempoOnda = -1}, ondaA3]} [inimigoA3]
        -- Não tem inimigos, a onda é retirada. 
       ]
-       
+
+--atualizaVelocidadeInimigoGeloEResina
 teste7 :: Test
 teste7 =
   TestLabel "Testes para a função atualizaVelocidadeInimigoGeloEResina" $
     test
       [
-        "Teste com um inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1],
-        "Teste com um inimigo com velocidade não nula" ~: [inimigo2 {velocidadeInimigo = 0}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo2],
-        "Teste com um inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1],
-        "Teste com um inimigo com velocidade não nula" ~: [inimigo2 {velocidadeInimigo = 5.0}]~=? atualizaVelocidadeInimigoGeloEResina [inimigo2]
+        "Teste com um inimigo com velocidade nula, afetado por todos os tipos de projétil" ~: [inimigo1] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1],
+        "Teste com um inimigo com velocidade não nula, afetado por todos os tipos de projétil" ~: [inimigo2 {velocidadeInimigo = 0}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo2],
+        "Teste com um inimigo com velocidade nula, afetado por Resina" ~: [inimigo1 {projeteisInimigo = [projetil3]}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1{projeteisInimigo = [projetil3]}],
+        "Teste com um inimigo com velocidade não nula, afetado por Resina" ~: [inimigo2 {projeteisInimigo = [projetil3], velocidadeInimigo = 5.0}]~=? atualizaVelocidadeInimigoGeloEResina [inimigo2{projeteisInimigo = [projetil3]}],
+        "Teste com um inimigo com velocidade nula, afetado por Gelo" ~: [inimigo1{projeteisInimigo = [projetil2]}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1{projeteisInimigo = [projetil2]}],
+        "Teste com um inimigo com velocidade não nula, afetado por Gelo" ~: [inimigo2 {velocidadeInimigo = 0.0, projeteisInimigo = [projetil2]}]~=? atualizaVelocidadeInimigoGeloEResina [inimigo2{projeteisInimigo = [projetil2]}]
       ]
 
-teste9 :: Test
-teste9 =
+--atualizaInimigoFogo
+teste8 :: Test
+teste8 =
   TestLabel "Teste para a função atualizaInimigoFogo" $
     test
       [
@@ -184,8 +188,9 @@ teste9 =
         "Teste com um inimigo afetado por Fogo" ~: [inimigo1 {vidaInimigo = 10 - 5/60}] ~=? atualizaInimigoFogo [inimigo1]
       ]
 
-teste10 :: Test
-teste10 = 
+--inimigosSemVida
+teste9 :: Test
+teste9 = 
   TestLabel "Teste para a função inimigosSemVida" $
     test
       [
@@ -194,17 +199,19 @@ teste10 =
         "Teste com inimigos com e sem vida" ~: (baseA {creditosBase = 15} ,[inimigo1]) ~=? inimigosSemVida baseA [inimigo1,inimigo3]
       ]
 
-teste11 :: Test
-teste11 = 
+--atualizaDistanciaPercorridaInimigos
+teste10 :: Test
+teste10 = 
   TestLabel "Teste para a função atualizaDistanciaPercorridaInimigos" $
     test
       [
         "Teste com inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo1],
         "Teste com inimigo com velocidade não nula" ~: [inimigo2 {posicaoInimigo = (10,0)}] ~=? atualizaDistanciaPercorridaInimigos 1 [inimigo2]
       ]
- 
-teste12 :: Test
-teste12 = 
+
+--inimigoAtingeBase
+teste11 :: Test
+teste11 = 
   TestLabel "Teste para a função inimigoAtingeBase" $
     test
       [
@@ -214,9 +221,8 @@ teste12 =
       ]
 
 -- disparaTodosProjeteis
-
-teste13 :: Test 
-teste13 = 
+teste12 :: Test 
+teste12 = 
    TestLabel "Testes para a função disparaTodosProjeteis" $
     test
       [
@@ -268,9 +274,8 @@ teste13 =
       ]
 
 -- lancaTodosPortais
-
-teste14 :: Test 
-teste14 = 
+teste13 :: Test 
+teste13 = 
    TestLabel "Testes para a função lancaTodosPortais" $
     test
      [
@@ -287,9 +292,8 @@ teste14 =
      ]
 
 -- atualizaPortaisEInimigos
-
-teste15 :: Test 
-teste15 = 
+teste14 :: Test 
+teste14 = 
    TestLabel "Testes para a função atualizaPortaisEInimigos" $
     test
      [
@@ -302,9 +306,8 @@ teste15 =
      ]
 
 -- duraçaoFogoOuGelo
-
-teste16 :: Test 
-teste16 = 
+teste15 :: Test 
+teste15 = 
    TestLabel "Testes para a função duracaoFogoOuGelo" $
     test
      [
@@ -314,9 +317,8 @@ teste16 =
      ]
 
 -- atualizaDuracaoProjeteisInimigos
-
-teste17 :: Test 
-teste17 = 
+teste16 :: Test 
+teste16 = 
   TestLabel "Testes para a função atualizaDuracaoProjeteisInimigos" $
    test
     [
@@ -324,8 +326,9 @@ teste17 =
      "Recebe inimigo com projéteis" ~: inimigo1 {projeteisInimigo = [projetil1 {duracaoProjetil = Finita 4.0}, projetil3]} ~=? atualizaDuracaoProjeteisInimigos inimigo1
     ] 
 
-teste18 :: Test
-teste18 =
+--atualizaTorres
+teste17 :: Test
+teste17 =
   TestLabel "Testes para a função atualizaTorres" $ 
    test
     [
@@ -340,8 +343,9 @@ teste18 =
                                                   ~=? atualizaTorres jogoInicial {torresJogo = [torreA3, torreB3], inimigosJogo = [inimigoE3, inimigoA3, inimigoF3]}
     ]
 
-teste19 :: Test 
-teste19 = 
+--atualizaInimigosEBase
+teste18 :: Test 
+teste18 = 
   TestLabel "Testes para a função atualizaInimigosEBase" $
    test 
     [
@@ -377,8 +381,9 @@ teste19 =
                                                                                      baseJogo = baseB}
     ]
 
-teste20 :: Test 
-teste20 = 
+--atualizaJogo
+teste19 :: Test 
+teste19 = 
   TestLabel "Testes para a função atualizaJogo" $
    test 
     [
@@ -411,8 +416,9 @@ teste20 =
       "Teste com mais de um inimigo" ~: (baseJogo jogoI) {creditosBase = 500} ~=? baseJogo (atualizaJogo 1 jogoI)
     ]                       
 
-teste21 :: Test 
-teste21 = 
+--atualizaAnimaçãoTorres
+teste20 :: Test 
+teste20 = 
   TestLabel "Testes para a função atualizaAnimaçãoTorres" $
    test 
     [
@@ -422,19 +428,20 @@ teste21 =
       "Torre sem animação e sem inimigo no alcance" ~: jogoInicial {inimigosJogo = [inimigoA3 {posicaoInimigo = (15,15)}], torresJogo = [torreA3]} ~=? atualizaAnimacaoTorres jogoInicial {inimigosJogo = [inimigoA3 {posicaoInimigo = (15,15)}], torresJogo = [torreA3]}
     ]
 
-teste22 :: Test 
-teste22 = 
+--atualizaAnimaçãoInimigos
+teste21 :: Test 
+teste21 = 
   TestLabel "Testes para a função atualizaAnimaçãoInimigos" $
    test 
     [
-      "Inimigo com efeito de Gelo" ~: jogoInicial {inimigosJogo = [inimigoA3 {iteracoesDesdeInicioAnimacaoInimigo = 0, projeteisInimigo = [projetil2]}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoA3 {projeteisInimigo = [projetil2]}]},
+      "Inimigo com velocidade nula" ~: jogoInicial {inimigosJogo = [inimigoA3 {iteracoesDesdeInicioAnimacaoInimigo = 0, velocidadeInimigo = 0}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoA3 {velocidadeInimigo = 0}]},
       "Inimigo com animação a meio" ~: jogoInicial {inimigosJogo = [inimigoA3 {iteracoesDesdeInicioAnimacaoInimigo = 2}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoA3]},
       "Inimigo com animação no final" ~: jogoInicial {inimigosJogo = [inimigoB3 {iteracoesDesdeInicioAnimacaoInimigo = 1}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoB3]}
     ]
 
 --a função geraCaminhos apenas corre quando o mapa é válido, ou seja, não há necessidade de um caso de teste para um caso em que não exista um caminho
-teste23 :: Test
-teste23 = 
+teste22 :: Test
+teste22 = 
   TestLabel "Testes para a função geraCaminhos" $
    test 
     [
@@ -474,8 +481,8 @@ teste23 =
                                                                     }] mapaA baseJ {posicaoBase = (0,0)} 0
     ]
 
-teste24 :: Test
-teste24 = 
+teste23 :: Test
+teste23 = 
   TestLabel "Testes para a função moveInimigo" $
    test 
     [
@@ -783,7 +790,7 @@ inimigoA3 = Inimigo
   posicaoInimigo = (0,0),
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
-  velocidadeInimigo = 10.0,
+  velocidadeInimigo = 1.0,
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [], 

@@ -337,12 +337,14 @@ desenhaMenu it = Pictures
 
 desenhaJogo :: ImmutableTowers -> Picture
 desenhaJogo it = Pictures [picMapa, 
+                           picAlcanceTorres,
+                           picTorre,
+                           picFundoMapa,
                            picMolduraMapa, 
                            picInimigo,
                            Pictures picPortais, 
                            picLoja, 
                            picBase, 
-                           picTorre, 
                            creditosJog, 
                            moldBaixo,
                            picModoJogo
@@ -365,18 +367,18 @@ desenhaJogo it = Pictures [picMapa,
           loja = lojaJogo jogo
           creditosJog = desenhaPerfilJogador it texturas 
           picModoJogo = desenhaModoJogo it texturas
+          picFundoMapa = fromJust $ lookup "fundoMapa" texturas
+          picAlcanceTorres = Pictures $ desenhaAlcanceTorres torres
 
 
 desenhaMolduraMapa :: [Textura] -> Picture
 desenhaMolduraMapa ts = Pictures [moldCima]
     where moldCima = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa" ts)
 
-
 desenhaMapa :: Mapa -> [Textura] -> Picture
 desenhaMapa mapa textures =
     let t = getMapaTexturas mapa textures
-    in Pictures [translate 0 0 (fromJust $ lookup "fundoJogo" textures), 
-                 pictures [translate ((fromInteger x * fromInteger lado )-7.5*64) ((fromInteger y * fromInteger lado) +7.5*64 ) ((t!!abs (fromInteger y))!!fromInteger x) | (x,y) <- positions]]
+    in Pictures [pictures [translate ((fromInteger x * fromInteger lado )-7.5*64) ((fromInteger y * fromInteger lado) +7.5*64 ) ((t!!abs (fromInteger y))!!fromInteger x) | (x,y) <- positions]]
 
 selectTexture :: [Textura] -> Terreno -> Picture
 selectTexture textures Terra = fromJust $ lookup "terra" textures
@@ -445,6 +447,16 @@ desenhaUmaTorre torre texturas =
             Fogo -> fromJust $ lookup "torreFogo" texturas
         texturaAnimacao = desenhaAnimacaoTorre torre texturas
     in Pictures [translate x (y + (121-64)/2) textura, texturaAnimacao]
+
+desenhaAlcanceTorres :: [Torre] -> [Picture]
+desenhaAlcanceTorres [] = []
+desenhaAlcanceTorres (t:ts) = 
+    let (x,y) = conversaoCoordsGloss $ posicaoTorre t
+        alcance = case tipoProjetil (projetilTorre t) of 
+            Gelo -> Translate x y $ color (makeColorI 72 99 100 100) $ circleSolid ((alcanceTorre t)*64)
+            Fogo -> Translate x y $ color (makeColorI 87 41 22 100) $ circleSolid ((alcanceTorre t)*64)
+            _ -> Translate x y $ color (makeColorI 97 64 55 100) $ circleSolid ((alcanceTorre t)*64)
+    in alcance : desenhaAlcanceTorres ts
 
 desenhaAnimacaoTorre :: Torre -> [Textura] -> Picture
 desenhaAnimacaoTorre t ts =

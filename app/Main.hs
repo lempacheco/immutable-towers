@@ -195,6 +195,7 @@ main = do
   botaoCredito <- loadBMP "resources/textures/ui/botaoCredits.bmp"
   botaoLevel <- loadBMP "resources/textures/ui/botaoLevel.bmp"
   fundoJogo <- loadBMP "resources/textures/ui/fundoPedra.bmp"
+  fundoMapa <- loadBMP "resources/textures/ui/fundoPedraMapa.bmp"
   numero0 <- loadBMP "resources/textures/numbers/0.bmp"
   numero1 <- loadBMP "resources/textures/numbers/1.bmp"
   numero2 <- loadBMP "resources/textures/numbers/2.bmp"
@@ -488,7 +489,8 @@ main = do
             ("cadeadoAberto", cadeadoAberto),
             ("cadeadoFechado", cadeadoFechado),
             ("multiplayer", multiplayer),
-            ("costumizarVoltar", costumizarVoltar)
+            ("costumizarVoltar", costumizarVoltar),
+            ("fundoMapa", fundoMapa)
         ]) 
         desenha 
         reageEventos 

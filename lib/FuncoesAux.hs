@@ -9,7 +9,7 @@ import Data.Ord (comparing)
 
 baseTds :: Base
 baseTds = Base {vidaBase = 100,
-                creditosBase = 200} 
+                creditosBase = 500} 
 
 -- inimigos Homem
 inimigo1Tds :: Inimigo

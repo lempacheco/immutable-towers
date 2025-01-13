@@ -247,6 +247,7 @@ main = do
   nivel5 <- loadBMP "resources/textures/ui/Nivel5.bmp"
   tutorial1 <- loadBMP "resources/textures/menuFundo/tutorial1.bmp"
   tutorial2 <- loadBMP "resources/textures/menuFundo/tutorial2.bmp"
+  tutorial3 <- loadBMP "resources/textures/menuFundo/tutorial3.bmp"
   etapa1 <- loadBMP "resources/textures/ui/etapa1.bmp"
   etapa2 <- loadBMP "resources/textures/ui/etapa2.bmp"
   etapa3 <- loadBMP "resources/textures/ui/etapa3.bmp"
@@ -263,6 +264,10 @@ main = do
   ninimigoF <- loadBMP "resources/textures/ui/nInimigosF.bmp"
   customize <- loadBMP "resources/textures/ui/customize.bmp"
   menuCustomize <- loadBMP "resources/textures/menuFundo/menuCustomize.bmp"
+  cadeadoAberto <- loadBMP "resources/textures/ui/cadeadoAberto.bmp"
+  cadeadoFechado <- loadBMP "resources/textures/ui/cadeadoFechado.bmp"
+  multiplayer <- loadBMP "resources/textures/ui/multiplayer.bmp"
+  costumizarVoltar <- loadBMP "resources/textures/ui/costumizarVoltarMenu.bmp"
 
   play janela 
         fundo 
@@ -466,6 +471,7 @@ main = do
             ("etapa4", etapa4),
             ("tutorial1", tutorial1),
             ("tutorial2", tutorial2),
+            ("tutorial3", tutorial3),
             ("fundoPedraTT", fundoPedraTT),
             ("yes", yes),
             ("no", no),
@@ -476,7 +482,11 @@ main = do
             ("botaomodo", botaomodo),
             ("ninimigoM", ninimigoM), 
             ("customize", customize),
-            ("menuCustomize", menuCustomize)
+            ("menuCustomize", menuCustomize),
+            ("cadeadoAberto", cadeadoAberto),
+            ("cadeadoFechado", cadeadoFechado),
+            ("multiplayer", multiplayer),
+            ("costumizarVoltar", costumizarVoltar)
         ]) 
         desenha 
         reageEventos 

@@ -263,6 +263,7 @@ main = do
   ninimigoF <- loadBMP "resources/textures/ui/nInimigosF.bmp"
   customize <- loadBMP "resources/textures/ui/customize.bmp"
   menuCustomize <- loadBMP "resources/textures/menuFundo/menuCustomize.bmp"
+  semNivel <- loadBMP "resources/textures/ui/semNivel.bmp"
 
   play janela 
         fundo 
@@ -475,8 +476,10 @@ main = do
             ("nOndas", nOndas), 
             ("botaomodo", botaomodo),
             ("ninimigoM", ninimigoM), 
+            ("ninimigoF", ninimigoF),
             ("customize", customize),
-            ("menuCustomize", menuCustomize)
+            ("menuCustomize", menuCustomize),
+            ("semNivel", semNivel)
         ]) 
         desenha 
         reageEventos 

@@ -268,6 +268,10 @@ reageEventos (EventKey (Char 'm') Down _ _) it
 
 reageEventos _ it = it 
 
+{-| Costumiza o perfil do jogador e os inimigos, com base na posição da seta. 
+
+-}
+
 alteraITCostumizar :: ImmutableTowers -> ImmutableTowers
 alteraITCostumizar it = case selecaoCostumizar it of
     (-400, 350) -> it {inimigoHomem = "guerreiro"}
@@ -277,6 +281,10 @@ alteraITCostumizar it = case selecaoCostumizar it of
     (-600, -350) -> it {perfil = "perfilGuerreiro"}
     (-100, -350) -> it {perfil = "perfilViking"}
     _ -> it {perfil = "perfilMulherLanca"}
+
+{-| Responsável por posicionar uma torre comprada no mapa. 
+
+-}
 
 colocaTorre:: ImmutableTowers -> Posicao -> (Torre, Creditos)
 colocaTorre it (xF, yF) = case produtoLoja it of
@@ -306,6 +314,10 @@ colocaTorre it (xF, yF) = case produtoLoja it of
                   tempoTorre = 4*60,
                   projetilTorre = Projetil {tipoProjetil = Fogo, duracaoProjetil = Finita (3*60)},
                   iteracoesDesdeInicioAnimacao = 1}, 200)
+
+{-| Estado inicial do jogo, que é aplicado sempre que o jogador volta oa menu. 
+
+-}
 
 reiniciarEstado :: ImmutableTowers -> ImmutableTowers
 reiniciarEstado it = it {

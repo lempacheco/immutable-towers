@@ -112,7 +112,7 @@ teste8 =
 
 teste9 :: Test
 teste9 =
-  TestLabel "Testes para a função auxiliar getTiposProjsInimigo" $
+  TestLabel "Testes para a função atingeInimigo" $
    test 
    [
     "Torre com Gelo e inimigo sem projéteis" ~: danoInimigo torre1 (inimigo5 {projeteisInimigo = [projetil1]}) ~=? atingeInimigo torre1 inimigo5,

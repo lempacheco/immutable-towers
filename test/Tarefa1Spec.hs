@@ -206,6 +206,7 @@ portalInicial = Portal {posicaoPortal = (0,9)}
 baseInicial :: Base
 baseInicial = Base {posicaoBase = (15,9)}
 
+portal1 :: Portal
 portal1 = Portal {
   posicaoPortal = (0.5,0.5),
   ondasPortal = []
@@ -217,21 +218,6 @@ mapa1 =
  [ [t, t, r, a, a, a],
    [r, t, r, a, r, r],
    [r, t, r, a, r, t],
-   [r, t, r, a, r, t],
-   [r, t, t, t, t, t],
-   [a, a, a, a, r, r]
- ]
- where
-       t = Terra
-       r = Relva
-       a = Agua
-
---mapa sem caminho até à torre
-mapa2 :: Mapa
-mapa2 =
- [ [t, t, r, a, a, a],
-   [r, t, r, a, r, r],
-   [r, a, r, a, r, t],
    [r, t, r, a, r, t],
    [r, t, t, t, t, t],
    [a, a, a, a, r, r]
@@ -572,12 +558,6 @@ projetilB = Projetil
   { tipoProjetil = Gelo,
     duracaoProjetil = Finita 2.0
   }
-
-projetilC :: Projetil 
-projetilC = Projetil 
- {tipoProjetil = Resina, 
-  duracaoProjetil = Infinita
- }
 
 
 

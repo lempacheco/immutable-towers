@@ -9,7 +9,7 @@ testesTarefa1 :: Test
 testesTarefa1 =
   TestLabel "Testes Tarefa 1" $
     test
-      [ testesFaux, testesPortais, testesInimigos, testesTorres, testesBase, testesExistePeloMenosUmCaminho, testesGeraUmCaminho] 
+      [ testesFaux, testesPortais, testesInimigos, testesTorres, testesBase, testesExistePeloMenosUmCaminho, testesGeraUmCaminho, testeValida] 
 
 testesFaux :: Test 
 testesFaux = 
@@ -175,6 +175,25 @@ testesGeraUmCaminho =
           "Não existe um caminho válido" ~: [(False, [])]
                                          ~=? geraCaminhos mapa1 (0,0) (5,2) [(1,0)] []
          ]
+
+testeValida :: Test 
+testeValida = 
+  TestLabel "Testes para a função validaBase, validaPortal, validaInimigo, validaJogo" $
+   test [
+         "A base esta valida" ~: True ~=? validaBase jogo1,
+         "A base não esta valida" ~: False ~=? validaBase jogo1 {baseJogo= baseB, portaisJogo = [portalC]}, 
+
+         "Os inimigos estão válidos" ~: True ~=? validaInimigo jogo1,
+         "Os inimigos não estão válidos" ~: False ~=? validaInimigo jogo1 {inimigosJogo = [inimigoD]}, 
+         "Os inimigos não estão válidos" ~: False ~=? validaInimigo jogo1 {inimigosJogo = [inimigoB]}, 
+         "Não tem inimigos no jogo" ~: True ~=? validaInimigo jogo1 {inimigosJogo = []},
+
+         "os portais estão válidos" ~: True ~=? validaPortal jogo1, 
+         "os portais não estão válidos" ~: False ~=? validaPortal jogo1 {portaisJogo = [portalB]},
+
+        "O jogo está válido" ~: True ~=? validaJogo jogo1, 
+        "O jogo não está válido" ~: False ~=? validaJogo jogo2
+   ]
 
 mapaInicial :: Mapa 
 mapaInicial = 

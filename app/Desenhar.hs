@@ -487,13 +487,19 @@ desenhaLoja loja ts = Pictures [iconeLoja,
                                 fundoTorre1, 
                                 fundoTorre2, 
                                 fundoTorre3, 
-                                Pictures $ map desenhaTorre loja]
+                                Pictures $ map desenhaTorre loja,
+                                fogo, 
+                                gelo, 
+                                resina]
     where x = -805
           y = 100
           espacamento = 200
           tamanhoTorre = 0.70
           tamanhoCreditos = 1
           iconeLoja = Translate (-750) 270 $ scale 5.5 5.5  $ fromJust $ lookup "iconeLoja" ts
+          gelo = Translate (-730) 120 $ scale 4 4 $ fromJust $ lookup "gelo" ts
+          resina = Translate (-730) (-80) $ scale 4 4 $ fromJust $ lookup "resina" ts
+          fogo = Translate (-730) (-280) $ scale 4 4 $ fromJust $ lookup "fogo" ts
           fundoTorre1 =  Translate (-730) 100 $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre2 = Translate (-730) (-100) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts
           fundoTorre3 = Translate (-730) (-300) $ scale 4 4 $ fromJust $ lookup "creditosJogador" ts

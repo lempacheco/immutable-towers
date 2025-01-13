@@ -472,7 +472,7 @@ teste23 =
   TestLabel "Testes para a função geraCaminhos" $
    test 
     [
-      "teste 1" ~: [Inimigo {tipoInimigo = MulherLanca, 
+      "teste 1" ~: [Inimigo {tipoInimigo = Mulher, 
                                       projeteisInimigo = [], 
                                       vidaInimigo = 0, 
                                       butimInimigo = 150,  
@@ -484,7 +484,7 @@ teste23 =
                                       acDirecao = (5,1),
                                       direcaoInimigo = Norte
                                       }] ~=? geraCaminhos (inimigosJogo jogoJ) mapaJ baseJ 0,
-      "teste 2" ~: [Inimigo {tipoInimigo = MulherLanca, 
+      "teste 2" ~: [Inimigo {tipoInimigo = Mulher, 
                                       projeteisInimigo = [], 
                                       vidaInimigo = 0, 
                                       butimInimigo = 150,  
@@ -495,7 +495,7 @@ teste23 =
                                       posicaoInimigo = (5,2),
                                       acDirecao = (5,2),
                                       direcaoInimigo = Norte
-                                      }] ~=? geraCaminhos [Inimigo {tipoInimigo = MulherLanca, 
+                                      }] ~=? geraCaminhos [Inimigo {tipoInimigo = Mulher, 
                                                                     projeteisInimigo = [], 
                                                                     vidaInimigo = 0, 
                                                                     butimInimigo = 150,  
@@ -565,7 +565,7 @@ ondaGOP = Onda {cicloOnda = 5*60,
                 }
 
 inimigo1GOP :: Inimigo
-inimigo1GOP = Inimigo {tipoInimigo = Guerreiro, 
+inimigo1GOP = Inimigo {tipoInimigo = Homem, 
                         projeteisInimigo = [], 
                         vidaInimigo = 150, 
                         butimInimigo = 50, 
@@ -576,7 +576,7 @@ inimigo1GOP = Inimigo {tipoInimigo = Guerreiro,
                         direcaoInimigo = Norte}
 
 inimigo2GOP :: Inimigo
-inimigo2GOP = Inimigo {tipoInimigo = MulherLanca, 
+inimigo2GOP = Inimigo {tipoInimigo = Mulher, 
                         projeteisInimigo = [], 
                         vidaInimigo = 100, 
                         butimInimigo = 45,  
@@ -591,7 +591,7 @@ jogoJ = Jogo {baseJogo = baseJ,
               torresJogo = [],
               portaisJogo = [portal1_J],
               mapaJogo = mapaJ,
-              inimigosJogo = [Inimigo {tipoInimigo = MulherLanca, 
+              inimigosJogo = [Inimigo {tipoInimigo = Mulher, 
                                                                   projeteisInimigo = [], 
                                                                   vidaInimigo = 0, 
                                                                   butimInimigo = 150,  
@@ -611,7 +611,7 @@ jogoH = Jogo {baseJogo = baseJ,
               torresJogo = [],
               portaisJogo = [portal1_J],
               mapaJogo = mapaJ,
-              inimigosJogo = [Inimigo {tipoInimigo = MulherLanca, 
+              inimigosJogo = [Inimigo {tipoInimigo = Mulher, 
                                                                   projeteisInimigo = [], 
                                                                   vidaInimigo = -10, 
                                                                   butimInimigo = 150,  
@@ -631,7 +631,7 @@ jogoI = Jogo {baseJogo = baseJ,
               torresJogo = [],
               portaisJogo = [portal1_J],
               mapaJogo = mapaJ,
-              inimigosJogo = [Inimigo {tipoInimigo = MulherLanca, 
+              inimigosJogo = [Inimigo {tipoInimigo = Mulher, 
                                         projeteisInimigo = [], 
                                         vidaInimigo = 0, 
                                         butimInimigo = 150,  
@@ -643,7 +643,7 @@ jogoI = Jogo {baseJogo = baseJ,
                                         acDirecao = (5,1){- ,
                                         direcaoInimigo = Sul -}
                                         },
-                              Inimigo {tipoInimigo = MulherLanca, 
+                              Inimigo {tipoInimigo = Mulher, 
                                         projeteisInimigo = [], 
                                         vidaInimigo = -10, 
                                         butimInimigo = 150,  
@@ -655,7 +655,7 @@ jogoI = Jogo {baseJogo = baseJ,
                                         acDirecao = (5,1){- ,
                                         direcaoInimigo = Sul -}
                                         },
-                              Inimigo {tipoInimigo = MulherLanca, 
+                              Inimigo {tipoInimigo = Mulher, 
                                         projeteisInimigo = [], 
                                         vidaInimigo = 10, 
                                         butimInimigo = 150,  
@@ -885,7 +885,7 @@ inimigoA3 = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [], 
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (0,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
@@ -901,7 +901,7 @@ inimigoB3 = Inimigo
   velocidadeInimigo = 10.0,
   butimInimigo = 5, 
   projeteisInimigo = [], 
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (1,0),
   iteracoesDesdeInicioAnimacaoInimigo = 32  
@@ -917,7 +917,7 @@ inimigoC3 = Inimigo
   velocidadeInimigo = 0.0,
   butimInimigo = 5, 
   projeteisInimigo = [],
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (0,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
@@ -933,7 +933,7 @@ inimigoD3 = Inimigo
   velocidadeInimigo = 0.0,
   butimInimigo = 5, 
   projeteisInimigo = [], 
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (1,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
@@ -949,7 +949,7 @@ inimigoE3 = Inimigo
   velocidadeInimigo = 0.0,
   butimInimigo = 5, 
   projeteisInimigo = [], 
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (5,2),
   iteracoesDesdeInicioAnimacaoInimigo = 1 
@@ -965,7 +965,7 @@ inimigoF3 = Inimigo
   velocidadeInimigo = 0.0,
   butimInimigo = 5, 
   projeteisInimigo = [], 
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (2,4),
   iteracoesDesdeInicioAnimacaoInimigo = 1 
@@ -1003,7 +1003,7 @@ inimigo1 = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [projetil1, projetil2, projetil3],
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (5,4),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
@@ -1020,7 +1020,7 @@ inimigo2 = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [], 
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (0,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  
@@ -1037,7 +1037,7 @@ inimigo3 = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 5, 
   projeteisInimigo = [],
-  tipoInimigo = MulherLanca,
+  tipoInimigo = Mulher,
   caminhoInimigo = [],
   acDirecao = (5,4),
   iteracoesDesdeInicioAnimacaoInimigo = 1   
@@ -1054,7 +1054,7 @@ inimigo4 = Inimigo
   ataqueInimigo = 5.0, 
   butimInimigo = 10, 
   projeteisInimigo = [], 
-  tipoInimigo = MulherLanca , 
+  tipoInimigo = Mulher , 
   caminhoInimigo = [],
   acDirecao = (0,0),
   iteracoesDesdeInicioAnimacaoInimigo = 1  

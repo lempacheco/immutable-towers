@@ -17,7 +17,7 @@ comprimento :: Integer
 comprimento = 64*16
 
 desenha :: ImmutableTowers -> Picture
-desenha it = Pictures [desenhaPrimeiroJogador it, desenhaSegundoJogador it, text $ show $ botaoNivelPassado it ]
+desenha it = Pictures [desenhaPrimeiroJogador it, desenhaSegundoJogador it]
 
 desenhaPrimeiroJogador :: ImmutableTowers -> Picture
 desenhaPrimeiroJogador it = case estadoIT it of
@@ -368,11 +368,7 @@ desenhaJogo it = Pictures [picMapa,
           creditosJog = desenhaPerfilJogador it texturas 
           picModoJogo = desenhaModoJogo it texturas
 
-{- selecionaJogo :: ImmutableTowers -> ImmutableTowers
-selecionaJogo it = case estadoIT it of 
-    Tutorial -> it {jogoIT = jogoTT }
-    _                 -> it 
- -}
+
 desenhaMolduraMapa :: [Textura] -> Picture
 desenhaMolduraMapa ts = Pictures [moldCima]
     where moldCima = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa2" ts)
@@ -466,8 +462,8 @@ desenhaAnimacaoInimigo :: Inimigo -> ImmutableTowers -> [Textura] -> Picture
 desenhaAnimacaoInimigo i it ts =
     let its = iteracoesDesdeInicioAnimacaoInimigo i
         textura = case tipoInimigo i of
-            Guerreiro -> fromJust $ lookup (inimigoHomem it ++ show (ceiling $ int2Float(its) / 4)) ts
-            MulherLanca -> fromJust $ lookup (inimigoMulher it ++ show (ceiling $ int2Float(its) / 4)) ts
+            Homem -> fromJust $ lookup (inimigoHomem it ++ show (ceiling $ int2Float(its) / 4)) ts
+            Mulher -> fromJust $ lookup (inimigoMulher it ++ show (ceiling $ int2Float(its) / 4)) ts
     in  Pictures [textura]
 
 desenhaPortais :: [Portal] -> Picture -> [Picture]
@@ -548,8 +544,6 @@ desenhaPerfilJogador it ts = Pictures [creditosJogador,
                                   Translate 780 (-85) $ scale 3.5 3.5 $ fromJust $ lookup "iconePausa" ts, 
                                   desenhaNivelJogo it ts
                                  ]
--- translate (-960+16*10) (540-16*10) $ scale 10 10 (ts!!10) -- painel
--- translate (x) (y+30) $ scale 0.1 0.1 $ text $ show $ vidaInimigo inimigo
 
 desenhaModoJogo :: ImmutableTowers -> [Textura] -> Picture
 desenhaModoJogo it ts = Translate 780 (-20) $ scale 0.8 0.8 $ 

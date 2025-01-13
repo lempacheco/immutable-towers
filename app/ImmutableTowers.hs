@@ -31,7 +31,8 @@ data ImmutableTowers = ImmutableTowers {
     selecaoCostumizar :: Posicao,
     inimigoHomem :: String,
     inimigoMulher :: String,
-    perfil :: String
+    perfil :: String, 
+    multiplayer :: Bool
 }
 
 data EstadoJogo = Menu 
@@ -63,6 +64,9 @@ data NivelJogoFinito = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 deriving (Eq, 
 
 data ModoJogo = Finito | Infinito | MapaCriado deriving (Eq, Show)
 
+ativaMP :: ImmutableTowers -> ImmutableTowers
+ativaMP it = if multiplayer it then it {estadoIT2 = Jogando }
+             else it {estadoIT2 = Menu}
 
 {-| Controla a progressão de nível no jogo. 
 

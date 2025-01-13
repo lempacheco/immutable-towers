@@ -46,11 +46,12 @@ Verifica as combinações de projéteis e ajusta os efeitos aplicados ao inimigo
   1. *Fogo e Gelo*:
        Remove os projéteis do tipo Fogo e Gelo do inimigo.
   2. *Fogo e Resina*:
-       Remove o projétil de Resina e dobra a duração do projétil de Fogo no inimigo.
+       Dobra a duração do projétil de Fogo no inimigo e remove o projétil de Resina, se for necessário. 
+       Caso contrário adiciona-o aos projéteis do inimigo.
   3. *Projetil Igual*:
        Dobra a duração do projétil se o tipo for igual ao projétil disparado pela torre.
   4. *Outras Combinações*:
-       Adiciona o projétil da torre ao inimigo.
+       Adiciona o projétil da torre aos projéteis do inimigo.
 -}
 
 atingeInimigo :: Torre -> Inimigo -> Inimigo

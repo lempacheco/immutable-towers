@@ -13,9 +13,7 @@ import LI12425
 import Tarefa2
 import Tarefa1
 import Data.List
-import Data.Maybe 
-
-
+import Data.Ord
 
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j =
@@ -27,8 +25,9 @@ atualizaJogo t j =
   
 {-| É responsável por atualizar o jogo, relativamente as torres. 
 
-    == __ Comportamento: __ == 
+== __ Comportamento: __ == 
 A função atualiza os inimigos, sempre que estes sofrem danos, e atualiza as torres do jogo, sempre que estas lançam projéteis.
+
 -}
 
 atualizaTorres :: Jogo -> Jogo 
@@ -40,6 +39,7 @@ atualizaTorres j = j{inimigosJogo = inimigosAtualizados, torresJogo = torresAtua
 {-| Atualiza o estado dos portais e dos inimigos no jogo. 
 A função atualiza os inimigos com base nos projéteis disparados pelas torres e a cada vez que um inimigo é lançado no jogo. 
 E atualiza os portais, lançando os inimigos.
+
 -}
 
 atualizaPortaisEInimigos :: Jogo -> Jogo
@@ -50,24 +50,6 @@ atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJo
           (inimigosAtualizados, _) = disparaTodosProjeteis torres inimigos
           (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
 
-
-{-| É responsável por processar todos os portais do jogo, lançando os inimigos no jogo. 
--}
-
-lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
-lancaTodosPortais [] is = ([], is)
-lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is
-                                  (restoPortaisAtualizados, inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos
-                              in (portalAtualizado:restoPortaisAtualizados, inimigosNovosAtualizados)
-
-{-| É responsável por processar todas as torres do jogo, disparando projéteis contra os inimigos. 
--}
-
-disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
-disparaTodosProjeteis [] is = (is, [])
-disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = disparaProjeteis t is
-                                      (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo
-                                  in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas)
 
 {-| Atualiza o estado das animações das torres no jogo. 
 
@@ -190,6 +172,14 @@ disparaProjeteis torre is
     | otherwise = (inimigosSobreviventes torre is, novaTorre)
        where novaTorre = torre {tempoTorre = cicloTorre torre}
 
+{-| É responsável por processar todas as torres do jogo, disparando projéteis contra os inimigos. 
+-}
+
+disparaTodosProjeteis :: [Torre] -> [Inimigo] -> ([Inimigo], [Torre])
+disparaTodosProjeteis [] is = (is, [])
+disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = disparaProjeteis t is
+                                      (inimigosAtualizados, restoTorresAtualizadas) = disparaTodosProjeteis ts inimigosPosDisparo
+                                  in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas)
 
 {-| Ordena uma lista de inimigos com base na distância
   de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
@@ -268,7 +258,7 @@ fatorVelocidadeInimigoResina = 0.9 --atualizaInimigoResina reduz a velocidade po
 atualizaInimigoFogo :: [Inimigo] -> [Inimigo]
 atualizaInimigoFogo [] = []
 atualizaInimigoFogo (i:is)
-    | Fogo `elem` getTiposProjsInimigo i = i {vidaInimigo = vidaInimigo i - taxaVelocidadeInimigoFogo} : atualizaInimigoFogo is
+    | Fogo `elem` getTiposProjsInimigo i = i {vidaInimigo = vidaInimigo i - taxaDanoInimigoFogo} : atualizaInimigoFogo is
     | otherwise = i : atualizaInimigoFogo is
 
 {-| Taxa de dano aplicada a inimigos sob o efeito de projéteis de Fogo.
@@ -276,19 +266,9 @@ atualizaInimigoFogo (i:is)
 ==__Nota:__ 
 5/60 - Reduz 5 pontos de vida por segundo, considerando um framerate de 60 quadros por segundo.
 -}
--- TODO dano? ou velocidade?
-taxaVelocidadeInimigoFogo :: Float
-taxaVelocidadeInimigoFogo = 5/60 
 
-{-| Devolve a lista de inimigos sobreviventes, cujo parâmetro 'vidaInimigo' seja maior que 0. 
--}
-{- 
-inimigosSemVidaIs :: [Inimigo] -> [Inimigo]
-inimigosSemVidaIs [] = []
-inimigosSemVidaIs (i:is)
-    | vidaInimigo i <= 0 = inimigosSemVidaIs is
-    | otherwise = i : inimigosSemVidaIs is
- -}
+taxaDanoInimigoFogo :: Float
+taxaDanoInimigoFogo = 5/60 
  
 {-| É responsável por atualizar os créditos da base, sempre que um inimigo morre. 
 -}
@@ -303,9 +283,8 @@ inimigosSemVida b (i:is)
         let (bFinal, inimigosRestantes) = inimigosSemVida b is
         in (bFinal, i : inimigosRestantes)
 
--- TODO
 
-{-| Atualiza a distância percorrida pelos inimigos no jogo.
+{-| Atualiza a distância percorrida pelos inimigos no jogo, permitindo com que esses se movam.
 
 == __Comportamento:__
 Calcula a nova posição do inimigo com base em sua direção, velocidade e o tempo decorrido.
@@ -390,6 +369,16 @@ lancaInimigo p is = case ondasPortal p of
                 p' = p {ondasPortal = o':os}
             in ativaInimigo p' is
 
+{-| É responsável por processar todos os portais do jogo, lançando os inimigos no jogo. 
+
+-}
+
+lancaTodosPortais :: [Portal] -> [Inimigo] -> ([Portal], [Inimigo])
+lancaTodosPortais [] is = ([], is)
+lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimigo p is
+                                  (restoPortaisAtualizados, inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos
+                              in (portalAtualizado:restoPortaisAtualizados, inimigosNovosAtualizados)
+
 {-| Responsável por calcular os caminhos para os inimigos no mapa, em direção a base. 
 
 ==__Comportamento:__ 
@@ -417,7 +406,7 @@ geraCaminhos (i:is) m b ac =
         l = escolheCaminho caminhos ac
     in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b (ac+1) else i : geraCaminhos is m b (ac+1)
 
-{-| Movimenta um inimigo ao longo de um caminho de terra, previamente calculado. 
+{-| Avalia quando é necessário passa para a próxima direção no caminho do inimigo já definido, mudando assim, a direção do inimigo necessário.
 
 -}
 
@@ -435,15 +424,36 @@ moveInimigo i =
           | sqrt ((xAtual-xInicial)^2 + (yAtual-yInicial)^2) < 1 -> i
           | otherwise -> i {caminhoInimigo = rt, acDirecao = posicaoInimigo i, direcaoInimigo = head rt}
 
+
+{-| É responsável por atulizar o jogo, após ter sido realizada, a compra de uma torre. Adiciona a torre nova ao jogo, desde que 
+o jogador tenha créditos suficientes, e a torre seja válida, de acordo com as definições da função 'validaTorre'. 
+
+-}
+
+compraTorre :: Torre -> Creditos -> Jogo -> Jogo
+compraTorre t custoTorre j 
+    | custoTorre <= creditosBase (baseJogo j) && validaTorre j {torresJogo = t: torresJogo j} = jogoNovo
+    | otherwise = j 
+  where jogoNovo = j {baseJogo = (baseJogo j) {creditosBase = creditosBase (baseJogo j) - custoTorre}, 
+                      torresJogo = ordenaTorre  $ t: torresJogo j}
+
+{-| Ordena a lista de torres, com base na coordenada Y da posição de cada torre. 
+
+-}
+
+ordenaTorre :: [Torre] -> [Torre]
+ordenaTorre = sortBy (comparing (snd . posicaoTorre)) 
+
+
 -- Bases do jogo
 
 baseTds :: Base
 baseTds = Base {vidaBase = 100,
                 creditosBase = 200} 
 
--- inimigos Guerreiro
+-- inimigos Homem
 inimigo1Tds :: Inimigo
-inimigo1Tds = Inimigo {tipoInimigo = Guerreiro, 
+inimigo1Tds = Inimigo {tipoInimigo = Homem, 
                         projeteisInimigo = [], 
                         vidaInimigo = 150, 
                         butimInimigo = 50, 
@@ -452,9 +462,9 @@ inimigo1Tds = Inimigo {tipoInimigo = Guerreiro,
                         caminhoInimigo = [],
                         iteracoesDesdeInicioAnimacaoInimigo = 1}
 
--- inimigos MulherLanca
+-- inimigos Mulher
 inimigo2Tds :: Inimigo
-inimigo2Tds = Inimigo {tipoInimigo = MulherLanca, 
+inimigo2Tds = Inimigo {tipoInimigo = Mulher, 
                         projeteisInimigo = [], 
                         vidaInimigo = 100, 
                         butimInimigo = 45,  
@@ -463,57 +473,6 @@ inimigo2Tds = Inimigo {tipoInimigo = MulherLanca,
                         caminhoInimigo = [],
                         iteracoesDesdeInicioAnimacaoInimigo = 1}
 
-geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
-geraOndasPortal 0 _ _ _ = []
-geraOndasPortal qOndas n1 n2 posP = 
-  let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
-  in (last ondas) {tempoOnda = 0} : init ondas
-
-{-| Cria uma onda de inimigos com base nos parâmetros fornecidos
-
--}
-
-geraOndaPortal :: Int -- ^ quantidade de inimigos masculinos. 
-               -> Int -- ^ quantidade de inimigos femininos. 
-               -> Posicao -- ^ posição inicial dos inimigos. 
-               -> Onda -- ^ Onda com a configuração definida.
-geraOndaPortal n1 n2 posP = 
-  let is1 = geraIs1 posP n1
-      is2 = geraIs2 posP n2
-  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
-            cicloOnda = 5*60,
-            tempoOnda = 10*60,
-            entradaOnda = 0
-            }
-
-{-| Cria um grupo com n inimigos masculinos. 
-
--}
-
-geraIs1 :: Posicao -> Int -> [Inimigo]
-geraIs1 posP n1
-  | n1 == 0 = []
-  | otherwise = inimigo1Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs1 posP (n1-1)
-
-{-| Cria um grupo com n inimigos femininos. 
-
--}
-
-geraIs2 :: Posicao -> Int -> [Inimigo]
-geraIs2 posP n2
-  | n2 == 0 = []
-  | otherwise = inimigo2Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs2 posP (n2-1)
-
-{-| Cria um grupo de inimigos, intercalando os masculinos com os femininos. 
-
--}
-
-juntaIs1Is2 :: [Inimigo] -> [Inimigo] -> Int -> [Inimigo]
-juntaIs1Is2 [] is2 _ = is2
-juntaIs1Is2 is1 [] _ = is1
-juntaIs1Is2 is1 is2 ac
-  | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
-  | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
 
 -- loja do jogo. 
 loja :: Loja
@@ -773,4 +732,58 @@ portal6_1 :: Portal
 portal6_1 = Portal {posicaoPortal = (5,0), 
                     ondasPortal = geraOndasPortal 1 3 2 (5,0)}
 
+
+
+
+geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
+geraOndasPortal 0 _ _ _ = []
+geraOndasPortal qOndas n1 n2 posP = 
+  let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
+  in (last ondas) {tempoOnda = 0} : init ondas
+
+{-| Cria uma onda de inimigos com base nos parâmetros fornecidos
+
+-}
+
+geraOndaPortal :: Int -- ^ quantidade de inimigos masculinos. 
+               -> Int -- ^ quantidade de inimigos femininos. 
+               -> Posicao -- ^ posição inicial dos inimigos. 
+               -> Onda -- ^ Onda com a configuração definida.
+geraOndaPortal n1 n2 posP = 
+  let is1 = geraIs1 posP n1
+      is2 = geraIs2 posP n2
+  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
+            cicloOnda = 5*60,
+            tempoOnda = 10*60,
+            entradaOnda = 0
+            }
+
+{-| Cria um grupo com n inimigos masculinos. 
+
+-}
+
+geraIs1 :: Posicao -> Int -> [Inimigo]
+geraIs1 posP n1
+  | n1 == 0 = []
+  | otherwise = inimigo1Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs1 posP (n1-1)
+
+{-| Cria um grupo com n inimigos femininos. 
+
+-}
+
+geraIs2 :: Posicao -> Int -> [Inimigo]
+geraIs2 posP n2
+  | n2 == 0 = []
+  | otherwise = inimigo2Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs2 posP (n2-1)
+
+{-| Cria um grupo de inimigos, intercalando os masculinos com os femininos. 
+
+-}
+
+juntaIs1Is2 :: [Inimigo] -> [Inimigo] -> Int -> [Inimigo]
+juntaIs1Is2 [] is2 _ = is2
+juntaIs1Is2 is1 [] _ = is1
+juntaIs1Is2 is1 is2 ac
+  | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
+  | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
 

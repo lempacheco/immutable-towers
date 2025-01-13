@@ -111,7 +111,6 @@ eAgua (x,y) mapa = case procuraTerreno (x,y) mapa of
 >>> let mapa = [[Relva, Relva, Agua], [Terra, Relva, Terra], [Relva, Terra, Agua]]
 >>> procuraTerreno (1.5, 0.5) mapa
 Just Relva
-
 >>> procuraTerreno (5, 1) mapa
 Nothing
 
@@ -219,11 +218,9 @@ velocidadeInimigos is = all (>0) (map velocidadeInimigo is)
 >>> let inimigos = [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}]}]
 >>> normalizaInimigos inimigos
 True
-
 >>> let inimigos = [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}, Projetil {tipoProjetil = Gelo}]}]
 >>> normalizaInimigos inimigos
 False
-
 >>> let inimigos = [Inimigo {projeteisInimigo = [Projetil {tipoProjetil = Fogo}, Projetil {tipoProjetil = Fogo}]}]
 >>> normalizaInimigos inimigos
 False

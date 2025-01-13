@@ -38,7 +38,9 @@ itTds texturas =
                      selecaoCostumizar = (-400,350),
                      inimigoHomem = "guerreiro",
                      inimigoMulher = "mulherLanca",
-                     perfil = "perfilGuerreiro"}
+                     perfil = "perfilGuerreiro", 
+                     multiplayer = False
+                     }
 
 janela :: Display
 janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen

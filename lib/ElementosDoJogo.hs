@@ -3,14 +3,14 @@ module ElementosDoJogo where
 import LI12425
 import FuncoesAux
 
--- loja do jogo. 
+-- | Loja do jogo. 
 loja :: Loja
 loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
          (150, Torre{projetilTorre = Projetil {tipoProjetil = Resina}}),
          (200, Torre{projetilTorre = Projetil {tipoProjetil = Fogo}})
         ]
 
--- Nível 1
+-- | Nível 1
 
 jogo1 :: Jogo
 jogo1 = Jogo {baseJogo = base1,
@@ -58,7 +58,7 @@ mapa1 =
        r = Relva
        a = Agua
 
--- Nível 2
+-- | Nível 2
 
 jogo2 :: Jogo
 jogo2 = Jogo {baseJogo = base2,
@@ -109,7 +109,7 @@ portal3_2 :: Portal
 portal3_2 = Portal {posicaoPortal = (5,0), 
                   ondasPortal = geraOndasPortal 2 3 2 (5,0)}
 
--- Nível 3
+-- | Nível 3
 
 mapa3 :: Mapa 
 mapa3 = 
@@ -144,6 +144,7 @@ jogo3 = Jogo {mapaJogo = mapa3,
               lojaJogo = loja,
               acGeraCaminhos = 0}
 
+base3 :: Base
 base3 = baseTds {posicaoBase = (8,15)}
 
 portal1_3 :: Portal
@@ -154,7 +155,7 @@ portal2_3 :: Portal
 portal2_3 = Portal {posicaoPortal = (9,0), 
                   ondasPortal = geraOndasPortal 2 3 2 (9,0)}
 
--- Nivel 4
+-- | Nivel 4
 
 mapa4 :: Mapa 
 mapa4 = 
@@ -197,7 +198,7 @@ portal1_4 :: Portal
 portal1_4 = Portal {posicaoPortal = (1,0),
                   ondasPortal = geraOndasPortal 6 3 2 (1,0)}
 
--- Nivel 5
+-- | Nivel 5
 
 mapa5 :: Mapa 
 mapa5 = 
@@ -233,6 +234,7 @@ jogo5 = Jogo {mapaJogo = mapa5,
               lojaJogo = loja,
               acGeraCaminhos = 0}
 
+base5 :: Base
 base5 = baseTds {posicaoBase = (12,15)}
 
 portal1_5 :: Portal
@@ -247,16 +249,16 @@ portal3_5 :: Portal
 portal3_5 = Portal {posicaoPortal = (11,0),
                    ondasPortal = geraOndasPortal 3 3 2 (11,0)}
 
--- Jogo tutorial
+-- | Jogo tutorial
 jogoTT :: Jogo
 jogoTT = Jogo {mapaJogo = mapa1,
                      inimigosJogo = [], 
-                     portaisJogo = [portal6_1], 
+                     portaisJogo = [portalTT], 
                      torresJogo = [], 
                      baseJogo = base1, 
                      lojaJogo = loja,
                      acGeraCaminhos = 0}
 
-portal6_1 :: Portal
-portal6_1 = Portal {posicaoPortal = (5,0), 
+portalTT :: Portal
+portalTT = Portal {posicaoPortal = (5,0), 
                     ondasPortal = geraOndasPortal 1 3 2 (5,0)}

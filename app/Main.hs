@@ -6,15 +6,15 @@ import Eventos
 import Graphics.Gloss
 import ImmutableTowers
 import Tempo
-import LI12425
-import Tarefa3
 import ElementosDoJogo
 
+-- | Estado inicial do jogo.
 itInicial :: [Textura] -> ImmutableTowers
 itInicial ts = 
   let it = itTds ts
   in it {jogoIT = jogo1}
 
+-- | Usado para facilitar a criação de outros estados.
 itTds :: [Textura] -> ImmutableTowers
 itTds texturas = 
     ImmutableTowers {estadoIT = Menu, 
@@ -43,15 +43,19 @@ itTds texturas =
                      multiplayer = False
                      }
 
+-- | Tamanho da janela.
 janela :: Display
-janela = {-InWindow "Immutable Towers" (fromInteger comprimento, fromInteger altura) (0, 0)-} FullScreen
+janela = FullScreen
 
+-- | Cor do fundo.
 fundo :: Color
 fundo = makeColorI 20 60 85 100
 
+-- | Framerate.
 fr :: Int
 fr = 60
 
+-- | Obtém as texturas e dá começo à função 'play'.
 main :: IO ()
 main = do
   putStrLn "Hello from Immutable Towers!"
@@ -276,13 +280,13 @@ main = do
         fr 
         (itInicial 
           [
-            ("terra",terra),         --64x64 px
-            ("relva",relva),         --64x64 px
-            ("agua",agua),          --64x64 px
-            ("torreGelo",torreGelo),     --64x121 px
-            ("torreResina",torreResina),   --64x121 px
-            ("torreFogo",torreFogo),     --64x121 px
-            ("base",base),          --64x104 px
+            ("terra",terra),
+            ("relva",relva),
+            ("agua",agua),
+            ("torreGelo",torreGelo),
+            ("torreResina",torreResina),
+            ("torreFogo",torreFogo),
+            ("base",base),
             ("portal",portal),         
             ("guerreiro0",guerreiro0),
             ("guerreiro1",guerreiro1),
@@ -320,12 +324,12 @@ main = do
             ("viking6",viking6),
             ("viking7",viking7),
             ("viking8",viking8),
-            ("vida", vida), --18x16 px
+            ("vida", vida),
             ("fundoMenu",fundoMenu), 
             ("botaoPlay",botaoPlay), 
             ("botaoCredito",botaoCredito), 
             ("botaoLevel",botaoLevel),
-            ("fundoJogo", fundoJogo), --1920x1080 px
+            ("fundoJogo", fundoJogo),
             ("animacaoTorreGelo1", animacaoTorreGelo1),
             ("animacaoTorreGelo2", animacaoTorreGelo2),
             ("animacaoTorreGelo3", animacaoTorreGelo3),

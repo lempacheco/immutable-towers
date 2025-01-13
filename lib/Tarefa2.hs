@@ -46,7 +46,6 @@ Verifica as combinações de projéteis e ajusta os efeitos aplicados ao inimigo
     Remove os projéteis do tipo Fogo e Gelo do inimigo.
 2. __Fogo e Resina__:
     Dobra a duração do projétil de Fogo no inimigo e remove o projétil de Resina, se for necessário. 
-    Caso contrário adiciona-o aos projéteis do inimigo.
 3. __Projetil Igual__:
     Dobra a duração do projétil se o tipo for igual ao projétil disparado pela torre.
 4. __Outras Combinações__:
@@ -104,7 +103,7 @@ atingeInimigo torre inimigo
                 let tpProj = tipoProjetil $ head (projeteisInimigo i)
                 in i {projeteisInimigo = dobraElem tpProj (tail $ projeteisInimigo i)}
                 
-{-| É responsável por mover o próximo inimigo a ser lanaçado pelo portal para lista de inimigos ativos. 
+{-| É responsável por mover o próximo inimigo a ser lançado pelo portal para lista de inimigos ativos. 
 
 == __Comportamento: __
 

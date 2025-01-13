@@ -157,7 +157,7 @@ testesExistePeloMenosUmCaminho =
 
 testesGeraUmCaminho :: Test 
 testesGeraUmCaminho = 
-  TestLabel "Testes para a função geraUmCaminho" $
+  TestLabel "Testes para a função geraCaminhos" $
     test [
           "Existe um caminho válido" ~:  [(True,[Este,Norte,Norte,Norte,Norte,Este,Este,Este,Este,Sul,Sul]),
                                           (False,[Este,Norte,Norte,Norte,Norte,Este,Este,Este,Este,Sul]),
@@ -171,9 +171,9 @@ testesGeraUmCaminho =
                                           (False,[Este,Norte]),
                                           (False,[Este]),
                                           (False,[])] 
-                                     ~=? geraUmCaminho mapa1 (0,0) (5,2) [] [],
+                                     ~=? geraCaminhos mapa1 (0,0) (5,2) [] [],
           "Não existe um caminho válido" ~: [(False, [])]
-                                         ~=? geraUmCaminho mapa1 (0,0) (5,2) [(1,0)] []
+                                         ~=? geraCaminhos mapa1 (0,0) (5,2) [(1,0)] []
          ]
 
 mapaInicial :: Mapa 

@@ -5,6 +5,8 @@ import LI12425
 import Tarefa3
 import Tarefa2 
 
+{-| Responsável por atualizar o jogo com o passar do tempo, de acordo com o framerate.-}
+
 reageTempo :: Tempo -> ImmutableTowers -> ImmutableTowers
 reageTempo t it  
     | estadoIT it == Menu = it

@@ -85,7 +85,7 @@ data Torre = Torre
     tempoTorre :: Tempo,
     -- | Efeito secundário associado ao tipo de projétil da torre.
     projetilTorre :: Projetil,
-    --tempoInicialAnimacao :: Tempo,
+    -- | Auxiliar da animação da torre.
     iteracoesDesdeInicioAnimacao :: Int
   }
   deriving (Show,Eq)
@@ -132,12 +132,16 @@ data Inimigo = Inimigo
     projeteisInimigo :: [Projetil],
     -- | Tipo do inimigo.
     tipoInimigo :: TipoInimigo,
+    -- | Caminho que o inimigo irá percorrer até à base.
     caminhoInimigo :: [Direcao],
+    -- | Auxiliar do movimento do inimigo.
     acDirecao :: Posicao,
+    -- | Auxiliar da animação do inimigo.
     iteracoesDesdeInicioAnimacaoInimigo :: Int
   }
   deriving (Show, Eq)
 
+-- | Tipo que o inimigo pode assumir.
 data TipoInimigo = Homem | Mulher
   deriving (Show, Eq)
 
@@ -177,6 +181,7 @@ data Jogo = Jogo
     inimigosJogo :: [Inimigo],
     -- | Loja de torres disponíveis para construir.
     lojaJogo :: Loja,
+    -- | Auxiliar da escolha do caminho de um inimigo.
     acGeraCaminhos :: Int
   }
   deriving (Eq, Show)

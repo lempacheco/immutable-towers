@@ -259,12 +259,12 @@ Gera todos os caminhos possíveis de uma posição inicial até a base.
 == __Comportamento:__ 
 
 
-Verifica se é possível mover-se em cada direção (Norte, Sul, Leste, Oeste) com base nas condições do mapa,
+Verifica se é possível mover-se em cada direção (Norte, Sul, Este, Oeste) com base nas condições do mapa,
 nas posições já visitadas, e no terreno atual. Caso encontre um caminho até a base, retorna um par contendo
 um valor booleano indicando sucesso, __True__, e a sequência de direções.
 
 
-== __Exemplos de utilizção:__ 
+== __Exemplos de utilização:__ 
 
 >>> let mapa = 
     [ [t, t, r, a, a, a],
@@ -278,28 +278,28 @@ um valor booleano indicando sucesso, __True__, e a sequência de direções.
           t = Terra
           r = Relva
           a = Agua
->>> geraUmCaminho mapa (0,0) (1,3) [] []
-[(True, [Este, Norte, Norte, Norte])]
+>>> geraCaminhos mapa (0,0) (1,3) [] []
+[(True,[Este,Norte,Norte,Norte]),(False,[Este,Norte,Norte]),(False,[Este,Norte]),(False,[Este]),(False,[])]
 
 -}
 
-geraUmCaminho :: Mapa 
-             -- | Mapa do jogo.
+geraCaminhos :: Mapa 
+             -- ^ Mapa do jogo.
               -> Posicao 
-             -- | Posição do inimigo.
+             -- ^ Posição do inimigo.
               -> Posicao
-             -- | Posição da base.
+             -- ^ Posição da base.
               -> [Posicao] 
-             -- | Lista de posições já visitadas.
+             -- ^ Lista de posições já visitadas.
               -> [Direcao] 
-             -- | Lista de direções acumuladas no caminho atual.
+             -- ^ Lista de direções acumuladas no caminho atual.
               -> [(Bool, [Direcao])]
-geraUmCaminho m pos@(x,y) posB lpos ld
+geraCaminhos m pos@(x,y) posB lpos ld
   | chegouBase pos posB = [(True, ld)]
-  | verificaDirecaoTerra m pos lpos Norte = geraUmCaminho m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y+1)]) ld
-  | verificaDirecaoTerra m pos lpos Sul = geraUmCaminho m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul]) ++ geraUmCaminho m (x,y) posB (lpos++[(x,y-1)]) ld
-  | verificaDirecaoTerra m pos lpos Este = geraUmCaminho m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este]) ++ geraUmCaminho m (x,y) posB (lpos++[(x+1,y)]) ld
-  | verificaDirecaoTerra m pos lpos Oeste = geraUmCaminho m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste]) ++ geraUmCaminho m (x,y) posB (lpos++[(x-1,y)]) ld
+  | verificaDirecaoTerra m pos lpos Norte = geraCaminhos m (x,y+1) posB (lpos++[(x,y)]) (ld ++ [Norte]) ++ geraCaminhos m (x,y) posB (lpos++[(x,y+1)]) ld
+  | verificaDirecaoTerra m pos lpos Sul = geraCaminhos m (x,y-1) posB (lpos++[(x,y)]) (ld ++ [Sul]) ++ geraCaminhos m (x,y) posB (lpos++[(x,y-1)]) ld
+  | verificaDirecaoTerra m pos lpos Este = geraCaminhos m (x+1,y) posB (lpos++[(x,y)]) (ld ++ [Este]) ++ geraCaminhos m (x,y) posB (lpos++[(x+1,y)]) ld
+  | verificaDirecaoTerra m pos lpos Oeste = geraCaminhos m (x-1,y) posB (lpos++[(x,y)]) (ld ++ [Oeste]) ++ geraCaminhos m (x,y) posB (lpos++[(x-1,y)]) ld
   | otherwise = [(False, ld)]
 
 {-| Verifica se há pelo menos um caminho possível entre um portal e a base.
@@ -310,7 +310,7 @@ existePeloMenosUmCaminho :: Mapa -> Portal -> Base -> Bool
 existePeloMenosUmCaminho mapa p b =
   let posP = posicaoPortal p
       posB = posicaoBase b
-      caminhos = geraUmCaminho mapa posP posB [] []
+      caminhos = geraCaminhos mapa posP posB [] []
       resultado = lookup True caminhos
   in resultado /= Nothing
 

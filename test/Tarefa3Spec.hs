@@ -31,7 +31,8 @@ testesTarefa3 =
         teste20,
         teste21,
         teste22,
-        teste23
+        teste23,
+        teste24
       ]
 
 -- detetarInimigos 
@@ -439,10 +440,10 @@ teste21 =
       "Inimigo com animação no final" ~: jogoInicial {inimigosJogo = [inimigoB3 {iteracoesDesdeInicioAnimacaoInimigo = 1}]} ~=? atualizaAnimacaoInimigos jogoInicial {inimigosJogo = [inimigoB3]}
     ]
 
---a função geraCaminhos apenas corre quando o mapa é válido, ou seja, não há necessidade de um caso de teste para um caso em que não exista um caminho
+--a função atribuiCaminhos apenas corre quando o mapa é válido, ou seja, não há necessidade de um caso de teste para um caso em que não exista um caminho
 teste22 :: Test
 teste22 = 
-  TestLabel "Testes para a função geraCaminhos" $
+  TestLabel "Testes para a função atribuiCaminhos" $
    test 
     [
       "teste 1" ~: [Inimigo {tipoInimigo = Mulher, 
@@ -456,7 +457,7 @@ teste22 =
                                       posicaoInimigo = (5,1),
                                       acDirecao = (5,1),
                                       direcaoInimigo = Norte
-                                      }] ~=? geraCaminhos (inimigosJogo jogoJ) mapaJ baseJ 0,
+                                      }] ~=? atribuiCaminhos (inimigosJogo jogoJ) mapaJ baseJ 0,
       "teste 2" ~: [Inimigo {tipoInimigo = Mulher, 
                                       projeteisInimigo = [], 
                                       vidaInimigo = 0, 
@@ -468,7 +469,7 @@ teste22 =
                                       posicaoInimigo = (5,2),
                                       acDirecao = (5,2),
                                       direcaoInimigo = Norte
-                                      }] ~=? geraCaminhos [Inimigo {tipoInimigo = Mulher, 
+                                      }] ~=? atribuiCaminhos [Inimigo {tipoInimigo = Mulher, 
                                                                     projeteisInimigo = [], 
                                                                     vidaInimigo = 0, 
                                                                     butimInimigo = 150,  
@@ -483,16 +484,27 @@ teste22 =
 
 teste23 :: Test
 teste23 = 
-  TestLabel "Testes para a função moveInimigo" $
+  TestLabel "Testes para a função mudaDirecaoInimigo" $
    test 
     [
-      "inimigo não tem caminho" ~: inimigoA3 ~=? moveInimigo inimigoA3,
-      "inimigo tem apenas mais uma direção no caminho e está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,1), acDirecao = (0,1), direcaoInimigo = Sul} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,1), acDirecao = (0,0)},
-      "inimigo tem apenas mais uma direção no caminho e não está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,0.5), acDirecao = (0,0)} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,0.5), acDirecao = (0,0)},
-      "inimigo tem mais de uma direção no caminho e está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Oeste, Este], posicaoInimigo = (0,1), acDirecao = (0,1), direcaoInimigo = Oeste} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,1), acDirecao = (0,0), direcaoInimigo = Sul},
-      "inimigo tem mais de uma direção no caminho e não está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)}
+      "inimigo não tem caminho" ~: inimigoA3 ~=? mudaDirecaoInimigo inimigoA3,
+      "inimigo tem apenas mais uma direção no caminho e está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,1), acDirecao = (0,1), direcaoInimigo = Sul} ~=? mudaDirecaoInimigo inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,1), acDirecao = (0,0)},
+      "inimigo tem apenas mais uma direção no caminho e não está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,0.5), acDirecao = (0,0)} ~=? mudaDirecaoInimigo inimigoA3 {caminhoInimigo = [Sul], posicaoInimigo = (0,0.5), acDirecao = (0,0)},
+      "inimigo tem mais de uma direção no caminho e está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Oeste, Este], posicaoInimigo = (0,1), acDirecao = (0,1), direcaoInimigo = Oeste} ~=? mudaDirecaoInimigo inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,1), acDirecao = (0,0), direcaoInimigo = Sul},
+      "inimigo tem mais de uma direção no caminho e não está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)} ~=? mudaDirecaoInimigo inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)}
     ]
 
+-- escolheCaminho
+teste24 :: Test
+teste24 = 
+  TestLabel "Testes para a função escolheCaminho" $
+   test 
+    [
+      "lista apenas tem um caminho" ~: [Norte, Norte, Este] ~=? escolheCaminho [(True, [Norte, Norte, Este])] 1,
+      "lista tem mais de um caminho e o acumulador é menor que o tamanho da lista" ~: [Norte, Este] ~=? escolheCaminho [(True, [Norte, Norte, Este]), (True, [Norte, Este])] 1,
+      "lista tem mais de um caminho e o acumulador é igual ao tamanho da lista" ~: [Norte, Norte, Este] ~=? escolheCaminho [(True, [Norte, Norte, Este]), (True, [Norte, Este])] 2,
+      "lista tem mais de um caminho e o acumulador é maior que o tamanho da lista" ~: [Norte, Este] ~=? escolheCaminho [(True, [Norte, Norte, Este]), (True, [Norte, Este])] 3
+    ]
 
 
 jogoJ :: Jogo

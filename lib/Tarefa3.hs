@@ -12,8 +12,8 @@ module Tarefa3 where
 import LI12425
 import Tarefa2
 import Tarefa1
-import Data.List
-import Data.Ord
+import Data.List ( sortBy, sortOn )
+import Data.Ord ( comparing )
 
 {-| É responsável por atualizar o jogo, com o passar do tempo. 
 
@@ -27,10 +27,10 @@ atualizaJogo t j =
   $ atualizaAnimacaoTorres 
   $ atualizaInimigosEBase t j
   
-{-| É responsável por atualizar o jogo, relativamente as torres. 
+{-| É responsável por atualizar o jogo, relativamente às torres. 
 
 == __ Comportamento: __ 
-A função atualiza os inimigos, sempre que estes sofrem danos, e atualiza as torres do jogo, sempre que estas lançam projéteis.
+Atualiza os inimigos, sempre que estes sofrem danos, e atualiza as torres do jogo, sempre que estas lançam projéteis.
 
 -}
 
@@ -60,21 +60,17 @@ atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJo
 
 atualizaAnimacaoTorres :: Jogo -> Jogo
 atualizaAnimacaoTorres j = j {torresJogo = auxAtualizaAnimacaoTorres (torresJogo j) (inimigosJogo j)}
+    where
+        auxAtualizaAnimacaoTorres :: [Torre] -> [Inimigo] -> [Torre]
+        auxAtualizaAnimacaoTorres [] _ = []
+        auxAtualizaAnimacaoTorres (t:ts) is
+            | its == 29 = t {iteracoesDesdeInicioAnimacao = 1} : auxAtualizaAnimacaoTorres ts is
+            | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : auxAtualizaAnimacaoTorres ts is
+            | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : auxAtualizaAnimacaoTorres ts is
+            | otherwise = t : auxAtualizaAnimacaoTorres ts is
+                where its = iteracoesDesdeInicioAnimacao t
 
-{-| Processa as animações de cada torre. 
-
--}
-
-auxAtualizaAnimacaoTorres :: [Torre] -> [Inimigo] -> [Torre]
-auxAtualizaAnimacaoTorres [] _ = []
-auxAtualizaAnimacaoTorres (t:ts) is
-    | its == 29 = t {iteracoesDesdeInicioAnimacao = 1} : auxAtualizaAnimacaoTorres ts is
-    | its /= 1 = t {iteracoesDesdeInicioAnimacao = its + 1} : auxAtualizaAnimacaoTorres ts is
-    | tempoTorre t == 0 && inimigosNoAlcance t is /= [] = t {iteracoesDesdeInicioAnimacao = 2} : auxAtualizaAnimacaoTorres ts is
-    | otherwise = t : auxAtualizaAnimacaoTorres ts is
-        where its = iteracoesDesdeInicioAnimacao t
-
-{-| Atualiza o estado das animações dos inimigos no jogo.
+{-| Atualiza as animações dos inimigos. 
 
 -}
 
@@ -82,27 +78,21 @@ atualizaAnimacaoInimigos :: Jogo -> Jogo
 atualizaAnimacaoInimigos j =
     let is = inimigosJogo j
     in j {inimigosJogo = auxAtualizaAnimacaoInimigos is}
-
-{-| Processa as animações de cada inimigo. 
-
--}
-
-auxAtualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
-auxAtualizaAnimacaoInimigos [] = []
-auxAtualizaAnimacaoInimigos (i:is)
-    | velocidadeInimigo i == 0 = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : auxAtualizaAnimacaoInimigos is
-    | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : auxAtualizaAnimacaoInimigos is --reseta animaçao correr
-    | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : auxAtualizaAnimacaoInimigos is
-        where its = iteracoesDesdeInicioAnimacaoInimigo i
+    where
+        auxAtualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
+        auxAtualizaAnimacaoInimigos [] = []
+        auxAtualizaAnimacaoInimigos (i:is)
+            | velocidadeInimigo i == 0 = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : auxAtualizaAnimacaoInimigos is
+            | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : auxAtualizaAnimacaoInimigos is --reseta animaçao correr
+            | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : auxAtualizaAnimacaoInimigos is
+                where its = iteracoesDesdeInicioAnimacaoInimigo i
 
 {-| Atualiza o estado dos inimigos e da base no jogo.
 
 ==__ Comportamento:__ 
 
 1. Movimenta os inimigos sobre a terra, e aplica os efeitos dos projéteis;
-2. Atualiza a base, sempre que os inimigos a atingiram, diminuito a vida, e sempre que os inimigos morrem, 
-aumentando os créditos.
-
+2. Atualiza a base, diminuindo a vida sempre que os inimigos a atingem e aumentando os créditos sempre que os inimigos morrem.
 -}
 
 atualizaInimigosEBase :: Tempo -> Jogo -> Jogo
@@ -116,8 +106,8 @@ atualizaInimigosEBase t j =
                             $ atualizaVelocidadeInimigoGeloEResina
                             $ atualizaDistanciaPercorridaInimigos t
                             $ map atualizaDuracaoProjeteisInimigos 
-                            $ map moveInimigo 
-                            $ geraCaminhos nnIs m nnB (acGeraCaminhos j),
+                            $ map mudaDirecaoInimigo 
+                            $ atribuiCaminhos nnIs m nnB (acGeraCaminhos j),
                             baseJogo = nnB,
                             acGeraCaminhos = acGeraCaminhos j + 1
                          }
@@ -246,7 +236,7 @@ atualizaVelocidadeInimigoGeloEResina (i:is)
 {-| Fator de redução aplicado ao inimigo sob o efeito de Resina.
 
 ==__Nota:__
-* 0.5 - Representa uma redução de 10% na velocidade do inimigo.
+* 0.5 - Representa uma redução de 50% na velocidade do inimigo.
 
 -}
 
@@ -272,7 +262,7 @@ atualizaInimigoFogo (i:is)
 taxaDanoInimigoFogo :: Float
 taxaDanoInimigoFogo = 5/60 
  
-{-| É responsável por atualizar os créditos da base, sempre que um inimigo morre. 
+{-| É responsável por atualizar a base e a lista dos inimigos ativos sempre que um inimigo morre. 
 
 -}
 
@@ -307,8 +297,7 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
         Este -> i {posicaoInimigo = (x + (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
 
 
-{-| É responsável por atualizar a lista de inimigos ativos. 
-Sempre que o inimigo atinja a base, este é retirado do mapa. 
+{-| É responsável por atualizar a lista de inimigos ativos e a base sempre que um inimigo a atinja.
 -}
 
 inimigoAtingeBase :: Base -> [Inimigo] -> (Base,[Inimigo])
@@ -373,18 +362,7 @@ lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimig
                                   (restoPortaisAtualizados, inimigosNovosAtualizados) = lancaTodosPortais ps inimigosNovos
                               in (portalAtualizado:restoPortaisAtualizados, inimigosNovosAtualizados)
 
-{-| Responsável por calcular os caminhos para os inimigos no mapa, em direção a base. 
-
-==__Comportamento:__ 
-
-Para cada inimigo:
-
-1. Verifica a posição atual do inimigo e a posição da base.
-2. Gera um caminho usando a função 'geraUmCaminho', a partir da posição do inimigo até a base.
-3. Atualiza o inimigo com o caminho gerado e define a próxima direção.
-
-
--}
+{-| Escolhe um caminho de uma lista de todos os possíveis de um portal até à base.-}
 
 escolheCaminho :: [(Bool, [Direcao])] -> Int -> [Direcao]
 escolheCaminho caminhos ac
@@ -392,21 +370,34 @@ escolheCaminho caminhos ac
     | otherwise = snd (caminhos !! ac)
     where len = length caminhos
 
-geraCaminhos :: [Inimigo] -> Mapa -> Base -> Int -> [Inimigo]
-geraCaminhos [] _ _ _ = []
-geraCaminhos (i:is) m b ac =
-    let posI = posicaoInimigo i
-        posB = posicaoBase b
-        caminhos = filter (\v -> fst v == True) (geraUmCaminho m posI posB [] [])
-        l = escolheCaminho caminhos ac
-    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : geraCaminhos is m b (ac+1) else i : geraCaminhos is m b (ac+1)
+{-| Responsável por calcular os caminhos para os inimigos no mapa, em direção a base. 
 
-{-| Avalia quando é necessário passa para a próxima direção no caminho do inimigo já definido, mudando assim, a direção do inimigo necessário.
+==__Comportamento:__ 
+
+Para cada inimigo:
+
+1. Verifica a posição atual do inimigo e a posição da base.
+2. Gera uma lista de caminhos usando a função 'geraCaminhos', a partir da posição do inimigo até a base.
+3. Atualiza o inimigo com o caminho gerado e define a próxima direção.
+
 
 -}
 
-moveInimigo :: Inimigo -> Inimigo
-moveInimigo i =
+atribuiCaminhos :: [Inimigo] -> Mapa -> Base -> Int -> [Inimigo]
+atribuiCaminhos [] _ _ _ = []
+atribuiCaminhos (i:is) m b ac =
+    let posI = posicaoInimigo i
+        posB = posicaoBase b
+        caminhos = filter (\v -> fst v == True) (geraCaminhos m posI posB [] [])
+        l = escolheCaminho caminhos ac
+    in if caminhoInimigo i == [] then i {caminhoInimigo = l, direcaoInimigo = head l} : atribuiCaminhos is m b (ac+1) else i : atribuiCaminhos is m b (ac+1)
+
+{-| Avalia quando é necessário passar para a próxima direção no caminho do inimigo já definido. Quando determina que é, muda a direção do inimigo.
+
+-}
+
+mudaDirecaoInimigo :: Inimigo -> Inimigo
+mudaDirecaoInimigo i =
     let (xInicial, yInicial) = acDirecao i
         (xAtual, yAtual) = posicaoInimigo i
         caminho = caminhoInimigo i
@@ -420,8 +411,8 @@ moveInimigo i =
           | otherwise -> i {caminhoInimigo = rt, acDirecao = posicaoInimigo i, direcaoInimigo = head rt}
 
 
-{-| É responsável por atulizar o jogo, após ter sido realizada, a compra de uma torre. Adiciona a torre nova ao jogo, desde que 
-o jogador tenha créditos suficientes, e a torre seja válida, de acordo com as definições da função 'validaTorre'. 
+{-| É responsável por atualizar o jogo, após ter sido realizada a compra de uma torre. Adiciona a torre nova ao jogo, desde que 
+o jogador tenha créditos suficientes e a torre seja válida, de acordo a função 'validaTorre'. 
 
 -}
 

@@ -2,11 +2,7 @@ module FuncoesAux where
 
 import LI12425
 
-import Data.List ( sortBy ) 
-import Data.Ord (comparing)
-
 -- Bases do jogo
-
 baseTds :: Base
 baseTds = Base {vidaBase = 100,
                 creditosBase = 500} 
@@ -33,28 +29,33 @@ inimigo2Tds = Inimigo {tipoInimigo = Mulher,
                         caminhoInimigo = [],
                         iteracoesDesdeInicioAnimacaoInimigo = 1}
 
-geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
+{-| Cria uma lista de ondas de inimigos com base nos parâmetros fornecidos.
+
+-}
+
+geraOndasPortal :: Int 
+                  -- ^ Número de ondas.
+                  -> Int 
+                  -- ^ Número de inimigos Homem.
+                  -> Int 
+                  -- ^ Número de inimigos Mulher.
+                  -> Posicao 
+                  -- ^ Posição inicial dos inimigos.
+                  -> [Onda]
 geraOndasPortal 0 _ _ _ = []
 geraOndasPortal qOndas n1 n2 posP = 
   let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
   in (last ondas) {tempoOnda = 0} : init ondas
-
-{-| Cria uma onda de inimigos com base nos parâmetros fornecidos
-
--}
-
-geraOndaPortal :: Int -- ^ quantidade de inimigos masculinos. 
-               -> Int -- ^ quantidade de inimigos femininos. 
-               -> Posicao -- ^ posição inicial dos inimigos. 
-               -> Onda -- ^ Onda com a configuração definida.
-geraOndaPortal n1 n2 posP = 
-  let is1 = geraIs1 posP n1
-      is2 = geraIs2 posP n2
-  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
-            cicloOnda = 5*60,
-            tempoOnda = 10*60,
-            entradaOnda = 0
-            }
+  where
+    geraOndaPortal :: Int -> Int -> Posicao -> Onda
+    geraOndaPortal n1 n2 posP = 
+      let is1 = geraIs1 posP n1
+          is2 = geraIs2 posP n2
+      in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
+                cicloOnda = 5*60,
+                tempoOnda = 10*60,
+                entradaOnda = 0
+                }
 
 {-| Cria um grupo com n inimigos masculinos. 
 

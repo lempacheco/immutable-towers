@@ -87,7 +87,7 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando}
     | estadoIT it == Comprando =  
         let jogo = jogoIT it
-            (t,c) = colocaTorre it (posicaoSelecionadaMapa it)
+            (t,c) = colocaTorre (produtoLoja it) (posicaoSelecionadaMapa it)
             jogoAtualizado = compraTorre t c jogo
          in it {jogoIT = jogoAtualizado, 
                 estadoIT = Jogando}
@@ -144,7 +144,7 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == TutorialEscolhendoTorre && etapaTT it == 5 = it {estadoIT = TutorialComprando, 
                                                                       etapaTT = 6} 
     | estadoIT it == TutorialComprando && etapaTT it == 6 = 
-        let (t,c) = colocaTorre it (posicaoSelecionadaMapa it)
+        let (t,c) = colocaTorre (produtoLoja it) (posicaoSelecionadaMapa it)
             jogoAtualizado = compraTorre  t c (jogoIT it)
         in it {estadoIT = Tutorial, 
                jogoIT = jogoAtualizado, 
@@ -237,7 +237,8 @@ reageEventos (EventKey (SpecialKey KeyTab) Down _ _) it
     | estadoIT2 it == EscolhendoTorre2 = it {estadoIT2 = Comprando2}
     | estadoIT2 it == Comprando2 =  
         let jogo = jogoIT it
-            jogoAtualizado = compraTorre (fst (colocaTorre it (posicaoSelecionadaMapaSndJog it))) (snd (colocaTorre it (posicaoSelecionadaMapaSndJog it))) jogo
+            (t,c) = colocaTorre (produtoLoja2 it) (posicaoSelecionadaMapaSndJog it)
+            jogoAtualizado = compraTorre t c jogo
          in it {jogoIT = jogoAtualizado, 
                 estadoIT2 = Jogando}
 
@@ -286,9 +287,9 @@ alteraITCostumizar it = case selecaoCostumizar it of
 
 -}
 
-colocaTorre:: ImmutableTowers -> Posicao -> (Torre, Creditos)
-colocaTorre it (xF, yF) = case produtoLoja it of
-    (-900, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+colocaTorre :: Posicao -> Posicao -> (Torre, Creditos)
+colocaTorre prodLoja (xF, yF) = case prodLoja of
+    (_, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                             danoTorre = 15,
                             alcanceTorre = 4,
                             rajadaTorre = 4,
@@ -297,7 +298,7 @@ colocaTorre it (xF, yF) = case produtoLoja it of
                             projetilTorre = Projetil {tipoProjetil = Gelo, duracaoProjetil = Finita (2*60)},
                             iteracoesDesdeInicioAnimacao = 1}, 100)
 
-    (-900, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
+    (_, -100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                             danoTorre = 25,
                             alcanceTorre = 4,
                             rajadaTorre = 3,

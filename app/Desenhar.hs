@@ -297,10 +297,10 @@ desenhaAlcanceTorres (t:ts) =
 desenhaJogo :: ImmutableTowers -> Picture
 desenhaJogo it = Pictures [picMapa, 
                            picAlcanceTorres,
-                           picTorre,
                            picFundoMapa,
                            picMolduraMapa, 
                            picInimigo,
+                           picTorre,
                            Pictures picPortais, 
                            picLoja, 
                            picBase, 

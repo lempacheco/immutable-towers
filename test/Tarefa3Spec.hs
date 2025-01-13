@@ -170,10 +170,10 @@ teste7 =
   TestLabel "Testes para a função atualizaVelocidadeInimigoGeloEResina" $
     test
       [
-        "Teste com um inimigo com velocidade nula, afetado por todos os tipos de projétil" ~: [inimigo1] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1],
-        "Teste com um inimigo com velocidade não nula, afetado por todos os tipos de projétil" ~: [inimigo2 {velocidadeInimigo = 0}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo2],
-        "Teste com um inimigo com velocidade nula, afetado por Resina" ~: [inimigo1 {projeteisInimigo = [projetil3]}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1{projeteisInimigo = [projetil3]}],
-        "Teste com um inimigo com velocidade não nula, afetado por Resina" ~: [inimigo2 {projeteisInimigo = [projetil3], velocidadeInimigo = 5.0}]~=? atualizaVelocidadeInimigoGeloEResina [inimigo2{projeteisInimigo = [projetil3]}],
+        "Teste com um inimigo com velocidade nula, afetado por Resina e Gelo" ~: [inimigo1 {projeteisInimigo = [projetil3, projetil2]}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1{projeteisInimigo = [projetil3, projetil2]}],
+        "Teste com um inimigo com velocidade não nula, afetado por Resina e Gelo" ~: [inimigo2 {velocidadeInimigo = 0, projeteisInimigo = [projetil3, projetil2]}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo2{projeteisInimigo = [projetil3,projetil2]}],
+        "Teste com um inimigo com velocidade nula, afetado por Resina" ~: [inimigo1 {projeteisInimigo = [projetil3], velocidadeInimigo = 0.5}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1{projeteisInimigo = [projetil3]}],
+        "Teste com um inimigo com velocidade não nula, afetado por Resina" ~: [inimigo2 {projeteisInimigo = [projetil3], velocidadeInimigo = 0.5}]~=? atualizaVelocidadeInimigoGeloEResina [inimigo2{projeteisInimigo = [projetil3]}],
         "Teste com um inimigo com velocidade nula, afetado por Gelo" ~: [inimigo1{projeteisInimigo = [projetil2]}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1{projeteisInimigo = [projetil2]}],
         "Teste com um inimigo com velocidade não nula, afetado por Gelo" ~: [inimigo2 {velocidadeInimigo = 0.0, projeteisInimigo = [projetil2]}]~=? atualizaVelocidadeInimigoGeloEResina [inimigo2{projeteisInimigo = [projetil2]}]
       ]
@@ -352,18 +352,18 @@ teste18 =
       "Recebe um jogo no estado inicial" ~: jogoInicial {acGeraCaminhos = 1} ~=? atualizaInimigosEBase 1 jogoInicial, 
       "Recebe um jogo com inimigos no mapa, que não morrem, e nem chegam a base" ~: jogoInicial {portaisJogo = [portalB3], 
                                                                                                  baseJogo = baseB, 
-                                                                                                 inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), 
+                                                                                                 inimigosJogo = [inimigoA3 {posicaoInimigo = (0.1, 0), 
                                                                                                                            direcaoInimigo = Este, 
                                                                                                                            caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]}, 
-                                                                                                                 inimigoB3 {posicaoInimigo = (1,1), 
-                                                                                                                            direcaoInimigo = Norte, 
-                                                                                                                            caminhoInimigo = [Norte, Norte, Norte, Norte, Este, Este, Este, Este, Sul, Sul]}], acGeraCaminhos = 1} 
+                                                                                                                 inimigoB3 {posicaoInimigo = (0.1, 0), 
+                                                                                                                            direcaoInimigo = Este, 
+                                                                                                                            caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Este, Sul, Sul], acDirecao = (0,0)}], acGeraCaminhos = 1} 
                                                                                  ~=? atualizaInimigosEBase 0.1 jogoInicial {portaisJogo = [portalB3], 
-                                                                                                                          inimigosJogo = [inimigoA3, inimigoB3],
+                                                                                                                          inimigosJogo = [inimigoA3, inimigoB3 {posicaoInimigo = (0,0), acDirecao = (0,0)}],
                                                                                                                           baseJogo = baseB}, 
       "Recebe um jogo, e o inimigo atinge a base" ~: jogoInicial {portaisJogo = [portalB3], 
                                                                   baseJogo = baseB {vidaBase = 45}, 
-                                                                  inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), 
+                                                                  inimigosJogo = [inimigoA3 {posicaoInimigo = (0.1, 0), 
                                                                                              direcaoInimigo = Este, 
                                                                                              caminhoInimigo = [Este, Norte, Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul]} 
                                                                                  ], acGeraCaminhos = 1}
@@ -807,7 +807,7 @@ inimigoB3 = Inimigo
   direcaoInimigo = Norte,
   vidaInimigo = 6.0,
   ataqueInimigo = 5.0, 
-  velocidadeInimigo = 10.0,
+  velocidadeInimigo = 1.0,
   butimInimigo = 5, 
   projeteisInimigo = [], 
   tipoInimigo = Mulher,

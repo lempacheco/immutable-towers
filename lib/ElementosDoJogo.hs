@@ -10,7 +10,7 @@ loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
          (200, Torre{projetilTorre = Projetil {tipoProjetil = Fogo}})
         ]
 
--- | Nível 1
+-- | Jogo do nível 1.
 
 jogo1 :: Jogo
 jogo1 = Jogo {baseJogo = base1,
@@ -22,18 +22,22 @@ jogo1 = Jogo {baseJogo = base1,
               acGeraCaminhos = 0
             }
 
+-- | Base do nível 1.
 base1 :: Base
 base1 = baseTds {posicaoBase = (15,9)}
 
+-- | Portal 1 do nível 1.
 portal1_1 :: Portal
 portal1_1 = Portal {posicaoPortal = (0,9),
                   ondasPortal = geraOndasPortal 1 1 0 (0,9)
                   }
 
+-- | Portal 2 do nível 1.
 portal2_1 :: Portal
 portal2_1 = Portal {posicaoPortal = (5,0), 
                   ondasPortal = geraOndasPortal 1 2 3 (5,0)}
 
+-- | Mapa do nível 1.
 mapa1 :: Mapa 
 mapa1 = 
   [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
@@ -58,7 +62,7 @@ mapa1 =
        r = Relva
        a = Agua
 
--- | Nível 2
+-- | Jogo do nível 2.
 
 jogo2 :: Jogo
 jogo2 = Jogo {baseJogo = base2,
@@ -70,6 +74,7 @@ jogo2 = Jogo {baseJogo = base2,
               acGeraCaminhos = 0
             } 
 
+-- | Mapa do nível 2.
 mapa2 :: Mapa 
 mapa2 = 
   [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
@@ -94,22 +99,26 @@ mapa2 =
        r = Relva
        a = Agua
 
+-- | Base do nível 2.
 base2 :: Base
 base2 = baseTds {posicaoBase = (15,7)}
 
+-- | Portal 1 do nível 2.
 portal1_2 :: Portal
 portal1_2 = Portal {posicaoPortal = (0,1),
                   ondasPortal = geraOndasPortal 1 2 4 (0,1)}
 
+-- | Portal 2 do nível 2.
 portal2_2 :: Portal
 portal2_2 = Portal {posicaoPortal = (0,12), 
                   ondasPortal = geraOndasPortal 2 3 3 (0,12)}
 
+-- | Portal 3 do nível 2.
 portal3_2 :: Portal
 portal3_2 = Portal {posicaoPortal = (5,0), 
                   ondasPortal = geraOndasPortal 2 3 2 (5,0)}
 
--- | Nível 3
+-- | Mapa do nível 3.
 
 mapa3 :: Mapa 
 mapa3 = 
@@ -135,6 +144,7 @@ mapa3 =
        r = Relva
        a = Agua
 
+-- | Jogo do nível 3.
 jogo3 :: Jogo 
 jogo3 = Jogo {mapaJogo = mapa3, 
               inimigosJogo = [], 
@@ -144,18 +154,21 @@ jogo3 = Jogo {mapaJogo = mapa3,
               lojaJogo = loja,
               acGeraCaminhos = 0}
 
+-- | Base do nível 3.
 base3 :: Base
 base3 = baseTds {posicaoBase = (8,15)}
 
+-- | Portal 1 do nível 3.
 portal1_3 :: Portal
 portal1_3 = Portal {posicaoPortal = (6,0),
                   ondasPortal = geraOndasPortal 2 5 3 (6,0)}
 
+-- | Portal 2 do nível 3.
 portal2_3 :: Portal
 portal2_3 = Portal {posicaoPortal = (9,0), 
                   ondasPortal = geraOndasPortal 2 3 2 (9,0)}
 
--- | Nivel 4
+-- | Mapa do nível 4.
 
 mapa4 :: Mapa 
 mapa4 = 
@@ -182,6 +195,7 @@ mapa4 =
        r = Relva
        a = Agua
 
+-- | Jogo do nível 4.
 jogo4 :: Jogo 
 jogo4 = Jogo {mapaJogo = mapa4, 
               inimigosJogo = [], 
@@ -191,14 +205,16 @@ jogo4 = Jogo {mapaJogo = mapa4,
               lojaJogo = loja,
               acGeraCaminhos = 0}
 
+-- | Base do nível 4.
 base4 :: Base
 base4 = baseTds {posicaoBase = (15,14)}
 
+-- | Portal 1 do nível 4.
 portal1_4 :: Portal
 portal1_4 = Portal {posicaoPortal = (1,0),
                   ondasPortal = geraOndasPortal 6 3 2 (1,0)}
 
--- | Nivel 5
+-- | Mapa do nível 5.
 
 mapa5 :: Mapa 
 mapa5 = 
@@ -225,6 +241,7 @@ mapa5 =
        r = Relva
        a = Agua
 
+-- | Jogo do nível 5.
 jogo5 :: Jogo 
 jogo5 = Jogo {mapaJogo = mapa5, 
               inimigosJogo = [], 
@@ -234,22 +251,26 @@ jogo5 = Jogo {mapaJogo = mapa5,
               lojaJogo = loja,
               acGeraCaminhos = 0}
 
+-- | Base do nível 5.
 base5 :: Base
 base5 = baseTds {posicaoBase = (12,15)}
 
+-- | Portal 1 do nível 5.
 portal1_5 :: Portal
 portal1_5 = Portal {posicaoPortal = (0,0),
                    ondasPortal = geraOndasPortal 2 3 1 (0,0)}
 
+-- | Portal 2 do nível 5.
 portal2_5 :: Portal
 portal2_5 = Portal {posicaoPortal = (0,10),
                    ondasPortal = geraOndasPortal 3 2 1 (0,10)}
 
+-- | Portal 3 do nível 5.
 portal3_5 :: Portal
 portal3_5 = Portal {posicaoPortal = (11,0),
                    ondasPortal = geraOndasPortal 3 3 2 (11,0)}
 
--- | Jogo tutorial
+-- | Jogo do tutorial.
 jogoTT :: Jogo
 jogoTT = Jogo {mapaJogo = mapa1,
                      inimigosJogo = [], 
@@ -259,6 +280,7 @@ jogoTT = Jogo {mapaJogo = mapa1,
                      lojaJogo = loja,
                      acGeraCaminhos = 0}
 
+-- | Portal do tutorial.
 portalTT :: Portal
 portalTT = Portal {posicaoPortal = (5,0), 
                     ondasPortal = geraOndasPortal 1 3 2 (5,0)}

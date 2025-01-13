@@ -260,7 +260,7 @@ atualizaInimigoFogo (i:is)
 {-| Taxa de dano aplicada a inimigos sob o efeito de projéteis de Fogo.
 
 ==__Nota:__ 
-5/60 - Reduz 5 pontos de vida por segundo, considerando um framerate de 60 quadros por segundo.
+5/60 - Reduz 5 pontos de vida por segundo, considerando um framerate de 60 frames por segundo.
 -}
 
 taxaDanoInimigoFogo :: Float

@@ -244,7 +244,7 @@ alteraITCostumizar it = case selecaoCostumizar it of
     (-100, -350) -> it {perfil = "perfilViking"}
     _ -> it {perfil = "perfilMulherLanca"}
 
-colocaTorre:: ImmutableTowers -> Posicao -> (Torre, Creditos)
+colocaTorre :: ImmutableTowers -> Posicao -> (Torre, Creditos)
 colocaTorre it (xF, yF) = case produtoLoja it of
     (-900, 100) -> (Torre { posicaoTorre = (xF,yF), -- sincroniza posição da torre com a seleção
                             danoTorre = 15,

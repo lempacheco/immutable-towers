@@ -369,7 +369,7 @@ desenhaJogo it = Pictures [picMapa,
 
 desenhaMolduraMapa :: [Textura] -> Picture
 desenhaMolduraMapa ts = Pictures [moldCima]
-    where moldCima = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa2" ts)
+    where moldCima = translate 0 0 $ scale 1 1 $ (fromJust $ lookup "molduraMapa" ts)
 
 
 desenhaMapa :: Mapa -> [Textura] -> Picture

@@ -413,7 +413,8 @@ desenhaUmInimigo inimigo it texturas =
     in Pictures [translate x y textura, 
                  numeroDaVida, 
                  coracaoVida,
-                 indicativoProjeteis
+                 indicativoProjeteis,
+                 Translate x (y+100) $ Scale 0.2 0.2 $ Text (show (projeteisInimigo inimigo))
                 ]
 
 desenhaIndicativoProjeteis :: Inimigo -> [Textura] -> Picture

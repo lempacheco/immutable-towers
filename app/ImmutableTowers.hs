@@ -2,8 +2,8 @@ module ImmutableTowers where
 
 import LI12425
 import Graphics.Gloss
-import Tarefa2
-import Tarefa3 
+import ElementosDoJogo
+import FuncoesAux
 
 type Textura = (String,Picture)
 

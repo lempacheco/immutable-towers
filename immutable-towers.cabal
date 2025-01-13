@@ -43,6 +43,8 @@ library
         Tarefa1
         Tarefa2
         Tarefa3
+        ElementosDoJogo
+        FuncoesAux
 
     -- Modules included in this library but not exported.
     -- other-modules:

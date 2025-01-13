@@ -45,10 +45,8 @@ E atualiza os portais, lançando os inimigos.
 atualizaPortaisEInimigos :: Jogo -> Jogo
 atualizaPortaisEInimigos j = j{inimigosJogo = inimigosNovoAtualizados, portaisJogo = portaisAtualizado}
     where inimigos = inimigosJogo j
-          torres = torresJogo j
           portais = portaisJogo j
-          (inimigosAtualizados, _) = disparaTodosProjeteis torres inimigos
-          (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigosAtualizados
+          (portaisAtualizado, inimigosNovoAtualizados) = lancaTodosPortais portais inimigos
 
 
 {-| Atualiza o estado das animações das torres no jogo. 
@@ -88,7 +86,7 @@ atualizaAnimacaoInimigos j =
 auxAtualizaAnimacaoInimigos :: [Inimigo] -> [Inimigo]
 auxAtualizaAnimacaoInimigos [] = []
 auxAtualizaAnimacaoInimigos (i:is)
-    | Gelo `elem` getTiposProjsInimigo i = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : auxAtualizaAnimacaoInimigos is
+    | velocidadeInimigo i == 0 = i {iteracoesDesdeInicioAnimacaoInimigo = 0} : auxAtualizaAnimacaoInimigos is
     | its == 32 = i {iteracoesDesdeInicioAnimacaoInimigo = 1} : auxAtualizaAnimacaoInimigos is --reseta animaçao correr
     | otherwise = i {iteracoesDesdeInicioAnimacaoInimigo = its + 1} : auxAtualizaAnimacaoInimigos is
         where its = iteracoesDesdeInicioAnimacaoInimigo i
@@ -110,8 +108,9 @@ atualizaInimigosEBase t j =
         m = mapaJogo j
         (nB, nIs) = inimigoAtingeBase b is
         (nnB, nnIs) = inimigosSemVida nB nIs
-    in j { inimigosJogo = atualizaDistanciaPercorridaInimigos t
-                            $ atualizaInimigoFogo
+    in j { inimigosJogo = atualizaInimigoFogo
+                            $ atualizaVelocidadeInimigoGeloEResina
+                            $ atualizaDistanciaPercorridaInimigos t
                             $ map atualizaDuracaoProjeteisInimigos 
                             $ map moveInimigo 
                             $ geraCaminhos nnIs m nnB (acGeraCaminhos j),
@@ -225,21 +224,18 @@ tirosPossiveis torre is =
   where numeroInimigos = length (detetarInimigo torre (inimigosOrdenados torre is))
 
 
-{-| Atualiza o estado de um inimigo sob o efeito de um projétil de Gelo.
+{-| Atualiza a velocidade de um inimigo sob o efeito de um projétil de Gelo, de Resina ou de ambos.
 
 -}
 
-atualizaInimigoGelo :: Inimigo -> Inimigo
-atualizaInimigoGelo i = i {velocidadeInimigo = 0}
-
-{-| Atualiza a velocidade de um inimigo sob o efeito de um projétil de Resina. 
-
--}
-
-atualizaInimigoResina :: Inimigo -> Inimigo
-atualizaInimigoResina i =
-    let f = fatorVelocidadeInimigoResina
-    in i {velocidadeInimigo = velocidadeInimigo i * f}
+atualizaVelocidadeInimigoGeloEResina :: [Inimigo] -> [Inimigo]
+atualizaVelocidadeInimigoGeloEResina [] = []
+atualizaVelocidadeInimigoGeloEResina (i:is)
+    | elem Gelo tProjs = i {velocidadeInimigo = 0} : atualizaVelocidadeInimigoGeloEResina is
+    | elem Resina tProjs = i {velocidadeInimigo = v * fatorVelocidadeInimigoResina} : atualizaVelocidadeInimigoGeloEResina is
+    | otherwise = i {velocidadeInimigo = v} : atualizaVelocidadeInimigoGeloEResina is
+    where tProjs = getTiposProjsInimigo i
+          v = if tipoInimigo i == Homem then 0.5 else 1.0
 
 {-| Fator de redução aplicado ao inimigo sob o efeito de Resina.
 
@@ -249,7 +245,7 @@ atualizaInimigoResina i =
 -}
 
 fatorVelocidadeInimigoResina :: Float
-fatorVelocidadeInimigoResina = 0.9 --atualizaInimigoResina reduz a velocidade por 10 porcento
+fatorVelocidadeInimigoResina = 0.5 --atualizaInimigoResina reduz a velocidade por 10 porcento
 
 {-| Atualiza a vida dos inimigos sob o efeito de projéteis de Fogo.
 
@@ -294,7 +290,7 @@ Calcula a nova posição do inimigo com base em sua direção, velocidade e o te
 atualizaDistanciaPercorridaInimigos :: Tempo -> [Inimigo] -> [Inimigo]
 atualizaDistanciaPercorridaInimigos _ [] = []
 atualizaDistanciaPercorridaInimigos t (i:is)  =
-    let v = atualizaVelocidadeInimigo i
+    let v = velocidadeInimigo i
         (x,y) = posicaoInimigo i
         d = direcaoInimigo i
     in case d of
@@ -302,9 +298,9 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
         Sul -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
         Oeste -> i {posicaoInimigo = (x - (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
         Este -> i {posicaoInimigo = (x + (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
-    where
-        atualizaVelocidadeInimigo :: Inimigo -> Float
-        atualizaVelocidadeInimigo inimigo =
+{-     where
+        atualizaVelocidadeInimigoGeloEResina :: Inimigo -> Float
+        atualizaVelocidadeInimigoGeloEResina inimigo =
             let tpsProjsInimigo = getTiposProjsInimigo inimigo
             in if Gelo `elem` tpsProjsInimigo
                 then if Resina `elem` tpsProjsInimigo
@@ -312,7 +308,7 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
                     else velocidadeInimigo (atualizaInimigoGelo inimigo)
                 else if Resina `elem` tpsProjsInimigo
                     then velocidadeInimigo (atualizaInimigoResina inimigo)
-                    else velocidadeInimigo inimigo 
+                    else velocidadeInimigo inimigo  -}
 
 {-| É responsável por atualizar a lista de inimigos ativos. 
     Sempre que o inimigo atinja a base, este é retirado do mapa. 
@@ -442,348 +438,4 @@ compraTorre t custoTorre j
 -}
 
 ordenaTorre :: [Torre] -> [Torre]
-ordenaTorre = sortBy (comparing (snd . posicaoTorre)) 
-
-
--- Bases do jogo
-
-baseTds :: Base
-baseTds = Base {vidaBase = 100,
-                creditosBase = 200} 
-
--- inimigos Homem
-inimigo1Tds :: Inimigo
-inimigo1Tds = Inimigo {tipoInimigo = Homem, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 150, 
-                        butimInimigo = 50, 
-                        ataqueInimigo = 40, 
-                        velocidadeInimigo = 0.5, 
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1}
-
--- inimigos Mulher
-inimigo2Tds :: Inimigo
-inimigo2Tds = Inimigo {tipoInimigo = Mulher, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 100, 
-                        butimInimigo = 45,  
-                        ataqueInimigo = 20, 
-                        velocidadeInimigo = 1,
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-
--- loja do jogo. 
-loja :: Loja
-loja = [ (100, Torre{projetilTorre = Projetil {tipoProjetil = Gelo}}),
-         (150, Torre{projetilTorre = Projetil {tipoProjetil = Resina}}),
-         (200, Torre{projetilTorre = Projetil {tipoProjetil = Fogo}})
-        ]
-
--- Nível 1
-
-jogo1 :: Jogo
-jogo1 = Jogo {baseJogo = base1,
-              torresJogo = [],
-              portaisJogo = [portal1_1, portal2_1],
-              mapaJogo = mapa1,
-              inimigosJogo = [],
-              lojaJogo = loja,
-              acGeraCaminhos = 0
-            }
-
-base1 :: Base
-base1 = baseTds {posicaoBase = (15,9)}
-
-portal1_1 :: Portal
-portal1_1 = Portal {posicaoPortal = (0,9),
-                  ondasPortal = geraOndasPortal 1 1 0 (0,9)
-                  }
-
-portal2_1 :: Portal
-portal2_1 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = geraOndasPortal 1 2 3 (5,0)}
-
-mapa1 :: Mapa 
-mapa1 = 
-  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,t,t,t,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
-    [r,r,r,r,r,r,r,t,r,r,r,a,a,r,r,r],
-    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
-    [t,t,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
-    [r,r,r,r,r,r,t,r,r,a,a,r,r,t,r,r],
-    [r,r,r,r,r,r,t,t,t,t,t,t,t,t,r,r],
-    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r],
-    [r,r,r,r,r,r,r,r,a,a,a,a,r,r,r,r]
-  ]
-  where
-       t = Terra
-       r = Relva
-       a = Agua
-
--- Nível 2
-
-jogo2 :: Jogo
-jogo2 = Jogo {baseJogo = base2,
-              torresJogo = [],
-              portaisJogo = [portal1_2, portal2_2, portal3_2],
-              mapaJogo = mapa2,
-              inimigosJogo = [],
-              lojaJogo = loja,
-              acGeraCaminhos = 0
-            } 
-
-mapa2 :: Mapa 
-mapa2 = 
-  [ [r,r,r,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [t,t,t,r,r,t,r,r,r,r,r,a,a,r,r,r],
-    [r,r,t,r,r,t,t,t,t,t,t,t,t,t,r,r],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,t,r,r],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,t,r,r],
-    [r,r,t,t,t,t,t,t,t,t,t,t,t,t,t,t],
-    [r,r,t,r,r,r,r,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,t,r,r,r,a,a,r,r,t],
-    [r,r,t,r,r,r,t,r,r,r,a,a,a,r,r,t],
-    [r,r,t,r,r,r,t,r,r,a,a,a,r,t,t,t],
-    [r,r,t,r,r,r,t,r,r,a,a,r,r,t,r,r],
-    [r,r,t,r,r,r,t,t,t,t,t,t,t,t,r,r],
-    [t,t,t,r,r,r,t,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,t,r,r,a,a,r,r,r,r,r],
-    [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r],
-    [r,r,r,r,r,r,t,r,a,a,a,a,r,r,r,r]
-  ]
-  where
-       t = Terra
-       r = Relva
-       a = Agua
-
-base2 :: Base
-base2 = baseTds {posicaoBase = (15,7)}
-
-portal1_2 :: Portal
-portal1_2 = Portal {posicaoPortal = (0,1),
-                  ondasPortal = geraOndasPortal 1 2 4 (0,1)}
-
-portal2_2 :: Portal
-portal2_2 = Portal {posicaoPortal = (0,12), 
-                  ondasPortal = geraOndasPortal 2 3 3 (0,12)}
-
-portal3_2 :: Portal
-portal3_2 = Portal {posicaoPortal = (5,0), 
-                  ondasPortal = geraOndasPortal 2 3 2 (5,0)}
-
--- Nível 3
-
-mapa3 :: Mapa 
-mapa3 = 
-  [ [a,a,a,r,r,r,t,r,r,t,r,r,r,r,r,r],
-    [a,t,t,t,t,r,t,r,r,t,r,t,t,t,t,r],
-    [r,t,a,a,t,r,t,r,r,t,r,t,r,r,t,r],
-    [r,t,a,a,t,r,t,r,r,t,r,t,r,r,t,r],
-    [r,t,t,t,t,t,t,r,r,t,t,t,t,t,t,r],
-    [r,r,r,r,t,a,a,a,r,r,r,t,r,r,r,r],
-    [r,r,r,r,t,a,a,a,a,r,r,t,r,r,r,r],
-    [r,r,r,r,t,r,a,a,a,a,r,t,r,r,r,r],
-    [r,r,r,r,t,r,r,a,a,a,a,t,r,r,r,r],
-    [r,r,r,r,t,r,r,r,a,a,a,t,r,r,r,r],
-    [r,t,t,t,t,t,t,r,r,t,t,t,t,t,t,r],
-    [r,t,r,r,t,r,t,r,r,t,r,t,a,a,t,r],
-    [r,t,r,r,t,r,t,t,t,t,r,t,a,a,t,r],
-    [r,t,t,t,t,r,r,r,t,r,r,t,t,t,t,a],
-    [r,r,r,r,r,r,r,r,t,r,r,r,r,r,a,a],
-    [r,r,r,r,r,r,r,r,t,r,r,r,r,a,a,a]
-  ]
-  where
-       t = Terra
-       r = Relva
-       a = Agua
-
-jogo3 :: Jogo 
-jogo3 = Jogo {mapaJogo = mapa3, 
-              inimigosJogo = [], 
-              portaisJogo = [portal2_3, portal1_3], 
-              torresJogo = [], 
-              baseJogo = base3,
-              lojaJogo = loja,
-              acGeraCaminhos = 0}
-
-base3 = baseTds {posicaoBase = (8,15)}
-
-portal1_3 :: Portal
-portal1_3 = Portal {posicaoPortal = (6,0),
-                  ondasPortal = geraOndasPortal 2 5 3 (6,0)}
-
-portal2_3 :: Portal
-portal2_3 = Portal {posicaoPortal = (9,0), 
-                  ondasPortal = geraOndasPortal 2 3 2 (9,0)}
-
--- Nivel 4
-
-mapa4 :: Mapa 
-mapa4 = 
-  [
-    [a,t,a,a,a,a,a,a,a,a,a,a,a,a,a,a],
-    [a,t,a,a,a,a,a,t,t,t,t,t,t,t,t,a],
-    [a,t,a,a,a,a,a,t,a,a,a,a,a,a,t,a],
-    [a,t,t,t,t,t,t,t,a,r,r,r,r,a,t,a],
-    [a,t,a,a,a,a,a,t,a,r,r,r,r,a,t,a],
-    [a,t,a,r,r,r,a,t,a,a,a,a,a,a,t,a],
-    [a,t,a,r,r,r,a,t,a,a,t,t,t,t,t,a],
-    [a,t,a,a,a,a,a,t,a,a,t,a,a,a,t,a],
-    [a,t,t,t,t,t,t,t,t,t,t,a,r,a,t,a],
-    [a,a,a,a,t,a,a,a,a,a,t,a,r,a,t,a],
-    [a,a,a,a,t,a,r,r,r,a,t,a,a,a,t,a],
-    [a,a,a,a,t,a,r,r,r,a,t,t,t,t,t,a],
-    [a,a,a,a,t,a,a,a,a,a,t,a,a,a,t,a],
-    [a,a,a,a,t,t,t,t,t,t,t,a,a,a,t,a],
-    [a,a,a,a,a,a,a,a,a,a,a,a,a,a,t,t],
-    [a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a]
-  ]
-  where
-       t = Terra
-       r = Relva
-       a = Agua
-
-jogo4 :: Jogo 
-jogo4 = Jogo {mapaJogo = mapa4, 
-              inimigosJogo = [], 
-              portaisJogo = [portal1_4], 
-              torresJogo = [], 
-              baseJogo = base4,
-              lojaJogo = loja,
-              acGeraCaminhos = 0}
-
-base4 :: Base
-base4 = baseTds {posicaoBase = (15,14)}
-
-portal1_4 :: Portal
-portal1_4 = Portal {posicaoPortal = (1,0),
-                  ondasPortal = geraOndasPortal 6 3 2 (1,0)}
-
--- Nivel 5
-
-mapa5 :: Mapa 
-mapa5 = 
-  [
-    [t,t,t,a,a,a,a,a,a,a,a,t,a,a,a,a],
-    [a,a,t,t,t,t,t,t,a,a,a,t,t,t,t,a],
-    [a,a,t,a,a,a,a,t,a,a,a,a,a,a,t,a],
-    [a,a,t,a,r,r,a,t,a,r,r,r,r,a,t,a],
-    [a,a,t,a,r,r,a,t,a,r,r,r,r,a,t,a],
-    [a,a,t,a,a,a,a,t,a,a,a,a,a,a,t,a],
-    [a,a,t,t,t,t,t,t,t,t,t,t,t,t,t,a],
-    [a,a,a,a,a,a,a,a,a,a,t,a,a,a,t,a],
-    [a,a,a,a,a,a,a,a,a,a,t,a,r,a,t,a],
-    [a,a,t,t,t,t,t,t,t,t,t,t,t,t,t,a],
-    [t,t,t,a,a,a,r,r,r,a,a,a,a,a,t,a],
-    [a,a,t,a,a,a,r,r,r,a,a,a,a,a,t,a],
-    [a,a,t,a,a,a,a,a,a,a,a,a,a,a,t,a],
-    [a,a,t,t,t,t,t,t,a,a,a,a,a,a,t,a],
-    [a,a,a,a,a,a,a,t,t,t,t,t,a,t,t,a],
-    [a,a,a,a,a,a,a,a,a,a,a,t,t,t,a,a]
-  ]
-  where
-       t = Terra
-       r = Relva
-       a = Agua
-
-jogo5 :: Jogo 
-jogo5 = Jogo {mapaJogo = mapa5, 
-              inimigosJogo = [], 
-              portaisJogo = [portal1_5, portal2_5, portal3_5], 
-              torresJogo = [], 
-              baseJogo = base5,
-              lojaJogo = loja,
-              acGeraCaminhos = 0}
-
-base5 = baseTds {posicaoBase = (12,15)}
-
-portal1_5 :: Portal
-portal1_5 = Portal {posicaoPortal = (0,0),
-                   ondasPortal = geraOndasPortal 2 3 1 (0,0)}
-
-portal2_5 :: Portal
-portal2_5 = Portal {posicaoPortal = (0,10),
-                   ondasPortal = geraOndasPortal 3 2 1 (0,10)}
-
-portal3_5 :: Portal
-portal3_5 = Portal {posicaoPortal = (11,0),
-                   ondasPortal = geraOndasPortal 3 3 2 (11,0)}
-
--- Jogo tutorial
-jogoTT :: Jogo
-jogoTT = Jogo {mapaJogo = mapa1,
-                     inimigosJogo = [], 
-                     portaisJogo = [portal6_1], 
-                     torresJogo = [], 
-                     baseJogo = base1, 
-                     lojaJogo = loja,
-                     acGeraCaminhos = 0}
-
-portal6_1 :: Portal
-portal6_1 = Portal {posicaoPortal = (5,0), 
-                    ondasPortal = geraOndasPortal 1 3 2 (5,0)}
-
-
-
-
-geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
-geraOndasPortal 0 _ _ _ = []
-geraOndasPortal qOndas n1 n2 posP = 
-  let ondas = geraOndaPortal n1 n2 posP : geraOndasPortal (qOndas-1) n1 n2 posP
-  in (last ondas) {tempoOnda = 0} : init ondas
-
-{-| Cria uma onda de inimigos com base nos parâmetros fornecidos
-
--}
-
-geraOndaPortal :: Int -- ^ quantidade de inimigos masculinos. 
-               -> Int -- ^ quantidade de inimigos femininos. 
-               -> Posicao -- ^ posição inicial dos inimigos. 
-               -> Onda -- ^ Onda com a configuração definida.
-geraOndaPortal n1 n2 posP = 
-  let is1 = geraIs1 posP n1
-      is2 = geraIs2 posP n2
-  in Onda {inimigosOnda = juntaIs1Is2 is1 is2 0, 
-            cicloOnda = 5*60,
-            tempoOnda = 10*60,
-            entradaOnda = 0
-            }
-
-{-| Cria um grupo com n inimigos masculinos. 
-
--}
-
-geraIs1 :: Posicao -> Int -> [Inimigo]
-geraIs1 posP n1
-  | n1 == 0 = []
-  | otherwise = inimigo1Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs1 posP (n1-1)
-
-{-| Cria um grupo com n inimigos femininos. 
-
--}
-
-geraIs2 :: Posicao -> Int -> [Inimigo]
-geraIs2 posP n2
-  | n2 == 0 = []
-  | otherwise = inimigo2Tds {posicaoInimigo = posP, acDirecao = posP} : geraIs2 posP (n2-1)
-
-{-| Cria um grupo de inimigos, intercalando os masculinos com os femininos. 
-
--}
-
-juntaIs1Is2 :: [Inimigo] -> [Inimigo] -> Int -> [Inimigo]
-juntaIs1Is2 [] is2 _ = is2
-juntaIs1Is2 is1 [] _ = is1
-juntaIs1Is2 is1 is2 ac
-  | mod ac 2 == 0 = head is1 : juntaIs1Is2 (tail is1) is2 (ac+1)
-  | otherwise = head is2 : juntaIs1Is2 is1 (tail is2) (ac+1)
-
+ordenaTorre = sortBy (comparing (snd . posicaoTorre))

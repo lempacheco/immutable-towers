@@ -4,8 +4,8 @@ import ImmutableTowers
 import LI12425
 import Tarefa1 
 import Tarefa3
-import Data.List ( sortBy ) 
-import Data.Ord (comparing)
+import FuncoesAux
+import ElementosDoJogo
 
 
 
@@ -290,61 +290,4 @@ reiniciarEstado it = it {
                          botaoNivelPassado = (-500, -250),
                          botaoGameOver = (-600, -250),
                          etapaTT = 0 
-                        }  
-
-
-{-| Atualiza uma lista de terrenos. Caso a posição já exista, o terreno é atualizado. Caso contrário, a nova posição 
-e o terreno são adicionados a lista.
-
-==__Exemplo de utilização:__
-
->>> let lt = [((0,0), Terra), ((1,1), Agua)]
-
->>> atualizaMapa ((1,1), Terra) lt 
-[((0,0), Terra), ((1,1), Terra)]
-
--}
-
-atualizaMapa :: (Posicao, Terreno) -> [(Posicao,Terreno)] -> [(Posicao, Terreno)]
-atualizaMapa (pos, ter) [] = [(pos,ter)]
-atualizaMapa (pos, ter) lt = (pos, ter): filter (\(p,_) -> p /= pos) lt 
-
-{-| Converte uma lista de terrenos com a devida posição, em um mapa ([[Terreno]])
-
-==__Nota:__
-Caso o terreno não seja definido, será preenchido com 'Relva'. 
-
--}
-
-transformaMapa :: [(Posicao, Terreno)] -> Mapa
-transformaMapa lt =
-    [[procuraTerrenoNaLista (x, y) lt | x <- [0..15]] | y <- [0..15]]
-  where
-    procuraTerrenoNaLista :: Posicao -> [(Posicao, Terreno)] -> Terreno
-    procuraTerrenoNaLista pos lt =
-        case lookup pos lt of
-            Just terreno -> terreno
-            Nothing -> Relva 
-
-{-| Adiciona um portal em uma lista de portais, caso a sua posição esteja em um terreno 'Terra'. 
-
--}
-
-adicionarPortais :: Portal -> [(Posicao, Terreno)] -> [Portal] -> [Portal]
-adicionarPortais p lt ps
-    | lookup pp lt == Just Terra = p : ps
-    | otherwise = ps
-  where
-    pp = posicaoPortal p
-
-{-| Remove um portal de uma lista de portais, se a sua posição for igual a uma determinada posição. 
-
--}
-
-deletePortal :: [Portal] -> Posicao -> [Portal] 
-deletePortal [] _ = []
-deletePortal (p:portais) pos   
-    | pp == pos = portais 
-    | otherwise = p:deletePortal portais pos
-  where
-    pp = posicaoPortal p
+                        }

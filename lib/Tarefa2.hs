@@ -56,13 +56,17 @@ Verifica as combinações de projéteis e ajusta os efeitos aplicados ao inimigo
 
 atingeInimigo :: Torre -> Inimigo -> Inimigo
 atingeInimigo torre inimigo
-    | eFogoGelo torre inimigo = danoInimigo torre (fogoGelo inimigo)
-    | eFogoResina torre inimigo = danoInimigo torre (fogoResina inimigo)
-    | eProjetilIgual torre inimigo = danoInimigo torre (projetilIgual torre inimigo)
-    | otherwise = danoInimigo torre (outrasCombs torre inimigo)
+    | eFogoGelo nInimigo = danoInimigo torre (fogoGelo nInimigo)
+    | eFogoResina nInimigo = danoInimigo torre (fogoResina nInimigo)
+    | eProjetilIgual nInimigo = danoInimigo torre (projetilIgual nInimigo)
+    | otherwise = danoInimigo torre nInimigo
         where
-            eFogoGelo :: Torre -> Inimigo -> Bool
-            eFogoGelo t i = (tipoProjetil (projetilTorre t) == Fogo && Gelo `elem` getTiposProjsInimigo i) || (tipoProjetil (projetilTorre t) == Gelo && Fogo `elem` getTiposProjsInimigo i)
+            nInimigo = inimigo {projeteisInimigo = (projetilTorre torre) : (projeteisInimigo inimigo)}
+
+            eFogoGelo :: Inimigo -> Bool
+            eFogoGelo i = 
+                let tProjs = getTiposProjsInimigo i
+                in Gelo `elem` tProjs && Fogo `elem` tProjs
 
             fogoGelo :: Inimigo -> Inimigo
             fogoGelo i = i {projeteisInimigo = removeProj Gelo $ removeProj Fogo (projeteisInimigo i)}
@@ -73,32 +77,33 @@ atingeInimigo torre inimigo
                 | tp1 == tipoProjetil p = removeProj tp1 ps
                 | otherwise = p : removeProj tp1 ps
 
-            eFogoResina :: Torre -> Inimigo -> Bool
-            eFogoResina t i = (tipoProjetil (projetilTorre t) == Fogo && Resina `elem` getTiposProjsInimigo i) || (tipoProjetil (projetilTorre t) == Resina && Fogo `elem` getTiposProjsInimigo i)
+            eFogoResina :: Inimigo -> Bool
+            eFogoResina i =
+                let tProjs = getTiposProjsInimigo i
+                in Resina `elem` tProjs && Fogo `elem` tProjs
 
             fogoResina :: Inimigo -> Inimigo
-            fogoResina i = i {projeteisInimigo = newProjsInimigo}
+            fogoResina i = i {projeteisInimigo = nnProjsInimigo}
                 where
-                    newProjsInimigo = if Resina `elem` getTiposProjsInimigo i then dobraElem Fogo (removeProj Resina (projeteisInimigo i)) else dobraElem Fogo (projeteisInimigo i)
+                    nnProjsInimigo = dobraElem Fogo (removeProj Resina (projeteisInimigo i))
 
             dobraElem :: TipoProjetil -> [Projetil] -> [Projetil]
             dobraElem _ [] = []
             dobraElem p1 (p:ps)
                 |tipoProjetil p == p1 = case duracaoProjetil p of
-                    Finita (f :: Float) -> p{duracaoProjetil = Finita (f * 2)} : ps
+                    Finita f -> p{duracaoProjetil = Finita (f + f)} : ps
                     Infinita -> p:ps
-                | otherwise = dobraElem p1 ps
+                | otherwise = p : dobraElem p1 ps
 
-            eProjetilIgual :: Torre -> Inimigo -> Bool
-            eProjetilIgual t i = tipoProjetil (projetilTorre t) `elem` getTiposProjsInimigo i
+            eProjetilIgual :: Inimigo -> Bool
+            eProjetilIgual i =
+                let tProjs = getTiposProjsInimigo i
+                in if tProjs == [] then False else (head tProjs) `elem` (tail tProjs)
 
-            projetilIgual :: Torre -> Inimigo -> Inimigo
-            projetilIgual t i =
-                let tpProj = tipoProjetil (projetilTorre t)
-                in i {projeteisInimigo = dobraElem tpProj (projeteisInimigo i)}
-
-            outrasCombs :: Torre -> Inimigo -> Inimigo
-            outrasCombs t i = i {projeteisInimigo = projetilTorre t : projeteisInimigo i}
+            projetilIgual :: Inimigo -> Inimigo
+            projetilIgual i =
+                let tpProj = tipoProjetil $ head (projeteisInimigo i)
+                in i {projeteisInimigo = dobraElem tpProj (tail $ projeteisInimigo i)}
                 
 {-| É responsável por mover o próximo inimigo a ser lanaçado pelo portal para lista de inimigos ativos. 
 

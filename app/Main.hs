@@ -8,6 +8,7 @@ import ImmutableTowers
 import Tempo
 import LI12425
 import Tarefa3
+import ElementosDoJogo
 
 itInicial :: [Textura] -> ImmutableTowers
 itInicial ts = 

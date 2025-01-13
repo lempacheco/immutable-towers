@@ -182,6 +182,7 @@ desenhaUmInimigo inimigo it texturas =
 
 -}
 
+-- Um inimigo nunca será afetado por alguns destes casos, como, por exemplo, o caso de Gelo, Resina e Fogo, no entanto nós definimos esse caso para evitar que o jogo feche abruptamente caso ocorra algum erro relacionado às sinergias entre os projéteis.
 desenhaIndicativoProjeteis :: Inimigo -> [Textura] -> Picture
 desenhaIndicativoProjeteis i ts
     | elem Gelo tiposProjs && elem Resina tiposProjs && elem Fogo tiposProjs = Pictures [Translate (-30) 0 iGelo, 

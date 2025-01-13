@@ -1,9 +1,9 @@
-
 module Tarefa3Spec (testesTarefa3) where
 
 import Test.HUnit
 import LI12425
 import Tarefa3
+import FuncoesAux
 
 testesTarefa3 :: Test
 testesTarefa3 =
@@ -16,7 +16,6 @@ testesTarefa3 =
         teste5, 
         teste6, 
         teste7, 
-        teste8, 
         teste9, 
         teste10, 
         teste11,
@@ -32,8 +31,7 @@ testesTarefa3 =
         teste21,
         teste22,
         teste23,
-        teste24,
-        teste25
+        teste24
       ]
 
 -- detetarInimigos 
@@ -168,20 +166,13 @@ teste6 =
        
 teste7 :: Test
 teste7 =
-  TestLabel "Testes para a função atualizaInimigoGelo" $
+  TestLabel "Testes para a função atualizaVelocidadeInimigoGeloEResina" $
     test
       [
-        "Teste com um inimigo com velocidade nula" ~: inimigo1 ~=? atualizaInimigoGelo inimigo1,
-        "Teste com um inimigo com velocidade não nula" ~: inimigo2 {velocidadeInimigo = 0} ~=? atualizaInimigoGelo inimigo2
-      ]
-
-teste8 :: Test
-teste8 =
-  TestLabel "Testes para a função atualizaInimigoResina" $
-    test
-      [
-        "Teste com um inimigo com velocidade nula" ~: inimigo1 ~=? atualizaInimigoResina inimigo1,
-        "Teste com um inimigo com velocidade não nula" ~: inimigo2 {velocidadeInimigo = 9.0} ~=? atualizaInimigoResina inimigo2
+        "Teste com um inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1],
+        "Teste com um inimigo com velocidade não nula" ~: [inimigo2 {velocidadeInimigo = 0}] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo2],
+        "Teste com um inimigo com velocidade nula" ~: [inimigo1] ~=? atualizaVelocidadeInimigoGeloEResina [inimigo1],
+        "Teste com um inimigo com velocidade não nula" ~: [inimigo2 {velocidadeInimigo = 5.0}]~=? atualizaVelocidadeInimigoGeloEResina [inimigo2]
       ]
 
 teste9 :: Test
@@ -332,31 +323,6 @@ teste17 =
      "Recebe um inimigo sem projeteis" ~: inimigoA3 ~=? atualizaDuracaoProjeteisInimigos inimigoA3, 
      "Recebe inimigo com projéteis" ~: inimigo1 {projeteisInimigo = [projetil1 {duracaoProjetil = Finita 4.0}, projetil3]} ~=? atualizaDuracaoProjeteisInimigos inimigo1
     ] 
-
--- inimigosSemVida
-
-{- teste20 :: Test 
-teste20 = 
-  TestLabel "Testes para a função inimigosSemVida" $
-   test 
-    [
-      "Recebe inimigos apenas com vida" ~: (baseA, [inimigoA3, inimigoB3, inimigoC3])
-                                        ~=? inimigosSemVida baseA [inimigoA3, inimigoB3, inimigoC3],
-      "Recebe inimigos sem vida" ~: (baseA {creditosBase = 20}, [inimigoA3])
-                                 ~=? inimigosSemVida baseA [inimigoA3, inimigoB3 {vidaInimigo = 0}, inimigoC3 {vidaInimigo = 0}]
-      
-    ] -}
-
-{- teste21 :: Test 
-teste21 = 
-  TestLabel "Testes para a função inimigoAtingeBase" $
-   test 
-    [
-     "Recebe uma lista de inimigos que não chegaram a base" ~: (baseA, [inimigoA3, inimigoB3, inimigoC3])
-                                                            ~=? inimigoAtingeBase baseA [inimigoA3, inimigoB3, inimigoC3], 
-     "Inimigos chegam a base" ~: (baseA {vidaBase = 40}, [inimigoB3])
-                              ~=? inimigoAtingeBase baseA [inimigoA3 {posicaoInimigo = (5, 4)}, inimigoB3, inimigoC3 {posicaoInimigo = (5, 4)}]
-    ] -}
 
 teste18 :: Test
 teste18 =
@@ -520,71 +486,7 @@ teste24 =
       "inimigo tem mais de uma direção no caminho e não está pronto a trocar de direção" ~: inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)} ~=? moveInimigo inimigoA3 {caminhoInimigo = [Sul, Oeste, Este], posicaoInimigo = (0,0.5), acDirecao = (0,0)}
     ]
 
-teste25 :: Test
-teste25 = 
-  TestLabel "Testes para a função geraOndasPortal" $
-   test 
-    [
-      "apenas um inimigo 1 e dois inimigos 2" ~: [ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}], tempoOnda = 0},
-                                                  ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                                           inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}]}] ~=? escolheDirecao (geraOndasPortal 2 1 2 (0,9)),
-      "apenas inimigos 1" ~: [ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}], tempoOnda = 0},
-                              ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                       inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}]}] ~=? escolheDirecao (geraOndasPortal 2 3 0 (0,9)),
-      "sem inimigos" ~: [ondaGOP {inimigosOnda = [], tempoOnda = 0},
-                        ondaGOP {inimigosOnda = []}] ~=? escolheDirecao (geraOndasPortal 2 0 0 (0,9)),
-      "inimigos 1 e inimigos 2" ~: [ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}], tempoOnda = 0},
-                                    ondaGOP {inimigosOnda = [inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo2GOP {posicaoInimigo = (0,9), acDirecao = (0,9)},
-                                                             inimigo1GOP {posicaoInimigo = (0,9), acDirecao = (0,9)}]}] ~=? escolheDirecao (geraOndasPortal 2 3 2 (0,9))
-    ]
 
---esta função serve para conseguir fazer teste da geraOndasPortal, dado que a geraOndasPortal não atribui uma direção aos inimigos, e, embora isso não seja um problema para o jogo, dado que a geraCaminhos faz isso, para correr os testes é necessário que os inimigos tenham direções
-escolheDirecao :: [Onda] -> [Onda]
-escolheDirecao [] = []
-escolheDirecao (o:os) =
-  let is = inimigosOnda o
-  in o {inimigosOnda = map (\i -> i {direcaoInimigo = Norte}) is} : escolheDirecao os
-
-ondaGOP :: Onda
-ondaGOP = Onda {cicloOnda = 5*60,
-                tempoOnda = 10*60,
-                entradaOnda = 0
-                }
-
-inimigo1GOP :: Inimigo
-inimigo1GOP = Inimigo {tipoInimigo = Homem, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 150, 
-                        butimInimigo = 50, 
-                        ataqueInimigo = 40, 
-                        velocidadeInimigo = 0.5, 
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1,
-                        direcaoInimigo = Norte}
-
-inimigo2GOP :: Inimigo
-inimigo2GOP = Inimigo {tipoInimigo = Mulher, 
-                        projeteisInimigo = [], 
-                        vidaInimigo = 100, 
-                        butimInimigo = 45,  
-                        ataqueInimigo = 20, 
-                        velocidadeInimigo = 1,
-                        caminhoInimigo = [],
-                        iteracoesDesdeInicioAnimacaoInimigo = 1,
-                        direcaoInimigo = Norte}
 
 jogoJ :: Jogo
 jogoJ = Jogo {baseJogo = baseJ,

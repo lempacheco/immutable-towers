@@ -1,6 +1,7 @@
 module FuncoesAux where
 
 import LI12425
+
 import Data.List ( sortBy ) 
 import Data.Ord (comparing)
 
@@ -31,11 +32,6 @@ inimigo2Tds = Inimigo {tipoInimigo = Mulher,
                         velocidadeInimigo = 1,
                         caminhoInimigo = [],
                         iteracoesDesdeInicioAnimacaoInimigo = 1}
-
-
-
-
-
 
 geraOndasPortal :: Int -> Int -> Int -> Posicao -> [Onda]
 geraOndasPortal 0 _ _ _ = []
@@ -144,3 +140,4 @@ deletePortal (p:portais) pos
     | otherwise = p:deletePortal portais pos
   where
     pp = posicaoPortal p
+

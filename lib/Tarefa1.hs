@@ -144,7 +144,7 @@ validaPosicaoPortal (p:ps) mapa =
   eTerra (posicaoPortal p) mapa && validaPosicaoPortal ps mapa
 
 {-| Verifica se a base está sobreposta à algum portal. 
- Como para um bom funcionamento do jogo, a base não pode estar sobreposta à nenhum portal, a função devolve *True* quando 
+ Como para um bom funcionamento do jogo, a base não pode estar sobreposta à nenhum portal, a função devolve __True__ quando 
  não houver nenhum portal na mesma posição da base.
 
 -}
@@ -155,7 +155,7 @@ naoSobrepostoBasePortal b ps = not $ elem (posicaoBase b) pps
   where pps = map posicaoPortal ps 
 
 {-| Verifica se existe alguma torre sobreposta com algum portal. 
- Como para um bom funcionamento do jogo, não pode haver torres sobrepostas com portais, a função devolve *True* quando 
+ Como para um bom funcionamento do jogo, não pode haver torres sobrepostas com portais, a função devolve __True__ quando 
  não houver nenhuma torre na mesma posição de um portal.
 
 -}
@@ -167,9 +167,10 @@ naoSobrepostoTorrePortal (t:ts) ps = not ((posicaoTorre t) `elem` pps) && naoSob
 
 
 {-| Verifica o estado dos inimigos inicialmente. Isto é todos os inimigos inicialmente devem ter:
-    1. Posição do respetivo portal. 
-    2. Nı́vel de vida positivo. 
-    3. Lista de projéteis ativos vazia.
+
+1. Posição do respetivo portal;
+2. Nı́vel de vida positivo;
+3. Lista de projéteis ativos vazia.
 
 -}
 
@@ -191,7 +192,7 @@ inimigosTerra [] _ = True
 inimigosTerra (i:is) mapa = eTerra (posicaoInimigo i) mapa && inimigosTerra is mapa 
 
 {-| Verifica se os inimigos estão sobrepostos a alguma torre. 
-    Como os inimigos não podem estar sobrepostos a torres, a função devolve *True* se as posições forem diferentes.
+    Como os inimigos não podem estar sobrepostos a torres, a função devolve __True__ se as posições forem diferentes.
 
 -}
 
@@ -210,8 +211,9 @@ velocidadeInimigos [] = True
 velocidadeInimigos is = all (>0) (map velocidadeInimigo is)  
 
 {- | Verifica se a lista de projéteis ativos encontram-se “normalizada”, ou seja:
-       1. Não pode conter mais do que um projétil do mesmo tipo;
-       2. Não pode conter, simultaneamente, projéteis do tipo Fogo e Resina, nem Fogo e Gelo.
+
+1. Não pode conter mais do que um projétil do mesmo tipo;
+2. Não pode conter, simultaneamente, projéteis do tipo Fogo e Resina, nem Fogo e Gelo.
 
 == __Exemplos de utilização:__
 
@@ -249,15 +251,20 @@ normalizaInimigos is = all normalizainimigo is
 
 
 
-{-| Gera todos os caminhos possíveis de uma posição inicial até a base. 
+{-| 
 
-== __ Comportamento: __ 
+Gera todos os caminhos possíveis de uma posição inicial até a base. 
+
+
+== __Comportamento:__ 
+
 
 Verifica se é possível mover-se em cada direção (Norte, Sul, Leste, Oeste) com base nas condições do mapa,
 nas posições já visitadas, e no terreno atual. Caso encontre um caminho até a base, retorna um par contendo
-um valor booleano indicando sucesso, *True*, e a sequência de direções.
+um valor booleano indicando sucesso, __True__, e a sequência de direções.
 
-== __ Exemplo de utilizção: __ 
+
+== __Exemplos de utilizção:__ 
 
 >>> let mapa = 
     [ [t, t, r, a, a, a],
@@ -296,6 +303,7 @@ geraUmCaminho m pos@(x,y) posB lpos ld
   | otherwise = [(False, ld)]
 
 {-| Verifica se há pelo menos um caminho possível entre um portal e a base.
+
 -}
 
 existePeloMenosUmCaminho :: Mapa -> Portal -> Base -> Bool
@@ -307,7 +315,7 @@ existePeloMenosUmCaminho mapa p b =
   in resultado /= Nothing
 
 {-| Verifica se a posição está fora dos limites do mapa.
-Retorna *True* se a posição estiver fora, e *False* caso o contrário. 
+Retorna __True__ se a posição estiver fora, e __False__ caso o contrário. 
 
 -}
 
@@ -315,7 +323,7 @@ eFronteiras :: Posicao -> Bool
 eFronteiras (x,y) = x < 0 || y < 0 || x>=16 || y >= 16
 
 {-| Verifica se uma posição já foi visitada. 
-Retorna *True* se a posição já foi visitada, e *False* caso o contrário. 
+Retorna __True__ se a posição já foi visitada, e __False__ caso o contrário. 
 
 -}
 
@@ -324,7 +332,7 @@ jaPassou _ [] = False
 jaPassou (x,y) ((x1,y1):t) = (x==x1 && y == y1) || jaPassou (x,y) t
 
 {-| Verifica se a posição atual é a mesma da base. 
-Retorna *True* se a posição é a mesma, e *False* caso o contrário. 
+Retorna __True__ se a posição é a mesma, e __False__ caso o contrário. 
 -}
 
 chegouBase :: Posicao -> Posicao -> Bool
@@ -383,7 +391,7 @@ cicloTorresNaoNegativo (t:ts) = cicloTorre t >= 0 && cicloTorresNaoNegativo ts
 
 
 {-| Verifica se, numa lista de torres, nenhuma está sobreposta a outra. 
-Devolve *False* caso haja sobreposição.
+Devolve __False__ caso haja sobreposição.
 
 -}
 
@@ -410,7 +418,7 @@ creditoNaoNegativoBase :: Base -> Bool
 creditoNaoNegativoBase b = creditosBase b >= 0
 
 {-| Verifica se uma base não está sobreposta a uma torre ou a um portal. 
-Devolve *False* se houver sobreposição.
+Devolve __False__ se houver sobreposição.
 
 -}
 

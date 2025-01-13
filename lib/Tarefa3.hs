@@ -15,6 +15,10 @@ import Tarefa1
 import Data.List
 import Data.Ord
 
+{-| É responsável por atualizar o jogo, com o passar do tempo. 
+
+-}
+
 atualizaJogo :: Tempo -> Jogo -> Jogo
 atualizaJogo t j =
     atualizaPortaisEInimigos 
@@ -25,7 +29,7 @@ atualizaJogo t j =
   
 {-| É responsável por atualizar o jogo, relativamente as torres. 
 
-== __ Comportamento: __ == 
+== __ Comportamento: __ 
 A função atualiza os inimigos, sempre que estes sofrem danos, e atualiza as torres do jogo, sempre que estas lançam projéteis.
 
 -}
@@ -95,7 +99,7 @@ auxAtualizaAnimacaoInimigos (i:is)
 
 ==__ Comportamento:__ 
 
-1. Movimenta os inimigos sobre a terra, e aplica os efeitos dos projéteis.
+1. Movimenta os inimigos sobre a terra, e aplica os efeitos dos projéteis;
 2. Atualiza a base, sempre que os inimigos a atingiram, diminuito a vida, e sempre que os inimigos morrem, 
 aumentando os créditos.
 
@@ -122,8 +126,9 @@ atualizaInimigosEBase t j =
 {-| Atualiza a duração dos projéteis que estão afetando o inimigo.
 
 Essa função verifica todos os projéteis associados a um inimigo e:
-- Reduz a duração dos projéteis do tipo 'Finita'.
-- Remove projéteis cuja duração chegou a zero. 
+
+1. Reduz a duração dos projéteis do tipo __Finita__;
+2. Remove projéteis cuja duração chegou a zero. 
 
 -}
 
@@ -144,6 +149,7 @@ duracaoFogoOuGelo (p:ps) = case duracaoProjetil p of
 
 
 {-| Deteta os inimigos que estão no alcance de uma determinada torre. 
+
 -}
 
 detetarInimigo :: Torre -> [Inimigo] -> [Inimigo]
@@ -153,14 +159,14 @@ detetarInimigo torre inimigos =  inimigosNoAlcance torre inimigos
     respeitando o ciclo de recarga da torre. 
     
 == __ Comportamento: __
-A cada chamada a função verifica se a torre está pronta para disparar, com base no parâmetro *tempoTorre*, 
+A cada chamada a função verifica se a torre está pronta para disparar, com base no parâmetro 'tempoTorre', 
 o tempo restante. 
 
-    1. Se a torre não estiver pronta para disparar ('tempoTorre > 0') o tempo restante é decrementado, e os inimigos permanecem inalterados. 
-    2. Se a torre estiver pronta para disparar ('tempoTorre == 0'), verifica os inimigos dentro do alcance da torre: 
-       2.1. Não há inimigos: a função não realiza disparos. 
-       2.2. Há inimigos no alcance: a função realiza disparos, a lista de inimigos é atualizada, i.e. aplica-se 
-            os danos e os efeitos dos projéteis nos inimigos. E, após disparar o tempo de recarga da torre é reiniciado para o valor do ciclo ('cicloTorre').
+1. Se a torre não estiver pronta para disparar ('tempoTorre > 0') o tempo restante é decrementado, e os inimigos permanecem inalterados. 
+2. Se a torre estiver pronta para disparar ('tempoTorre == 0'), verifica os inimigos dentro do alcance da torre: 
+    2.1. Não há inimigos: a função não realiza disparos. 
+    2.2. Há inimigos no alcance: a função realiza disparos, a lista de inimigos é atualizada, i.e. aplica-se 
+        os danos e os efeitos dos projéteis nos inimigos. E, após disparar o tempo de recarga da torre é reiniciado para o valor do ciclo ('cicloTorre').
     -}
 
 disparaProjeteis :: Torre -> [Inimigo] -> ([Inimigo], Torre)
@@ -181,8 +187,8 @@ disparaTodosProjeteis (t:ts) is = let (inimigosPosDisparo,torreAtualizada) = dis
                                   in (inimigosAtualizados, torreAtualizada:restoTorresAtualizadas)
 
 {-| Ordena uma lista de inimigos com base na distância
-  de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
-  primeiro na lista resultante.
+de cada inimigo em relação a uma torre. Os inimigos mais próximos da torre aparecem 
+primeiro na lista resultante.
   
 -}
 
@@ -190,8 +196,8 @@ inimigosOrdenados :: Torre -> [Inimigo] -> [Inimigo]
 inimigosOrdenados torre inimigos = sortOn (distinimigo torre) (inimigos)
 
 {-| Filtra os inimigos do mapa, que sãoa sobreviventes, e aplica 
-    os danos e os efeitos dos projéteis nestes inimigos, tendo em conta o número máximo de inimigos que 
-    podem ser atacados de uma só vez.
+os danos e os efeitos dos projéteis nestes inimigos, tendo em conta o número máximo de inimigos que 
+podem ser atacados de uma só vez.
 
 -}
 
@@ -213,7 +219,7 @@ distinimigo t i = sqrt ((x1 - x2)^2 + (y1 - y2)^2)
               (x2, y2) = posicaoTorre t
 
 {-| Determina o número máximo de tiros que uma torre pode disparar em um ciclo, 
-    levando em consideração o número de rajadas da torre, e o número de inimigos no alcance.
+levando em consideração o número de rajadas da torre, e o número de inimigos no alcance.
 -}
 
 tirosPossiveis :: Torre -> [Inimigo] -> Int
@@ -239,13 +245,13 @@ atualizaVelocidadeInimigoGeloEResina (i:is)
 
 {-| Fator de redução aplicado ao inimigo sob o efeito de Resina.
 
-==__Comportamento:__
-* 0.9 - Representa uma redução de 10% na velocidade do inimigo.
+==__Nota:__
+* 0.5 - Representa uma redução de 10% na velocidade do inimigo.
 
 -}
 
 fatorVelocidadeInimigoResina :: Float
-fatorVelocidadeInimigoResina = 0.5 --atualizaInimigoResina reduz a velocidade por 10 porcento
+fatorVelocidadeInimigoResina = 0.5 
 
 {-| Atualiza a vida dos inimigos sob o efeito de projéteis de Fogo.
 
@@ -261,12 +267,14 @@ atualizaInimigoFogo (i:is)
 
 ==__Nota:__ 
 5/60 - Reduz 5 pontos de vida por segundo, considerando um framerate de 60 quadros por segundo.
+
 -}
 
 taxaDanoInimigoFogo :: Float
 taxaDanoInimigoFogo = 5/60 
  
 {-| É responsável por atualizar os créditos da base, sempre que um inimigo morre. 
+
 -}
 
 inimigosSemVida :: Base -> [Inimigo] -> (Base, [Inimigo])
@@ -298,20 +306,10 @@ atualizaDistanciaPercorridaInimigos t (i:is)  =
         Sul -> i {posicaoInimigo = (x, y - (v*t))} : atualizaDistanciaPercorridaInimigos t is
         Oeste -> i {posicaoInimigo = (x - (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
         Este -> i {posicaoInimigo = (x + (v*t), y)} : atualizaDistanciaPercorridaInimigos t is
-{-     where
-        atualizaVelocidadeInimigoGeloEResina :: Inimigo -> Float
-        atualizaVelocidadeInimigoGeloEResina inimigo =
-            let tpsProjsInimigo = getTiposProjsInimigo inimigo
-            in if Gelo `elem` tpsProjsInimigo
-                then if Resina `elem` tpsProjsInimigo
-                    then velocidadeInimigo (atualizaInimigoGelo (atualizaInimigoResina inimigo))
-                    else velocidadeInimigo (atualizaInimigoGelo inimigo)
-                else if Resina `elem` tpsProjsInimigo
-                    then velocidadeInimigo (atualizaInimigoResina inimigo)
-                    else velocidadeInimigo inimigo  -}
+
 
 {-| É responsável por atualizar a lista de inimigos ativos. 
-    Sempre que o inimigo atinja a base, este é retirado do mapa. 
+Sempre que o inimigo atinja a base, este é retirado do mapa. 
 -}
 
 inimigoAtingeBase :: Base -> [Inimigo] -> (Base,[Inimigo])
@@ -323,8 +321,9 @@ inimigoAtingeBase base (i:is) =
         then inimigoAtingeBase base {vidaBase = vidaBase base - ataqueInimigo i} is
         else (fst (inimigoAtingeBase base is), i : snd (inimigoAtingeBase base is))
 
-{-| Verifica se uma determinada está ativa. i.e. o parâmetro entradaOnda > 0. A função
-    devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.
+{-| Verifica se uma determinada está ativa. i.e. o parâmetro 'entradaOnda' > 0. A função
+devolve True se a onda estiver ativa, indicando então que esta pode lançar inimigos.
+
 -}
 
 ondaAtiva :: Onda -> Bool
@@ -332,20 +331,20 @@ ondaAtiva o = entradaOnda o <= 0
 
 {-| É responsável por gerenciar o lançamento de inimigos de um portal. 
 
-  == __Comportamneto: __ 
+== __Comportamneto: __ 
 
-  1. **Sem Ondas**: 
-      Se o portal não possui ondas, a função apenas retorna o portal e a lista de inimigos inalterada.
-  2. **Ondas Inativas**:
-      Caso a onda ativa no portal ainda não esteja pronta (parâmetro `entradaOnda` > 0), 
-      reduz o tempo restante para ativação da onda (`entradaOnda - 1`) e atualiza o portal.
-  3. **Onda Ativa com Tempo Restante**:
-      Se a onda está ativa, mas o tempo para lançar o próximo inimigo ainda não chegou (`tempoOnda > 0`),
-      reduz o tempo restante (`tempoOnda - 1`) e atualiza o portal.
-  4. **Onda Ativa Pronta para Lançar**:
-      Se o tempo para lançar o próximo inimigo chegou a 0, reinicia o contador (`tempoOnda` = `cicloOnda`),
-      chama a função 'ativaInimigo' para mover o próximo inimigo da onda para a lista de inimigos ativos,
-      e atualiza o portal. 
+1. __Sem Ondas__: 
+    Se o portal não possui ondas, a função apenas retorna o portal e a lista de inimigos inalterada.
+2. __Ondas Inativas__:
+    Caso a onda ativa no portal ainda não esteja pronta (parâmetro 'entradaOnda' > 0), 
+    reduz o tempo restante para ativação da onda ('entradaOnda' - 1) e atualiza o portal.
+3. __Onda Ativa com Tempo Restante__:
+    Se a onda está ativa, mas o tempo para lançar o próximo inimigo ainda não chegou ('tempoOnda' > 0),
+    reduz o tempo restante ('tempoOnda' - 1) e atualiza o portal.
+4. __Onda Ativa Pronta para Lançar__:
+    Se o tempo para lançar o próximo inimigo chegou a 0, reinicia o contador ('tempoOnda' = 'cicloOnda'),
+    chama a função 'ativaInimigo' para mover o próximo inimigo da onda para a lista de inimigos ativos,
+    e atualiza o portal. 
 -}
 
 lancaInimigo :: Portal -> [Inimigo] -> (Portal, [Inimigo])
@@ -380,6 +379,7 @@ lancaTodosPortais (p:ps) is = let (portalAtualizado,inimigosNovos) = lancaInimig
 ==__Comportamento:__ 
 
 Para cada inimigo:
+
 1. Verifica a posição atual do inimigo e a posição da base.
 2. Gera um caminho usando a função 'geraUmCaminho', a partir da posição do inimigo até a base.
 3. Atualiza o inimigo com o caminho gerado e define a próxima direção.
@@ -433,7 +433,7 @@ compraTorre t custoTorre j
   where jogoNovo = j {baseJogo = (baseJogo j) {creditosBase = creditosBase (baseJogo j) - custoTorre}, 
                       torresJogo = ordenaTorre  $ t: torresJogo j}
 
-{-| Ordena a lista de torres, com base na coordenada Y da posição de cada torre. 
+{-| Ordena a lista de torres, com base na coordenada __Y__ da posição de cada torre. 
 
 -}
 

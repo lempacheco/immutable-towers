@@ -8,7 +8,9 @@ import Tarefa3
 import FuncoesAux
 import ElementosDoJogo
 
+{-| Responsável por atualizar o jogo, sempre que o jogador interaja com o teclado. 
 
+-}
 
 reageEventos :: Event -> ImmutableTowers -> ImmutableTowers
 reageEventos (EventKey (SpecialKey KeyShiftL) Down _ _) it 
@@ -38,7 +40,8 @@ reageEventos (EventKey (Char 'a') Down _ _) it
 
 reageEventos (EventKey (Char 'p') Down _ _) it 
     | estadoIT it == CriandoMapa = 
-       it {estadoIT = EscolhendoOndas, escolhendoParametros = (0,0,0)}
+       it {estadoIT = EscolhendoOndas, 
+           escolhendoParametros = (0,0,0)}
 
 reageEventos (EventKey (SpecialKey KeyDelete) Down _ _ ) it
     | estadoIT it == CriandoMapa = 
@@ -61,20 +64,35 @@ reageEventos (EventKey (Char 'b') Down _ _) it
      where j = jogoIT it 
 
 reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it 
-    | estadoIT it == Menu && botaoMenu it == (-160,0) = if validaJogo $ jogoIT it then it {estadoIT = Jogando,  modoJogo = Finito} else it {estadoIT = MensagemErro, estadoIT2 = MensagemErro, modoJogo = Finito}
-    | estadoIT it == Menu && botaoMenu it == (-160,-100) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, modoJogo = Infinito} else it {estadoIT = MensagemErro, estadoIT2= MensagemErro, modoJogo = Infinito}
-    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado, jogoIT = (jogoIT it) {baseJogo = (baseJogo (jogoIT it)) {creditosBase = 1000} }} 
-    | estadoIT it == Menu && botaoMenu it == (-160,-300) = it {estadoIT = Tutorial, etapaTT = 0}    
+    | estadoIT it == Menu && botaoMenu it == (-160,0) = if validaJogo $ jogoIT it 
+                                                        then it {estadoIT = Jogando,  
+                                                                 modoJogo = Finito} 
+                                                        else it {estadoIT = MensagemErro, 
+                                                                 estadoIT2 = MensagemErro, 
+                                                                 modoJogo = Finito}
+    | estadoIT it == Menu && botaoMenu it == (-160,-100) = if validaJogo $ jogoIT it 
+                                                           then it {estadoIT = Jogando, 
+                                                                    modoJogo = Infinito} 
+                                                           else it {estadoIT = MensagemErro, 
+                                                                    estadoIT2= MensagemErro, 
+                                                                    modoJogo = Infinito}
+    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, 
+                                                               modoJogo = MapaCriado, 
+                                                               jogoIT = (jogoIT it) {baseJogo = (baseJogo (jogoIT it)) {creditosBase = 1000} }} 
+    | estadoIT it == Menu && botaoMenu it == (-160,-300) = it {estadoIT = Tutorial, 
+                                                               etapaTT = 0}    
     | estadoIT it == Menu && botaoMenu it == (-160,-400) = it {estadoIT = Costumizar}    
+
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}
     | estadoIT it == EscolhendoTorre = it {estadoIT = Comprando}
     | estadoIT it == Comprando =  
         let jogo = jogoIT it
             (t,c) = colocaTorre it (posicaoSelecionadaMapa it)
             jogoAtualizado = compraTorre t c jogo
-         in it {jogoIT = jogoAtualizado, estadoIT = Jogando}
+         in it {jogoIT = jogoAtualizado, 
+                estadoIT = Jogando}
 
-    | estadoIT it == EscolhendoOndas || estadoIT it == EscolhendoIG || estadoIT it == EscolhendoIM = 
+    | (estadoIT it == EscolhendoOndas) || (estadoIT it == EscolhendoIG) || (estadoIT it == EscolhendoIM) = 
       let (xF,yF) = posicaoSelecionadaMapa it 
           listaTerrenoNova = listaTerreno it 
           (nO, n1, n2) = escolhendoParametros it 
@@ -87,17 +105,25 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
              escolhendoParametros = (0,0,0)}
 
     | estadoIT it == CriandoMapa =
-              let jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, portaisJogo = listaPortais it, torresJogo = [], inimigosJogo = []}
+              let jogoAtual = (jogoIT it) {mapaJogo = mapaCriado, 
+                                           portaisJogo = listaPortais it, 
+                                           torresJogo = [], 
+                                           inimigosJogo = []}
                   mapaCriado = transformaMapa (listaTerreno it)
                   parametrosAtualizados = escolhendoParametros it
               in if validaJogo jogoAtual
-                  then it {jogoIT = jogoAtual, jogoItInicial = jogoAtual, escolhendoParametros = parametrosAtualizados, modoJogo = MapaCriado, estadoIT = Jogando}
+                  then it {jogoIT = jogoAtual, 
+                           jogoItInicial = jogoAtual, 
+                           escolhendoParametros = parametrosAtualizados, 
+                           modoJogo = MapaCriado, 
+                           estadoIT = Jogando}
                   else it {estadoIT = MensagemErro}
     | estadoIT it == MensagemErro && modoJogo it == MapaCriado = it {estadoIT = CriandoMapa}
     | estadoIT it == MensagemErro && (modoJogo it == Infinito || modoJogo it == Finito) = it {estadoIT = Menu} 
 
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -150 = progredirNivel it
-    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu, jogoIT = jogoItInicial it}
+    | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == -500 = it {estadoIT = Menu, 
+                                                                              jogoIT = jogoItInicial it}
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
     | estadoIT it == GameOver && fst (botaoGameOver it) == 100 = reiniciarNivel it 
     | (estadoIT it == GameOver || estadoIT it == Tutorial) && fst (botaoGameOver it) == -600 = reiniciarEstado it
@@ -110,18 +136,24 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == -500 = reiniciarEstado it 
     | estadoIT it == Pausado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
 
-    | estadoIT it == Tutorial && etapaTT it == 3 && fst (botaoGameOver it) == 100 = it {estadoIT = Tutorial, jogoIT = jogoTT, etapaTT = 4}
-    | estadoIT it == Tutorial && etapaTT it == 4 = it {estadoIT = TutorialEscolhendoTorre,  etapaTT = 5}
-    | estadoIT it == TutorialEscolhendoTorre && etapaTT it == 5 = it {estadoIT = TutorialComprando, etapaTT = 6} 
+    | estadoIT it == Tutorial && etapaTT it == 3 && fst (botaoGameOver it) == 100 = it {estadoIT = Tutorial, 
+                                                                                        jogoIT = jogoTT, 
+                                                                                        etapaTT = 4}
+    | estadoIT it == Tutorial && etapaTT it == 4 = it {estadoIT = TutorialEscolhendoTorre, 
+                                                       etapaTT = 5}
+    | estadoIT it == TutorialEscolhendoTorre && etapaTT it == 5 = it {estadoIT = TutorialComprando, 
+                                                                      etapaTT = 6} 
     | estadoIT it == TutorialComprando && etapaTT it == 6 = 
         let (t,c) = colocaTorre it (posicaoSelecionadaMapa it)
             jogoAtualizado = compraTorre  t c (jogoIT it)
-        in it {estadoIT = Tutorial, jogoIT = jogoAtualizado , etapaTT = 7}
+        in it {estadoIT = Tutorial, 
+               jogoIT = jogoAtualizado, 
+               etapaTT = 7}
     | estadoIT it == Costumizar = alteraITCostumizar it
     | otherwise = it
 
 reageEventos (EventKey (SpecialKey KeyShiftR) Down _ _)  it 
-    | estadoIT it == Jogando = it {estadoIT = Pausado}
+    | (estadoIT it == Jogando) || (estadoIT it == Comprando) || (estadoIT it == EscolhendoTorre) = it {estadoIT = Pausado}
     | estadoIT it == Pausado = it {estadoIT = Jogando}
     | otherwise = it
 
@@ -187,7 +219,7 @@ reageEventos (EventKey (SpecialKey KeyUp) Down _ _) it
         (a, b) = produtoLoja it 
         (px, py) = botaoMenu it 
         (nO, n1, n2) = escolhendoParametros it
-        (xSelecaoCostumizar, ySelecaoCostumizar) = selecaoCostumizar it 
+        (_, ySelecaoCostumizar) = selecaoCostumizar it 
 
 reageEventos (EventKey (SpecialKey KeySpace) Down _ _) it 
     | (estadoIT it == EscolhendoTorre || estadoIT it == Comprando) = it {estadoIT = Jogando}
@@ -206,7 +238,8 @@ reageEventos (EventKey (SpecialKey KeyTab) Down _ _) it
     | estadoIT2 it == Comprando2 =  
         let jogo = jogoIT it
             jogoAtualizado = compraTorre (fst (colocaTorre it (posicaoSelecionadaMapaSndJog it))) (snd (colocaTorre it (posicaoSelecionadaMapaSndJog it))) jogo
-         in it {jogoIT = jogoAtualizado, estadoIT2 = Jogando}
+         in it {jogoIT = jogoAtualizado, 
+                estadoIT2 = Jogando}
 
 
 reageEventos (EventKey (Char 'w') Down _ _) it
@@ -230,8 +263,8 @@ reageEventos (EventKey (Char 'd') Down _ _) it
   where (x,y) = posicaoSelecionadaMapaSndJog it 
 
 reageEventos (EventKey (Char 'm') Down _ _) it  
-   | multiplayer it == False = ativaMP (it {multiplayer = True})
-   | multiplayer it == True = ativaMP (it {multiplayer = False})
+   | not (multiplayer it) = ativaMP (it {multiplayer = True})
+   | multiplayer it = ativaMP (it {multiplayer = False})
 
 reageEventos _ it = it 
 

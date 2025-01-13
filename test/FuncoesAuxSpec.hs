@@ -50,7 +50,7 @@ teste2 =
                                     ~=? atualizaMapa ((5,5), Relva) [((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)],
         "Atualiza mapa com Agua" ~: [((7,7), Agua), ((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] 
                                 ~=? atualizaMapa ((7,7), Agua) [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)],
-        "Atualiza mapa com Terra" ~: [((7,7), Agua), ((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)]
+        "Atualiza mapa com Terra" ~: [((3,8), Terra),((7,7), Agua), ((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)]
                                ~=? atualizaMapa ((3,8), Terra) [((3,8), Terra), ((7,7), Agua), ((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)],
         "Atualiza com posição já existente" ~: [((0,0), Relva), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] 
                                              ~=? atualizaMapa ((0,0), Relva) [((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)],
@@ -89,16 +89,16 @@ teste4 =
   TestLabel "Testes para a função adicionarPortais" $
    test 
     [
-        "Adiciona o portal" ~: [Portal {posicaoPortal = (0,0)}]
-                              ~=? adicionarPortais Portal {posicaoPortal = (0,0)} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],
+        "Adiciona o portal" ~: [Portal {posicaoPortal = (0,0), ondasPortal = []}]
+                              ~=? adicionarPortais Portal {posicaoPortal = (0,0), ondasPortal = []} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],
         "Não adiciona Portal, posicao relva"~: []
-                              ~=? adicionarPortais Portal {posicaoPortal = (5,5)} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],
+                              ~=? adicionarPortais Portal {posicaoPortal = (5,5), ondasPortal = []} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],
         "Não adiciona Portal, posicao agua"~: []
-                              ~=? adicionarPortais Portal {posicaoPortal = (1,1)} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],                      
+                              ~=? adicionarPortais Portal {posicaoPortal = (1,1), ondasPortal = []} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],                      
         "Não adiciona Portal, não há terreno na posição"~: []
-                              ~=? adicionarPortais Portal {posicaoPortal = (1,0)} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],
-        "Adiciona Portal" ~:  [Portal {posicaoPortal = (0,0)}, Portal {posicaoPortal = (8,8)}] 
-                         ~=? adicionarPortais Portal {posicaoPortal = (0,0)} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [ Portal {posicaoPortal = (8,8)}]
+                              ~=? adicionarPortais Portal {posicaoPortal = (1,0), ondasPortal = []} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [],
+        "Adiciona Portal" ~:  [Portal {posicaoPortal = (0,0), ondasPortal = []}, Portal {posicaoPortal = (8,8), ondasPortal = []}] 
+                         ~=? adicionarPortais Portal {posicaoPortal = (0,0), ondasPortal = []} [((5,5), Relva), ((0,0), Terra), ((1,1), Agua), ((2,2), Relva), ((8,8),Terra)] [ Portal {posicaoPortal = (8,8), ondasPortal = []}]
      ]
 
 teste5 :: Test 
@@ -106,10 +106,10 @@ teste5 =
   TestLabel "Testes para a função deletePortais" $
    test 
     [
-        "Deleta o portal" ~: [Portal {posicaoPortal = (0,0)}, Portal {posicaoPortal = (8,8)}]
-                              ~=? deletePortal [Portal {posicaoPortal = (0,0)}, Portal {posicaoPortal = (8,8)}, Portal {posicaoPortal = (7,6)}] (7,6),
-        "Não deleta o portal" ~:  [Portal {posicaoPortal = (0,0)}, Portal {posicaoPortal = (8,8)}, Portal {posicaoPortal = (7,6)}]
-                             ~=? deletePortal [Portal {posicaoPortal = (0,0)}, Portal {posicaoPortal = (8,8)}, Portal {posicaoPortal = (7,6)}] (5,6)
+        "Deleta o portal" ~: [Portal {posicaoPortal = (0,0), ondasPortal = []}, Portal {posicaoPortal = (8,8), ondasPortal = []}]
+                              ~=? deletePortal [Portal {posicaoPortal = (0,0), ondasPortal = []}, Portal {posicaoPortal = (8,8), ondasPortal = []}, Portal {posicaoPortal = (7,6), ondasPortal = []}] (7,6),
+        "Não deleta o portal" ~:  [Portal {posicaoPortal = (0,0), ondasPortal = []}, Portal {posicaoPortal = (8,8), ondasPortal = []}, Portal {posicaoPortal = (7,6), ondasPortal = []}]
+                             ~=? deletePortal [Portal {posicaoPortal = (0,0), ondasPortal = []}, Portal {posicaoPortal = (8,8), ondasPortal = []}, Portal {posicaoPortal = (7,6), ondasPortal = []}] (5,6)
     ]
        
 

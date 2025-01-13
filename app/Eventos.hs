@@ -323,7 +323,7 @@ colocaTorre prodLoja (xF, yF) = case prodLoja of
 reiniciarEstado :: ImmutableTowers -> ImmutableTowers
 reiniciarEstado it = it {
                          estadoIT = Menu, 
-                         jogoIT = jogoItInicial it,
+                         jogoIT = jogo1,
                          posicaoSelecionadaMapa = (0,0),
                          produtoLoja = (-900, 100),
                          botaoMenu = (-160, 0),

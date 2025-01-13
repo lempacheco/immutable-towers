@@ -14,7 +14,7 @@ baseTds = Base {vidaBase = 100,
 inimigo1Tds :: Inimigo
 inimigo1Tds = Inimigo {tipoInimigo = Homem, 
                         projeteisInimigo = [], 
-                        vidaInimigo = 1000, 
+                        vidaInimigo = 150, 
                         butimInimigo = 50, 
                         ataqueInimigo = 40, 
                         velocidadeInimigo = 0.5, 

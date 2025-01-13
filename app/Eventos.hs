@@ -62,7 +62,7 @@ reageEventos (EventKey (Char 'b') Down _ _) it
 reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it 
     | estadoIT it == Menu && botaoMenu it == (-160,0) = if validaJogo $ jogoIT it then it {estadoIT = Jogando,  modoJogo = Finito} else it {estadoIT = MensagemErro, estadoIT2 = MensagemErro, modoJogo = Finito}
     | estadoIT it == Menu && botaoMenu it == (-160,-100) = if validaJogo $ jogoIT it then it {estadoIT = Jogando, modoJogo = Infinito} else it {estadoIT = MensagemErro, estadoIT2= MensagemErro, modoJogo = Infinito}
-    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado} 
+    | estadoIT it == Menu && botaoMenu it == (-160,-200) = it {estadoIT = CriandoMapa, modoJogo = MapaCriado, jogoIT = (jogoIT it) {baseJogo = (baseJogo (jogoIT it)) {creditosBase = 1000} }} 
     | estadoIT it == Menu && botaoMenu it == (-160,-300) = it {estadoIT = Tutorial, etapaTT = 0}    
     | estadoIT it == Menu && botaoMenu it == (-160,-400) = it {estadoIT = Costumizar}    
     | estadoIT it == Jogando = it {estadoIT = EscolhendoTorre}

@@ -37,21 +37,18 @@ data ImmutableTowers = ImmutableTowers {
 
 data EstadoJogo = Menu 
                 | Pausado 
-                | VoltandoMenu
                 | Jogando 
                 | EscolhendoTorre
                 | EscolhendoTorre2
-                | EscolhendoTorre3
                 | Comprando 
                 | Comprando2
-                | Comprando3
                 | CriandoMapa
                 | EscolhendoOndas 
                 | EscolhendoIG
                 | EscolhendoIM
                 | GameOver
                 | YouWon 
-                | YouWon1
+                | YouWonCM
                 | NivelPassado
                 | Tutorial
                 | TutorialEscolhendoTorre
@@ -63,6 +60,10 @@ data EstadoJogo = Menu
 data NivelJogoFinito = Nivel1 | Nivel2 | Nivel3 | Nivel4 | Nivel5 deriving (Eq, Show)
 
 data ModoJogo = Finito | Infinito | MapaCriado deriving (Eq, Show)
+
+{-| Responsável por ativar o segundo jogador nos modos Infinito e Finito. 
+
+-}
 
 ativaMP :: ImmutableTowers -> ImmutableTowers
 ativaMP it = if multiplayer it then it {estadoIT2 = Jogando }
@@ -87,11 +88,14 @@ progredirNivel it
 
 reiniciarNivel :: ImmutableTowers -> ImmutableTowers
 reiniciarNivel it 
-    | estadoIT it == NivelPassado || estadoIT it == GameOver || estadoIT it == YouWon || estadoIT it == YouWon1 || estadoIT it == Pausado = 
+    | estadoIT it == NivelPassado || estadoIT it == GameOver || estadoIT it == YouWon || estadoIT it == YouWonCM || estadoIT it == Pausado = 
         case modoJogo it of 
             Finito   -> reiniciarNivelFinito it
-            Infinito -> it {nivelJogoInfinito = nivelJogoInfinito it, estadoIT = Jogando, jogoIT = jogoItInicial it }
-            _        -> it {jogoIT = jogoItInicial it, estadoIT = Jogando}
+            Infinito -> it {nivelJogoInfinito = nivelJogoInfinito it, 
+                            estadoIT = Jogando, 
+                            jogoIT = jogoItInicial it }
+            _        -> it {jogoIT = jogoItInicial it, 
+                            estadoIT = Jogando}
     | otherwise = it 
 
 {-| Controla a progressão de nível no modo infinito, aumentando a dificuldade, sempre que o nível aumenta. 
@@ -155,7 +159,7 @@ aumentarDificuldadeInimigo n i = i {vidaInimigo = vidaInimigo i * fromIntegral n
 progredirNivelFinito :: ImmutableTowers -> ImmutableTowers
 progredirNivelFinito it = if estadoIT it == NivelPassado || estadoIT it == YouWon then avancaNivelFinito it 
                           else if estadoIT it == GameOver || estadoIT it == YouWon || 
-                                  estadoIT it == NivelPassado || estadoIT it == YouWon1 || 
+                                  estadoIT it == NivelPassado || estadoIT it == YouWonCM || 
                                   estadoIT it == Pausado
                           then reiniciarNivelFinito it 
                           else it  

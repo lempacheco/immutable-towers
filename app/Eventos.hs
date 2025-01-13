@@ -127,8 +127,8 @@ reageEventos (EventKey (SpecialKey KeyEnter) Down _ _) it
     | estadoIT it == NivelPassado && fst (botaoNivelPassado it) == 200 = reiniciarNivel it 
     | estadoIT it == GameOver && fst (botaoGameOver it) == 100 = reiniciarNivel it 
     | (estadoIT it == GameOver || estadoIT it == Tutorial) && fst (botaoGameOver it) == -600 = reiniciarEstado it
-    | estadoIT it == YouWon1 && fst (botaoGameOver it) == 100 = reiniciarNivel it 
-    | estadoIT it == YouWon1 && fst (botaoGameOver it) == -600 = reiniciarEstado it
+    | estadoIT it == YouWonCM && fst (botaoGameOver it) == 100 = reiniciarNivel it 
+    | estadoIT it == YouWonCM && fst (botaoGameOver it) == -600 = reiniciarEstado it
     | estadoIT it == YouWon && fst (botaoNivelPassado it) == -150 = progredirNivel it 
     | (estadoIT it == YouWon || estadoIT it == Pausado) && fst (botaoNivelPassado it) == -500 = reiniciarEstado it
     | (estadoIT it == YouWon || estadoIT it == Pausado) && fst (botaoNivelPassado it) == 200  = reiniciarNivel it  
@@ -180,7 +180,7 @@ reageEventos (EventKey (SpecialKey KeyRight) Down _ _) it
     | estadoIT it == EscolhendoOndas = it {estadoIT = EscolhendoIG}
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoIM}
     | (estadoIT it == GameOver || estadoIT it == Tutorial) && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
-    | estadoIT it == YouWon1 && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
+    | estadoIT it == YouWonCM && xBotaoGameOver == -600 = it {botaoGameOver = (100, yBotaoGameOver)}
     | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado < 200  = it {botaoNivelPassado = (xBotaoNivelPassado + 350, yBotaoNivelPassado)}
     | estadoIT it == Costumizar && (xSelecaoCostumizar < 200 && ySelecaoCostumizar > -350) = it {selecaoCostumizar = (xSelecaoCostumizar + 600, ySelecaoCostumizar)}
     | estadoIT it == Costumizar && (xSelecaoCostumizar < 200 && ySelecaoCostumizar == -350) = it {selecaoCostumizar = (xSelecaoCostumizar + 500, ySelecaoCostumizar)}
@@ -196,7 +196,7 @@ reageEventos (EventKey (SpecialKey KeyLeft) Down _ _) it
     | estadoIT it == EscolhendoIG = it {estadoIT = EscolhendoOndas}
     | estadoIT it == EscolhendoIM = it {estadoIT = EscolhendoIG}
     | (estadoIT it == GameOver || estadoIT it == Tutorial) && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
-    | estadoIT it == YouWon1 && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
+    | estadoIT it == YouWonCM && xBotaoGameOver == 100 = it {botaoGameOver = (-600, yBotaoGameOver)}
     | (estadoIT it == YouWon || estadoIT it == Pausado || estadoIT it == NivelPassado) && xBotaoNivelPassado > -500  = it {botaoNivelPassado = (xBotaoNivelPassado - 350, yBotaoNivelPassado)}
     | estadoIT it == Costumizar && (xSelecaoCostumizar > -400 && ySelecaoCostumizar > -350) = it {selecaoCostumizar = (xSelecaoCostumizar - 600, ySelecaoCostumizar)}
     | estadoIT it == Costumizar && (xSelecaoCostumizar > -400 && ySelecaoCostumizar == -350) = it {selecaoCostumizar = (xSelecaoCostumizar - 500, ySelecaoCostumizar)}

@@ -394,26 +394,26 @@ teste19 =
                                                                           inimigosJogo = [], 
                                                                           baseJogo = baseB}, 
      "Recebe o jogo acima 1" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 2), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1,0)}], 
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0.2), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1,0)}], 
                                            baseJogo = baseB, acGeraCaminhos = 1}
                           ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 3.0, entradaOnda = 0.0}, ondaB3]}],
                                                             inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 0), caminhoInimigo = []}], 
                                                             baseJogo = baseB},
       "Recebe o jogo acima 2" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 4), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1,2)}], 
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.0,2.2), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1,2)}], 
                                            baseJogo = baseB, acGeraCaminhos = 1}
                             ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 2.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 2), caminhoInimigo = [Norte, Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 2, acDirecao = (1,0)}], 
                                            baseJogo = baseB},
       "Recebe o jogo acima 3" ~: jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 0.0, entradaOnda = 0.0}, ondaB3]}],
-                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 6), caminhoInimigo = [Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo =4, acDirecao = (1,4)}], 
+                                           inimigosJogo = [inimigoA3 {posicaoInimigo = (1.0,4.2), caminhoInimigo = [Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo =4, acDirecao = (1,4)}], 
                                            baseJogo = baseB, acGeraCaminhos = 1}
                             ~=? atualizaJogo 0.2 jogoInicial {portaisJogo = [portalA3 {ondasPortal = [ondaA3 {inimigosOnda = [], cicloOnda = 3.0, tempoOnda = 1.0, entradaOnda = 0.0}, ondaB3]}],
                                            inimigosJogo = [inimigoA3 {posicaoInimigo = (1, 4), caminhoInimigo = [Norte, Norte, Este, Este, Este, Sul, Este, Sul], iteracoesDesdeInicioAnimacaoInimigo = 3, acDirecao = (1,2)}], 
                                            baseJogo = baseB},
-      "Teste com um inimigo com vida nula" ~: (baseJogo jogoJ) {creditosBase = 350} ~=? baseJogo (atualizaJogo 1 jogoJ),
-      "Teste com um inimigo com vida negativa" ~: (baseJogo jogoH) {creditosBase = 350} ~=? baseJogo (atualizaJogo 1 jogoH),
-      "Teste com mais de um inimigo" ~: (baseJogo jogoI) {creditosBase = 500} ~=? baseJogo (atualizaJogo 1 jogoI)
+      "Teste com um inimigo com vida nula" ~: (baseJogo jogoJ) {creditosBase = 650} ~=? baseJogo (atualizaJogo 1 jogoJ),
+      "Teste com um inimigo com vida negativa" ~: (baseJogo jogoH) {creditosBase = 650} ~=? baseJogo (atualizaJogo 1 jogoH),
+      "Teste com mais de um inimigo" ~: (baseJogo jogoI) {creditosBase = 800} ~=? baseJogo (atualizaJogo 1 jogoI)
     ]                       
 
 --atualizaAnimaçãoTorres

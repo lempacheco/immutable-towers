@@ -95,6 +95,7 @@ test-suite immutable-towers-test
         Tarefa1Spec
         Tarefa2Spec
         Tarefa3Spec
+        FuncoesAuxSpec
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:

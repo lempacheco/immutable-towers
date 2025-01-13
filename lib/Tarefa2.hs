@@ -39,19 +39,18 @@ getTiposProjsInimigo i = map tipoProjetil (projeteisInimigo i)
 
 {-| Aplica os efeitos de projéteis de uma torre a um inimigo.
 
-==__Comportamento:__ 
-
+== __Comportamento:__
 Verifica as combinações de projéteis e ajusta os efeitos aplicados ao inimigo:
 
-  1. *Fogo e Gelo*:
-       Remove os projéteis do tipo Fogo e Gelo do inimigo.
-  2. *Fogo e Resina*:
-       Dobra a duração do projétil de Fogo no inimigo e remove o projétil de Resina, se for necessário. 
-       Caso contrário adiciona-o aos projéteis do inimigo.
-  3. *Projetil Igual*:
-       Dobra a duração do projétil se o tipo for igual ao projétil disparado pela torre.
-  4. *Outras Combinações*:
-       Adiciona o projétil da torre aos projéteis do inimigo.
+1. __Fogo e Gelo__:
+    Remove os projéteis do tipo Fogo e Gelo do inimigo.
+2. __Fogo e Resina__:
+    Dobra a duração do projétil de Fogo no inimigo e remove o projétil de Resina, se for necessário. 
+    Caso contrário adiciona-o aos projéteis do inimigo.
+3. __Projetil Igual__:
+    Dobra a duração do projétil se o tipo for igual ao projétil disparado pela torre.
+4. __Outras Combinações__:
+    Adiciona o projétil da torre aos projéteis do inimigo.
 -}
 
 atingeInimigo :: Torre -> Inimigo -> Inimigo
@@ -108,10 +107,11 @@ atingeInimigo torre inimigo
 {-| É responsável por mover o próximo inimigo a ser lanaçado pelo portal para lista de inimigos ativos. 
 
 == __Comportamento: __
-1. Caso o portal não possua ondas (lista de ondas vazia), o portal permanece inalterado e a lista de inimigos ativos não é modificada. 
+
+1. Caso o portal não possua ondas (parâmetro 'ondasPortal' = []), o portal permanece inalterado e a lista de inimigos ativos não é modificada. 
 2. Caso a primeira onda do portal não tenha inimigos, essa onda é removida do portal. 
 3. caso a primeira onda do portal possua inimigos, o primeiro inimigo da onda é movido para a lista de inimigos ativos,
-   e a onda é atualizada, removendo este inimigo.
+e a onda é atualizada, removendo este inimigo.
 
 ==__Exemplo de utilização:__
 
@@ -136,16 +136,18 @@ ativaInimigo portal inimigosAtivos = case ondasPortal portal of
                   novoInimigo = i: inimigosAtivos
               in (novoPortal, novoInimigo)
 
-{-| É responsável por indicar o fim do jogo, sendo possível duas eventualidaes: ganhar ou perder.
+{-| É responsável por indicar o fim do jogo, sendo possível duas eventualidaes: __ganhar__ ou __perder__.
 
 -}
 
 terminouJogo :: Jogo -> Bool
 terminouJogo j = ganhouJogo j || perdeuJogo j 
 
-{-| A função 'ganhouJogo' indica se um jogador ganhou o jogo, o jogador ganha o jogo nas seguintes condições: 
-     1. ausência de inimigos ativos ou inativos;  
-     2. nível de vida da base positivo.
+{-| Indica se um jogador ganhou o jogo, o jogador ganha o jogo nas seguintes condições: 
+     
+1. ausência de inimigos ativos ou inativos;  
+2. nível de vida da base positivo.
+
 -}
 
 ganhouJogo :: Jogo -> Bool
@@ -154,8 +156,9 @@ ganhouJogo j = null (inimigosJogo j)
                && all verificaPortal (portaisJogo j) 
 
 {-| Verifica se um portal está "inativo". Um portal é considerado inativo se:
-    1. Não possui nenhuma onda (ondasPortal é uma lista vazia);
-    2. Todas as ondas no portal estão vazias, ou seja, não possuem inimigos (inimigosOnda é uma lista vazia para todas as ondas).
+
+1. Não possui nenhuma onda (o parâmetro 'ondasPortal' é uma lista vazia);
+2. Todas as ondas no portal estão vazias, ou seja, não possuem inimigos (o parâmetro 'inimigosOnda' é uma lista vazia para todas as ondas).
 
 -}
 
@@ -163,7 +166,8 @@ verificaPortal :: Portal -> Bool
 verificaPortal p = null (ondasPortal p) || all (null . inimigosOnda) (ondasPortal p)
 
 {-| Indica se um jogador perdeu o jogo, o jogador perde o jogo na seguinte condição: 
-     1. nível de vida da base igual ou inferior a zero.
+     
+1. nível de vida da base igual ou inferior a zero.
 -}
 
 perdeuJogo :: Jogo -> Bool

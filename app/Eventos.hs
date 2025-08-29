@@ -1,6 +1,7 @@
 module Eventos where
     
 import Graphics.Gloss.Interface.Pure.Game
+import Graphics.Gloss.Data.Event
 import ImmutableTowers
 import LI12425
 import Tarefa1 
